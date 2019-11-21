@@ -10,6 +10,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import towers.Tower;
 
@@ -17,38 +18,38 @@ public class TowerDefenseView extends Application{
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		TowerDefenseController controller = new TowerDefenseController();
-		ViewModel model = new ViewModel(400,400);
+		ViewModel model = new ViewModel(500,500);
 
 		BorderPane root = new BorderPane();
 		
-		GridPane pane = new GridPane();
-		
-		root.setTop(createMenuBar());
-		root.setCenter(createBoard(controller));
-		
-		primaryStage.setScene(new Scene(root, model.getHeight(), model.getWidth()));
+		root.setTop(createMenuBar(model));
+		root.setCenter(createBoard(controller, model));
+		primaryStage.setScene(new Scene(root, model.getWidth(), model.getHeight()));
 		primaryStage.show();
 	}
 	
-	private GridPane createBoard(TowerDefenseController controller) {
+	private GridPane createBoard(TowerDefenseController controller, ViewModel model) {
 		GridPane pane = new GridPane();
 		Tower[][] towers = controller.getBoard();
 		for(int i =0;i<towers.length;i++) {
 			for(int j =0;j<towers[i].length;j++) {
-				pane.add(new Circle(10), j, i);
+				System.out.println(i+" "+j+" "+model.getWidth()/10+" "+model.getEffectiveBoardHeight()/10);
+				pane.add(new Rectangle(model.getWidth()/10,model.getEffectiveBoardHeight()/10), j, i);
 			}
 		}
 		
 		return pane;
 	}
 	
-	private MenuBar createMenuBar() {
+	private MenuBar createMenuBar(ViewModel model) {
 		// Create the menu bar.
 		MenuBar bar = new MenuBar();
 		
 		bar.getMenus().add(createFileMenu());
 		bar.getMenus().add(createOptionMenu());
-		bar.setPrefHeight(10);
+		int menuHeight = 30;
+		bar.setPrefHeight(menuHeight);
+		model.setMenuHeight(menuHeight);
 		return bar;
 	}
 	
@@ -63,7 +64,6 @@ public class TowerDefenseView extends Application{
 		MenuItem exit = new MenuItem();
 		exit.setText("Exit");
 		exit.setOnAction(new ExitHandler());
-		
 		
 		file.getItems().add(newGame);
 		file.getItems().add(exit);
