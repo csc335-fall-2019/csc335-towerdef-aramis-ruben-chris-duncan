@@ -2,9 +2,9 @@ package game;
 import java.util.Observable;
 
 import viewable.Viewable;
-import viewable.towers.ArcherTower;
-import viewable.towers.Tower;
-import viewable.towers.TowerType;
+import viewable.gameObjects.ArcherTower;
+import viewable.gameObjects.Tower;
+import viewable.gameObjects.TowerType;
 
 public class TowerDefenseBoard extends Observable{
 	private static final int BOARD_WIDTH = 10;

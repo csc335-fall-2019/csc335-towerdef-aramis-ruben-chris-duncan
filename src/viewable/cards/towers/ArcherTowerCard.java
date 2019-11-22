@@ -1,7 +1,7 @@
 package viewable.cards.towers;
 
 import viewable.cards.Card;
-import viewable.towers.ArcherTower;
+import viewable.gameObjects.ArcherTower;
 
 public class ArcherTowerCard extends Card {
 	private static final int cardId 		= 0;
