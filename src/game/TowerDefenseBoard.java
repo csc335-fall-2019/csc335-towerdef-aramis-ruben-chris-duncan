@@ -1,18 +1,15 @@
 package game;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Observable;
 
 import viewable.Viewable;
-import viewable.towers.BasicTower;
-import viewable.towers.Tower;
-import viewable.towers.TowerType;
+import viewable.gameObjects.BasicTower;
+import viewable.gameObjects.TowerType;
 
 public class TowerDefenseBoard extends Observable{
 	private static final int BOARD_WIDTH = 10;
 	private static final int BOARD_LENGTH = 10;
 	
-	Viewable[][] board;
+	private Viewable[][] board;
 	public TowerDefenseBoard(TowerDefenseView view) {
 		board = new Viewable[BOARD_WIDTH][BOARD_LENGTH];
 		addObserver(view);

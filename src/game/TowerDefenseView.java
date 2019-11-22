@@ -1,12 +1,10 @@
 package game;
 import javafx.event.*;
 
-import java.awt.Label;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,15 +16,10 @@ import chat.PeerToPeerSocket;
 import handlers.ExitHandler;
 import handlers.NewGameHandler;
 import handlers.PanHandler;
-import handlers.ResizeHandler;
 import handlers.SoundHandler;
 import handlers.VideoHandler;
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
-import javafx.geometry.HPos;
-import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -40,21 +33,15 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.RowConstraints;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import javafx.scene.transform.Scale;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import viewable.Viewable;
-import viewable.towers.Tower;
-import viewable.towers.TowerType;
+import viewable.gameObjects.TowerType;
 
 public class TowerDefenseView extends Application implements Observer{
 	public static Stage MESSAGE_RECEIVED;
@@ -305,7 +292,6 @@ public class TowerDefenseView extends Application implements Observer{
 		return files.get(0).toURI().toString();
 	}
 
-	
 	@Override
 	public void update(Observable o, Object e) {
 		// TODO Auto-generated method stub
