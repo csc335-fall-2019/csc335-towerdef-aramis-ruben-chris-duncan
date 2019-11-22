@@ -9,7 +9,7 @@ public class TowerDefenseController {
 		board = new TowerDefenseBoard(view);
 	}
 
-	public Viewable[][] getBoard() {
+	public Viewable[][][] getBoard() {
 		// TODO Auto-generated method stub
 		return board.getBoard();
 	}
