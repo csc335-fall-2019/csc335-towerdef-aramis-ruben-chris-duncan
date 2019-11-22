@@ -3,23 +3,22 @@ import java.util.Observable;
 
 import viewable.Viewable;
 import viewable.gameObjects.ArcherTower;
+import viewable.gameObjects.Map;
 import viewable.gameObjects.Tower;
 import viewable.gameObjects.TowerType;
 
-public class TowerDefenseBoard extends Observable{
-	private static final int BOARD_WIDTH = 10;
-	private static final int BOARD_LENGTH = 10;
-	
-	private Viewable[][] board;
+public class TowerDefenseBoard extends Observable{	
+	private Map board;
 	public TowerDefenseBoard(TowerDefenseView view) {
-		board = new Viewable[BOARD_WIDTH][BOARD_LENGTH];
+		board = new Map();
 		addObserver(view);
 	}
 	
 	public void addTower(int row, int col, TowerType type){
+		Viewable[][] boardArr = board.getBoard();
 		switch(type) {
 			case BASICTOWER:
-				board[col][row] = new ArcherTower();
+				boardArr[col][row] = new ArcherTower();
 				break;
 			default:
 				break;
@@ -29,6 +28,6 @@ public class TowerDefenseBoard extends Observable{
 	}
 	
 	public Viewable[][] getBoard() {
-		return board;
+		return board.getBoard();
 	}
 }
