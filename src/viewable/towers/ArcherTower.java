@@ -3,8 +3,14 @@ package viewable.towers;
 import java.io.File;
 import java.io.IOException;
 
-public class BasicTower extends Tower{
-	public BasicTower() {
+public class ArcherTower extends Tower {
+
+	private static final int defaultAttack 			= 1;
+	private static final int defaultRange 			= 1;
+	private static final double defaultAttackSpeed	= 1.0;
+	
+	public ArcherTower() {
+		super(defaultAttack, defaultRange, defaultAttackSpeed);
 	}
 	
 	@Override
