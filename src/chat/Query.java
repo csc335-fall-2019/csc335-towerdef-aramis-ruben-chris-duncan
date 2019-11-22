@@ -12,9 +12,27 @@ public class Query implements Serializable{
 	
 	private int desiredPort;
 	
+	private String desiredHostName;
+	
+	public Query(String desiredHostName) {
+		this.desiredHostName = desiredHostName;
+	}
+	
 	public Query(String desiredHost, int desiredPort) {
 		this.desiredHost = desiredHost;
 		this.desiredPort = desiredPort;
+	}
+	
+	public void setDesiredPort(int p) {
+		desiredPort = p;
+	}
+	
+	public void setDesiredHost(String h) {
+		desiredHost = h;
+	}
+	
+	public String getDesiredHostName() {
+		return desiredHostName;
 	}
 	
 	public String getDesiredHost() {

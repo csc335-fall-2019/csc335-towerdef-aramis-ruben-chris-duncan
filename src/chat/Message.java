@@ -12,9 +12,16 @@ public class Message implements Serializable{
 	
 	private Query query;
 	
-	public Message(Query query, String message) {
+	private Query from;
+	
+	public Message(Query from, Query query, String message) {
 		this.query = query;
 		this.message = message;
+		this.from = from;
+	}
+	
+	public Query getFrom() {
+		return from;
 	}
 	
 	public Query getQuery() {

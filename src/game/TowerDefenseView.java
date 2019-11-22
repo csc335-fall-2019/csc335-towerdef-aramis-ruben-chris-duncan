@@ -1,5 +1,7 @@
 package game;
 import javafx.event.*;
+
+import java.awt.Label;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -31,25 +33,32 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.scene.transform.Scale;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import viewable.Viewable;
 import viewable.towers.Tower;
 import viewable.towers.TowerType;
 
 public class TowerDefenseView extends Application implements Observer{
+	public static Stage MESSAGE_RECEIVED;
+	
 	private static final int VIEWABLE_ROWS = 8;
 	private static final int VIEWABLE_COLS = 8;
 	private Stage stage;
@@ -58,10 +67,20 @@ public class TowerDefenseView extends Application implements Observer{
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		MESSAGE_RECEIVED = new Stage();
+		BorderPane textPane = new BorderPane();
+		Text label = new Text();
+		label.setText("Received");
+		textPane.getChildren().add(label);
+		MESSAGE_RECEIVED.setScene(new Scene(textPane, 100,100));
+		MESSAGE_RECEIVED.initModality(Modality.WINDOW_MODAL);
+		MESSAGE_RECEIVED.initOwner(primaryStage);
 		PeerToPeerSocket p2p = new PeerToPeerSocket();
 		Thread thread = new Thread(p2p);
 		thread.start();
-		Thread p2p2 = new Thread(new PeerToPeerSocket("localhost",7000));
+		PeerToPeerSocket p2p2p = new PeerToPeerSocket("localhost",7000);
+		p2p2p.login("T","Bullshit");
+		Thread p2p2 = new Thread(p2p2p);
 		p2p2.start();
 		controller = new TowerDefenseController(this);
 		model = new ViewModel(900,1000, this);
@@ -84,7 +103,7 @@ public class TowerDefenseView extends Application implements Observer{
 		
 		primaryStage.getScene().setOnMouseMoved(new PanHandler(model, primaryStage));
 		primaryStage.setResizable(false);
-		//loadMusic();
+		loadMusic();
 		primaryStage.show();
 		primaryStage.sizeToScene();
 	}
@@ -98,22 +117,56 @@ public class TowerDefenseView extends Application implements Observer{
 	
 	private BorderPane createChatBottom(PeerToPeerSocket p2p) {
 		BorderPane box = new BorderPane();
+		HBox hbox = new HBox();
+		TextField text = new TextField();
+		TextField address = new TextField();
+		TextField port = new TextField();
+		
+		
 		Button button = new Button();
 		button.setText("Messages");
 		button.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
 				try {
-					p2p.sendMessage("localhost", 7000, "Piece of Shit");
+					p2p.sendMessage(address.getText(),Integer.parseInt(port.getText()), text.getText());
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
 		});
-		box.setBottom(button);
+		Button login = new Button();
+		login.setText("Login");
+		login.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				try {
+					if(p2p.login("Tester","Fuck you")) {
+						System.out.println("Logged in.");
+						login.setVisible(false);
+						hbox.getChildren().remove(login);
+						VBox input = createMessageStack(text, address, port);
+						hbox.getChildren().add(input);
+						hbox.getChildren().add(button);
+					}
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		hbox.getChildren().add(login);
+		box.setBottom(hbox);
 		box.setPickOnBounds(false);
 		return box;
+	}
+	
+	private VBox createMessageStack(TextField text, TextField address, TextField port) {
+		VBox box = new VBox();
+		box.getChildren().addAll(text, address, port);
+		return box;
+		
 	}
 	
 	private GridPane createBoard() throws FileNotFoundException {
