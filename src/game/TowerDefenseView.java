@@ -67,7 +67,7 @@ public class TowerDefenseView extends Application implements Observer{
 		Thread thread = new Thread(p2p);
 		thread.start();
 		PeerToPeerSocket p2p2p = new PeerToPeerSocket("localhost",7000);
-		//p2p2p.login("T","Bullshit");
+		p2p2p.login("T","Bullshit");
 		Thread p2p2 = new Thread(p2p2p);
 		p2p2.start();
 		controller = new TowerDefenseController(this);
@@ -109,7 +109,7 @@ public class TowerDefenseView extends Application implements Observer{
 		root.setBottom(bottom);
 		root.setLeft(market);
 		
-		primaryStage.setScene(new Scene(root, model.getWidth() + 100, model.getHeight() + 150));
+		primaryStage.setScene(new Scene(root, model.getWidth(), model.getHeight() + 150));
 		
 		//primaryStage.getScene().widthProperty().addListener(new ResizeHandler(model, primaryStage, pane));
 		//primaryStage.getScene().heightProperty().addListener(new ResizeHandler(model, primaryStage, pane));
@@ -185,10 +185,10 @@ public class TowerDefenseView extends Application implements Observer{
 	private GridPane createBoard() throws FileNotFoundException {
 		GridPane pane = new GridPane();
 		
-		Viewable[][] towers = controller.getBoard();
+		Viewable[][][] towers = controller.getBoard();
 		for(int i =model.getCurrentRow();i<model.getCurrentRow()+VIEWABLE_ROWS;i++) {
 			for(int j =model.getCurrentCol();j<model.getCurrentCol()+VIEWABLE_COLS;j++) {
-				pane.add(getResource(towers[j][i], i, j), j, i);
+				pane.add(getResource(towers[j][i][0], i, j), j, i);
 			}
 		}
 
@@ -211,7 +211,6 @@ public class TowerDefenseView extends Application implements Observer{
 		view.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				System.out.println(e);
 				ImageView v = (ImageView)e.getTarget();
 				if(v.getUserData()==null) {
 					controller.addTower(row, col, TowerType.BASICTOWER);
@@ -332,8 +331,14 @@ public class TowerDefenseView extends Application implements Observer{
 	}
 	
 	private void setBoard(int row, int col) throws FileNotFoundException {
-		Viewable[][] board = controller.getBoard();
-		Viewable obj = board[col][row];
+		Viewable[][][] board = controller.getBoard();
+		int i =0;
+		for(int j =0;j<board[col][row].length;j++) {
+			if(board[col][row][j]!=null) {
+				i=j;
+			}
+		}
+		Viewable obj = board[col][row][i];
 		StackPane pane = (StackPane)((BorderPane)(stage.getScene().getRoot())).getCenter();
 		GridPane grid = null;
 		for(Node n : pane.getChildren()) {

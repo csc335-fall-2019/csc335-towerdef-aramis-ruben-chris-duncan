@@ -15,10 +15,10 @@ public class TowerDefenseBoard extends Observable{
 	}
 	
 	public void addTower(int row, int col, TowerType type){
-		Viewable[][] boardArr = board.getBoard();
+		Viewable[][][] boardArr = board.getBoard();
 		switch(type) {
 			case BASICTOWER:
-				boardArr[col][row] = new ArcherTower();
+				boardArr[col][row][0] = new ArcherTower();
 				break;
 			default:
 				break;
@@ -27,7 +27,7 @@ public class TowerDefenseBoard extends Observable{
 		notifyObservers(row+" "+col);
 	}
 	
-	public Viewable[][] getBoard() {
+	public Viewable[][][] getBoard() {
 		return board.getBoard();
 	}
 }
