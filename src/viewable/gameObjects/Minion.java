@@ -7,11 +7,13 @@ public abstract class Minion extends Viewable {
 	private Integer health;
 	private Integer damage;
 	private Integer speed;
+	private Integer reward;
 	
-	public Minion(Integer health, Integer damage, Integer speed) {
+	public Minion(Integer health, Integer damage, Integer speed, Integer reward) {
 		this.health = health;
 		this.damage = damage;
 		this.speed = speed;
+		this.reward = reward;
 	}
 	
 	public void setHealth(Integer newHealth) {
@@ -36,6 +38,10 @@ public abstract class Minion extends Viewable {
 	
 	public Integer getSpeed() {
 		return this.speed;
+	}
+	
+	public Integer getReward() {
+		return this.reward;
 	}
 	
 }
