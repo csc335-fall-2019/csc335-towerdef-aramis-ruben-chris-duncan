@@ -79,7 +79,7 @@ public class TowerDefenseView extends Application implements Observer{
 		Thread thread = new Thread(p2p);
 		thread.start();
 		PeerToPeerSocket p2p2p = new PeerToPeerSocket("localhost",7000);
-		p2p2p.login("T","Bullshit");
+		//p2p2p.login("T","Bullshit");
 		Thread p2p2 = new Thread(p2p2p);
 		p2p2.start();
 		controller = new TowerDefenseController(this);
