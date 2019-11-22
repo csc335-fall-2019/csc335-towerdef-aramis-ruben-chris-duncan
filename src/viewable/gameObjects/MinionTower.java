@@ -1,23 +1,20 @@
 /** @author Chris Loper
  * 
- * Archer Tower Game Object
- * Contains default values for Archer Towers
+ * Minion Tower Game Object
+ * Contains default values for Minion Towers
  */
-
-package viewable.gameObjects;
+package viewable.towers;
 
 import java.io.File;
 import java.io.IOException;
 
-public class ArcherTower extends Tower {
-
+public class MinionTower extends Tower {
 	private static final int defaultAttack 			= 1;
-	private static final int defaultRange 			= 1;
-	private static final double defaultAttackSpeed	= 1.0;
-	private static final String name				= "Archer Tower";
-
+	private static final int defaultRange 			= 0;
+	private static final double defaultAttackSpeed	= 1;
+	private static final String name				= "Minion Tower";
 	
-	public ArcherTower() {
+	public MinionTower() {
 		super(defaultAttack, defaultRange, defaultAttackSpeed, name);
 	}
 	
