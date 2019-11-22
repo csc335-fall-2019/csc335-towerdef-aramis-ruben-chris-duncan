@@ -1,4 +1,4 @@
-package viewable.towers;
+package viewable.gameObjects;
 
 public enum TowerType {
 	BASICTOWER;

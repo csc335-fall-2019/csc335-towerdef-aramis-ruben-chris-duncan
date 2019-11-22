@@ -4,9 +4,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Observable;
 
 import viewable.Viewable;
-import viewable.towers.BasicTower;
-import viewable.towers.Tower;
-import viewable.towers.TowerType;
+import viewable.gameObjects.BasicTower;
+import viewable.gameObjects.Tower;
+import viewable.gameObjects.TowerType;
 
 public class TowerDefenseBoard extends Observable{
 	private static final int BOARD_WIDTH = 10;

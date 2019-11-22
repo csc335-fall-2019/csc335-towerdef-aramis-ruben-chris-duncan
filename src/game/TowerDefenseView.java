@@ -53,8 +53,8 @@ import javafx.scene.transform.Scale;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import viewable.Viewable;
-import viewable.towers.Tower;
-import viewable.towers.TowerType;
+import viewable.gameObjects.Tower;
+import viewable.gameObjects.TowerType;
 
 public class TowerDefenseView extends Application implements Observer{
 	public static Stage MESSAGE_RECEIVED;
