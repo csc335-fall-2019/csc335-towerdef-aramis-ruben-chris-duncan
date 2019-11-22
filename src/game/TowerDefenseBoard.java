@@ -4,7 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Observable;
 
 import viewable.Viewable;
-import viewable.towers.BasicTower;
+import viewable.towers.ArcherTower;
 import viewable.towers.Tower;
 import viewable.towers.TowerType;
 
@@ -21,7 +21,7 @@ public class TowerDefenseBoard extends Observable{
 	public void addTower(int row, int col, TowerType type){
 		switch(type) {
 			case BASICTOWER:
-				board[col][row] = new BasicTower();
+				board[col][row] = new ArcherTower();
 				break;
 			default:
 				break;
