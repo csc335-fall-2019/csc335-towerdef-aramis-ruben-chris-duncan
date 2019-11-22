@@ -1,23 +1,20 @@
 /** @author Chris Loper
  * 
- * Archer Tower Game Object
- * Contains default values for Archer Towers
+ * Freeze Tower Game Object
+ * Contains default values for Freeze Towers
  */
-
 package viewable.gameObjects;
 
 import java.io.File;
 import java.io.IOException;
 
-public class ArcherTower extends Tower {
-
-	private static final int defaultAttack 			= 1;
+public class FreezeTower extends Tower {
+	private static final int defaultAttack 			= 0;
 	private static final int defaultRange 			= 1;
-	private static final double defaultAttackSpeed	= 1.0;
-	private static final String name				= "Archer Tower";
-
+	private static final double defaultAttackSpeed	= 0.5;
+	private static final String name				= "Freeze Tower";
 	
-	public ArcherTower() {
+	public FreezeTower() {
 		super(defaultAttack, defaultRange, defaultAttackSpeed, name);
 	}
 	

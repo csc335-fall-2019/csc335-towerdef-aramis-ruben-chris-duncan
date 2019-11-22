@@ -4,10 +4,11 @@
  * Contains all accessors and mutators for tower game objects
  * 
  */
-package viewable.gameObjects;
+package viewable.towers;
 import viewable.Viewable;
 
 public abstract class Tower extends Viewable{
+	
 	private Integer attack;
 	private Integer range;
 	private double attackSpeed;

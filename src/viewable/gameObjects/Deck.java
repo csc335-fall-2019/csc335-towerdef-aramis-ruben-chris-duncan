@@ -39,7 +39,7 @@ public class Deck {
 	public void add(Card card) {
 		deck.add(card);
 	}
-	
+  
 	public Boolean isEmpty() {
 		return deck.isEmpty();
 	}
