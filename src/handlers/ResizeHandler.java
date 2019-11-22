@@ -22,7 +22,11 @@ public class ResizeHandler implements ChangeListener<Number>{
 		public void changed(ObservableValue<? extends Number> arg0, Number oldValue, Number newValue) {
 			double newW = primaryStage.getScene().getWidth();
 			double newH= primaryStage.getScene().getHeight();
-			primaryStage.getScene().getRoot().getTransforms().add(new Scale(newW/model.getWidth(), newH/model.getHeight()));
+			System.out.println(newW+" "+model.getWidth());
+			System.out.println(newH+" "+model.getHeight());
+			double scaleX = model.getWidth()<newW?newW/model.getWidth():model.getWidth()/newW;
+			double scaleY = model.getHeight()<newH?newH/model.getHeight():model.getHeight()/newH;
+			primaryStage.getScene().getRoot().getTransforms().add(new Scale(scaleX, scaleY));
 			model.setWidth((int)newW);
 			model.setHeight((int)newH);
 		}

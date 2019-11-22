@@ -1,4 +1,5 @@
 package game;
+import javafx.event.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import chat.PeerToPeerSocket;
 import handlers.ExitHandler;
 import handlers.NewGameHandler;
 import handlers.PanHandler;
@@ -25,6 +27,7 @@ import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -32,6 +35,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
@@ -54,6 +58,11 @@ public class TowerDefenseView extends Application implements Observer{
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		PeerToPeerSocket p2p = new PeerToPeerSocket();
+		Thread thread = new Thread(p2p);
+		thread.start();
+		Thread p2p2 = new Thread(new PeerToPeerSocket("localhost",7000));
+		p2p2.start();
 		controller = new TowerDefenseController(this);
 		model = new ViewModel(900,1000, this);
 		stage = primaryStage;
@@ -61,17 +70,23 @@ public class TowerDefenseView extends Application implements Observer{
 		
 		root.setTop(createMenuBar());
 		GridPane pane = createBoard();
-		root.setCenter(pane);
+		StackPane stack = new StackPane();
+		stack.getChildren().add(pane);
+		stack.getChildren().add(createChatBottom(p2p));
+		stack.setPickOnBounds(false);
+		
+		root.setCenter(stack);
 		
 		primaryStage.setScene(new Scene(root, model.getWidth(), model.getHeight()));
 		
-		primaryStage.getScene().widthProperty().addListener(new ResizeHandler(model, primaryStage, pane));
-		primaryStage.getScene().heightProperty().addListener(new ResizeHandler(model, primaryStage, pane));
+		//primaryStage.getScene().widthProperty().addListener(new ResizeHandler(model, primaryStage, pane));
+		//primaryStage.getScene().heightProperty().addListener(new ResizeHandler(model, primaryStage, pane));
 		
 		primaryStage.getScene().setOnMouseMoved(new PanHandler(model, primaryStage));
-		
-		loadMusic();
+		primaryStage.setResizable(false);
+		//loadMusic();
 		primaryStage.show();
+		primaryStage.sizeToScene();
 	}
 
 	public void update() {
@@ -79,6 +94,26 @@ public class TowerDefenseView extends Application implements Observer{
 		while(controller.canMove()) {
 			break;
 		}
+	}
+	
+	private BorderPane createChatBottom(PeerToPeerSocket p2p) {
+		BorderPane box = new BorderPane();
+		Button button = new Button();
+		button.setText("Messages");
+		button.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				try {
+					p2p.sendMessage("localhost", 7000, "Piece of Shit");
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		box.setBottom(button);
+		box.setPickOnBounds(false);
+		return box;
 	}
 	
 	private GridPane createBoard() throws FileNotFoundException {
@@ -90,7 +125,8 @@ public class TowerDefenseView extends Application implements Observer{
 				pane.add(getResource(towers[j][i], i, j), j, i);
 			}
 		}
-		
+
+		pane.setPickOnBounds(false);
 		return pane;
 	}
 	
@@ -109,6 +145,7 @@ public class TowerDefenseView extends Application implements Observer{
 		view.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
+				System.out.println(e);
 				ImageView v = (ImageView)e.getTarget();
 				if(v.getUserData()==null) {
 					controller.addTower(row, col, TowerType.BASICTOWER);
@@ -232,17 +269,23 @@ public class TowerDefenseView extends Application implements Observer{
 	private void setBoard(int row, int col) throws FileNotFoundException {
 		Viewable[][] board = controller.getBoard();
 		Viewable obj = board[col][row];
-		GridPane pane = (GridPane)((BorderPane)(stage.getScene().getRoot())).getCenter();
+		StackPane pane = (StackPane)((BorderPane)(stage.getScene().getRoot())).getCenter();
+		GridPane grid = null;
+		for(Node n : pane.getChildren()) {
+			if(n instanceof GridPane) {
+				grid = (GridPane)pane.getChildren().get(0);
+			}
+		}
 		Node node = null;
 		Node toRemove = null;
-		for(Node n: pane.getChildren()) {
+		for(Node n: grid.getChildren()) {
 			if(GridPane.getColumnIndex(n)==col&&GridPane.getRowIndex(n)==row) {
 				node = getResource(obj, row, col);
 				toRemove = n;
 			}
 		}
-		pane.getChildren().remove(toRemove);
-		pane.add(node, col, row);
+		grid.getChildren().remove(toRemove);
+		grid.add(node, col, row);
 	}
 }
 
