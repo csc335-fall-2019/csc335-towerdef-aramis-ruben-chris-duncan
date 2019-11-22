@@ -9,6 +9,7 @@ package viewable.cards.towers;
 
 import viewable.cards.Card;
 import viewable.gameObjects.CannonTower;
+import viewable.gameObjects.Player;
 
 public class CannonTowerCard extends Card {
 	private static final int cardId 		= 1;
@@ -22,5 +23,10 @@ public class CannonTowerCard extends Card {
 		c.setAttack(c.getAttack() + 1);
 		c.setRange(c.getRange() + 1);
 		c.setAttackSpeed(c.getAttackSpeed() + .1);
+	}
+
+	@Override
+	public void Ability(Player p) {
+		// TODO Auto-generated method stub
 	}
 }
