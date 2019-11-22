@@ -8,7 +8,7 @@
 package viewable.cards.towers;
 
 import viewable.cards.Card;
-import viewable.towers.CannonTower;
+import viewable.gameObjects.CannonTower;
 
 public class CannonTowerCard extends Card {
 	private static final int cardId 		= 1;

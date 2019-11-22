@@ -7,7 +7,7 @@
 package viewable.cards.towers;
 
 import viewable.cards.Card;
-import viewable.towers.CurrencyTower;
+import viewable.gameObjects.CurrencyTower;
 
 public class CurrencyTowerCard extends Card {
 	private static final int cardId 		= 4;

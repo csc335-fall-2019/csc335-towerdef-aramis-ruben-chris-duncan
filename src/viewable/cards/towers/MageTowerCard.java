@@ -7,7 +7,7 @@
 package viewable.cards.towers;
 
 import viewable.cards.Card;
-import viewable.towers.MageTower;
+import viewable.gameObjects.MageTower;
 
 public class MageTowerCard extends Card {
 	private static final int cardId 		= 2;

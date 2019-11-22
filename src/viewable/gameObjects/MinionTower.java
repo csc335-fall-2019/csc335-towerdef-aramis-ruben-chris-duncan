@@ -3,7 +3,7 @@
  * Minion Tower Game Object
  * Contains default values for Minion Towers
  */
-package viewable.towers;
+package viewable.gameObjects;
 
 import java.io.File;
 import java.io.IOException;

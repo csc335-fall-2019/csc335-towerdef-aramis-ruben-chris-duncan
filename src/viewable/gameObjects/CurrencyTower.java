@@ -3,7 +3,7 @@
  * Currency Tower Game Object
  * Contains default values for Currency Towers
  */
-package viewable.towers;
+package viewable.gameObjects;
 
 import java.io.File;
 import java.io.IOException;

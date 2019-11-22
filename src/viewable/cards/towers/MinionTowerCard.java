@@ -7,7 +7,7 @@
 package viewable.cards.towers;
 
 import viewable.cards.Card;
-import viewable.towers.MinionTower;
+import viewable.gameObjects.MinionTower;
 
 public class MinionTowerCard extends Card {
 	private static final int cardId 		= 5;

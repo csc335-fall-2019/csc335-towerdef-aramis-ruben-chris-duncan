@@ -3,7 +3,7 @@
  * Mage Tower Game Object
  * Contains default values for Mage Towers
  */
-package viewable.towers;
+package viewable.gameObjects;
 
 import java.io.File;
 import java.io.IOException;

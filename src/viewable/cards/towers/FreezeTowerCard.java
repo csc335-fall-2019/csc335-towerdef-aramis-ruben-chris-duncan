@@ -7,7 +7,7 @@
 package viewable.cards.towers;
 
 import viewable.cards.Card;
-import viewable.towers.FreezeTower;
+import viewable.gameObjects.FreezeTower;
 
 public class FreezeTowerCard extends Card {
 	private static final int cardId 		= 3;

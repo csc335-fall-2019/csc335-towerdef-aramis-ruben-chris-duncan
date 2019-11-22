@@ -40,8 +40,8 @@ public class Deck {
 		deck.add(card);
 	}
 	
-	public Boolean isEmpty() {
-		
+	public boolean isEmpty() {
+		return false;
 	}
 	
 }

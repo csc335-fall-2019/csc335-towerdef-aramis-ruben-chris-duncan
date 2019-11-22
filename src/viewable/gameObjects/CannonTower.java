@@ -3,7 +3,7 @@
  * Cannon Tower Game Object
  * Contains default values for Cannon Towers
  */
-package viewable.towers;
+package viewable.gameObjects;
 
 import java.io.File;
 import java.io.IOException;
