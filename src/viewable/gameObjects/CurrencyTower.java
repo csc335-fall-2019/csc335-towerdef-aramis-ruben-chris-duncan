@@ -1,23 +1,20 @@
 /** @author Chris Loper
  * 
- * Archer Tower Game Object
- * Contains default values for Archer Towers
+ * Currency Tower Game Object
+ * Contains default values for Currency Towers
  */
-
 package viewable.gameObjects;
 
 import java.io.File;
 import java.io.IOException;
 
-public class ArcherTower extends Tower {
-
-	private static final int defaultAttack 			= 1;
-	private static final int defaultRange 			= 1;
-	private static final double defaultAttackSpeed	= 1.0;
-	private static final String name				= "Archer Tower";
-
+public class CurrencyTower extends Tower {
+	private static final int defaultAttack 			= 5;
+	private static final int defaultRange 			= 0;
+	private static final double defaultAttackSpeed	= 1;
+	private static final String name				= "Currency Tower";
 	
-	public ArcherTower() {
+	public CurrencyTower() {
 		super(defaultAttack, defaultRange, defaultAttackSpeed, name);
 	}
 	

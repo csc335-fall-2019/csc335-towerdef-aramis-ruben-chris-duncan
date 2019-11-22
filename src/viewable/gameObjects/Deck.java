@@ -1,6 +1,14 @@
+/**
+ * @author Aramis Sennyey
+ * @author Ruben Tequida
+ * 
+ * rt update - adding drawCard and shuffle function
+ */
+
 package viewable.gameObjects;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import viewable.cards.Card;
@@ -18,5 +26,22 @@ public class Deck {
 		
 	}
 	
+	public Card drawCard() {
+		Card card = deck.get(0);
+		deck.remove(0);
+		return card;
+	}
+	
+	private void shuffle() {
+		Collections.shuffle(deck);
+	}
+	
+	public void add(Card card) {
+		deck.add(card);
+	}
+	
+	public boolean isEmpty() {
+		return false;
+	}
 	
 }
