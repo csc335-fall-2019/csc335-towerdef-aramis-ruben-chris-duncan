@@ -1,3 +1,9 @@
+/** @author Chris Loper
+ * 
+ * Contains card id and card name for Archer Towers, also
+ * contains an upgrade class for Archer Towers
+ * 
+ */
 package viewable.cards.towers;
 
 import viewable.cards.Card;
