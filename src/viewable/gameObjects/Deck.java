@@ -32,7 +32,7 @@ public class Deck {
 		return card;
 	}
 	
-	private void shuffle() {
+	public void shuffle() {
 		Collections.shuffle(deck);
 	}
 	
@@ -41,7 +41,15 @@ public class Deck {
 	}
 	
 	public Boolean isEmpty() {
-		
+		return deck.isEmpty();
+	}
+	
+	public List<Card> getDeck() {
+		return deck;
+	}
+	
+	public void empty() {
+		deck.removeAll(deck);
 	}
 	
 }
