@@ -1,7 +1,7 @@
 package game;
 import viewable.Viewable;
-import viewable.towers.Tower;
-import viewable.towers.TowerType;
+import viewable.gameObjects.Tower;
+import viewable.gameObjects.TowerType;
 
 public class TowerDefenseController {
 	TowerDefenseBoard board;

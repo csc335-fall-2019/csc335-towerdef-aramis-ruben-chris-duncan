@@ -314,8 +314,9 @@ public class PeerToPeerSocket implements Runnable{
 		File users = new File("users.txt");
 		users.createNewFile();
 		User user = new User(username, password);
-		ObjectInputStream in = new ObjectInputStream(new FileInputStream(users));
+		ObjectInputStream in = null;
 		try {
+			in = new ObjectInputStream(new FileInputStream(users));
 	        while (true) {
 	            User testUser = (User)(in.readObject());
 	            if(testUser.getUsername().equals(username)) {
