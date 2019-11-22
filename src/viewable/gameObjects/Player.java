@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import viewable.cards.*;
+import viewable.cards.towers.ArcherTowerCard;
 
 public class Player {
 	
@@ -24,6 +25,12 @@ public class Player {
 		draw = new Deck();
 		discard = new Deck();
 		gold = 0;
+		for (int i = 0; i < 6; i++) {
+			draw.add(new ArcherTowerCard());
+		}
+		for (int i = 0; i < 4; i++) {
+			draw.add(new PlunderCard());
+		}
 		for (int i = 0; i < 5; i++) {
 			hand.add(draw.drawCard());
 		}
@@ -31,5 +38,23 @@ public class Player {
 	
 	public void addToDiscard(Card card) {
 		discard.add(card);
+	}
+	
+	public void resetDraw() {
+		for (Card card : discard.getDeck()) {
+			draw.add(card);
+		}
+		draw.shuffle();
+		discard.empty();
+	}
+	
+	public void drawCards(int x) {
+		for (int i = 0; i < x; i++) {
+			hand.add(draw.drawCard());
+		}
+	}
+	
+	public void increaseGold(int amount) {
+		gold += amount;
 	}
 }

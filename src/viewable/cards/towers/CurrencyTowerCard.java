@@ -8,6 +8,7 @@ package viewable.cards.towers;
 
 import viewable.cards.Card;
 import viewable.gameObjects.CurrencyTower;
+import viewable.gameObjects.Player;
 
 public class CurrencyTowerCard extends Card {
 	private static final int cardId 		= 4;
@@ -21,5 +22,10 @@ public class CurrencyTowerCard extends Card {
 		m.setAttack(m.getAttack() + 1);
 		m.setRange(m.getRange() + 0);
 		m.setAttackSpeed(m.getAttackSpeed() + .1);
+	}
+
+	@Override
+	public void Ability(Player p) {
+		// TODO Auto-generated method stub
 	}
 }
