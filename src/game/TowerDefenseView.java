@@ -1,7 +1,6 @@
 package game;
 import javafx.event.*;
 
-import java.awt.Label;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -30,6 +29,7 @@ import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -79,13 +79,35 @@ public class TowerDefenseView extends Application implements Observer{
 		Thread thread = new Thread(p2p);
 		thread.start();
 		PeerToPeerSocket p2p2p = new PeerToPeerSocket("localhost",7000);
-		p2p2p.login("T","Bullshit");
+		//p2p2p.login("T","Bullshit");
 		Thread p2p2 = new Thread(p2p2p);
 		p2p2.start();
 		controller = new TowerDefenseController(this);
 		model = new ViewModel(900,1000, this);
 		stage = primaryStage;
 		BorderPane root = new BorderPane();
+		
+		// top hand
+		HBox top = new HBox();
+		VBox stat1 = new VBox();
+		Label hp1 = new Label("HP");
+		Label mp1 = new Label("MP");
+		stat1.getChildren().add(hp1);
+		stat1.getChildren().add(mp1);
+		top.getChildren().add(stat1);
+		top.setPrefHeight(75);
+		// bottom hand
+		HBox bottom = new HBox();
+		VBox stat2 = new VBox();
+		Label hp2 = new Label("HP");
+		Label mp2 = new Label("MP");
+		stat2.getChildren().add(hp2);
+		stat2.getChildren().add(mp2);
+		bottom.getChildren().add(stat2);
+		bottom.setPrefHeight(75);
+		// left market
+		VBox market = new VBox();
+		market.setPrefWidth(100);
 		
 		root.setTop(createMenuBar());
 		GridPane pane = createBoard();
@@ -95,8 +117,11 @@ public class TowerDefenseView extends Application implements Observer{
 		stack.setPickOnBounds(false);
 		
 		root.setCenter(stack);
+		root.setTop(top);
+		root.setBottom(bottom);
+		root.setLeft(market);
 		
-		primaryStage.setScene(new Scene(root, model.getWidth(), model.getHeight()));
+		primaryStage.setScene(new Scene(root, model.getWidth() + 100, model.getHeight() + 150));
 		
 		//primaryStage.getScene().widthProperty().addListener(new ResizeHandler(model, primaryStage, pane));
 		//primaryStage.getScene().heightProperty().addListener(new ResizeHandler(model, primaryStage, pane));
