@@ -14,9 +14,10 @@ import viewable.gameObjects.Player;
 public class CannonTowerCard extends Card {
 	private static final int cardId 		= 1;
 	private static final String cardName 	= "Cannon Tower";
+	private static final int cardCost       = 1;
 	
 	public CannonTowerCard() {
-		super(cardName, cardId);
+		super(cardName, cardId, cardCost);
 	}
 	
 	public void Upgrade(CannonTower c) {

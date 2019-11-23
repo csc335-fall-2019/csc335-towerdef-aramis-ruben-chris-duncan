@@ -13,9 +13,10 @@ import viewable.gameObjects.Player;
 public class CurrencyTowerCard extends Card {
 	private static final int cardId 		= 4;
 	private static final String cardName 	= "Currency Tower";
+	private static final int cardCost       = 1;
 	
 	public CurrencyTowerCard() {
-		super(cardName, cardId);
+		super(cardName, cardId, cardCost);
 	}
 	
 	public void Upgrade(CurrencyTower m) {
