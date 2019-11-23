@@ -52,4 +52,8 @@ public class Deck {
 		deck.removeAll(deck);
 	}
 	
+	public int getSize() {
+		return deck.size();
+	}
+	
 }
