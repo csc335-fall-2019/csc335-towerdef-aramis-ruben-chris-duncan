@@ -13,9 +13,10 @@ import viewable.gameObjects.Player;
 public class MageTowerCard extends Card {
 	private static final int cardId 		= 2;
 	private static final String cardName 	= "Mage Tower";
+	private static final int cardCost       = 1;
 	
 	public MageTowerCard() {
-		super(cardName, cardId);
+		super(cardName, cardId, cardCost);
 	}
 	
 	public void Upgrade(MageTower m) {

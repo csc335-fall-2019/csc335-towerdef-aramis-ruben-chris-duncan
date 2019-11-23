@@ -13,9 +13,10 @@ import viewable.gameObjects.Player;
 public class ArcherTowerCard extends Card {
 	private static final int cardId 		= 0;
 	private static final String cardName 	= "Archer Tower";
+	private static final int cardCost       = 1;
 	
 	public ArcherTowerCard() {
-		super(cardName, cardId);
+		super(cardName, cardId, cardCost);
 	}
 	
 	public void Upgrade(ArcherTower t) {
