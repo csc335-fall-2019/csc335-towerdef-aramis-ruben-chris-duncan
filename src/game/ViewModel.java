@@ -7,6 +7,9 @@ public class ViewModel {
 	private int currentRow;
 	private int currentCol;
 	private TowerDefenseView view;
+	private int topHeight;
+	private int bottomHeight;
+	private int leftWidth;
 	
 	public ViewModel(int height, int width, TowerDefenseView view) {
 		screenHeight = height;
@@ -20,6 +23,18 @@ public class ViewModel {
 	
 	public void setHeight(int h) {
 		screenHeight = h;
+	}
+	
+	public void setTopHeight(int t) {
+		topHeight = t;
+	}
+	
+	public void setBottomHeight(int b) {
+		bottomHeight = b;
+	}
+	
+	public void setLeftWidth(int l) {
+		leftWidth = l;
 	}
 	
 	public int getWidth() {
@@ -39,7 +54,11 @@ public class ViewModel {
 	}
 	
 	public int getEffectiveBoardHeight() {
-		return screenHeight-menuHeight;
+		return screenHeight-menuHeight-topHeight-bottomHeight;
+	}
+	
+	public int getEffectiveBoardWidth() {
+		return screenWidth-leftWidth;
 	}
 	
 	public int getCurrentRow() {
