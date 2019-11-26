@@ -9,7 +9,6 @@ public class Ogre extends Minion {
 
 	public Ogre(Integer health, Integer damage, Integer speed, Integer reward) {
 		super(defaultHealth, defaultDamage, defaultSpeed, defaultReward);
-		// TODO Auto-generated constructor stub
 	}
 
 }
