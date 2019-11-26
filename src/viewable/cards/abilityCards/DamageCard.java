@@ -13,15 +13,13 @@ public class DamageCard extends Card {
 	private static final int cardCost = 1;
 	private static final int damageAmount = 1;
 
-	public DamageCard(String name, int id, int cost) {
-		super(name, id, cost);
-		// TODO Auto-generated constructor stub
+	public DamageCard() {
+		super(cardName, cardId, cardCost);
 	}
 
 	@Override
 	public void Ability(Player p) {
-		// TODO Auto-generated method stub
-		
+		p.damageOther(damageAmount);
 	}
 
 }

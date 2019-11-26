@@ -1,6 +1,8 @@
 package game;
 
-public class ViewModel {
+import java.util.Observable;
+
+public class ViewModel extends Observable {
 	private int screenHeight;
 	private int screenWidth;
 	private int subtractedHeight;

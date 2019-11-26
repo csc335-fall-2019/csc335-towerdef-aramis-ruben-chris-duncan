@@ -12,14 +12,13 @@ public class HealCard extends Card {
 	private static final int cardCost = 1;
 	private static final int healAmount = 1;
 
-	public HealCard(String name, int id, int cost) {
-		super(name, id, cost);
+	public HealCard() {
+		super(cardName, cardId, cardCost);
 	}
 
 	@Override
 	public void Ability(Player p) {
-		// TODO Auto-generated method stub
-		
+		p.gainLife(healAmount);
 	}
 
 }

@@ -12,6 +12,7 @@ public class PlunderCard extends Card {
 	public PlunderCard() {
 		super(cardName, cardId, cardCost);
 	}
+	
 	@Override
 	public void Ability(Player p) {
 		p.increaseGold(goldToIncrease);
