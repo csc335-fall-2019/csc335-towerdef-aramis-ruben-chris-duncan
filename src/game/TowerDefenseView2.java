@@ -46,7 +46,7 @@ public class TowerDefenseView2 extends Application implements Observer{
 	public void start(Stage primaryStage) throws Exception {
 		// Initial Set Up
 		controller = new TowerDefenseController(this);
-		model = new ViewModel(1080,1920, this);
+		model = new ViewModel(1080,1920);
 		stage = primaryStage;
 		AnchorPane root = new AnchorPane();
 		
@@ -189,7 +189,7 @@ public class TowerDefenseView2 extends Application implements Observer{
 		bar.setMinHeight(menuHeight);
 		bar.setPrefHeight(menuHeight);
 		bar.setMaxHeight(menuHeight);
-		model.setMenuHeight(menuHeight);
+		model.addSubHeight(menuHeight);
 		return bar;
 	}
 	
