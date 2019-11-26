@@ -13,15 +13,14 @@ public class IncreaseRewardCard extends Card {
 	private static final int cardCost = 1;
 	private static final int minionsWithBonus = 5;
 
-	public IncreaseRewardCard(String name, int id, int cost) {
-		super(name, id, cost);
-		// TODO Auto-generated constructor stub
+	public IncreaseRewardCard() {
+		super(cardName, cardId, cardCost);
 	}
 
 	@Override
 	public void Ability(Player p) {
 		// TODO Auto-generated method stub
-		
+		p.buffReward(minionsWithBonus);
 	}
 
 }

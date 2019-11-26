@@ -58,4 +58,28 @@ public class Player {
 	public void increaseGold(int amount) {
 		gold += amount;
 	}
+	
+	public void gainLife(int amount) {
+		health += amount;
+	}
+	
+	public void payLife(int amount) {
+		health -= amount;
+	}
+	
+	public void summonMinion(int amount) {
+		// TODO
+	}
+	
+	public void summonBigMinion() {
+		// TODO
+	}
+	
+	public void buffReward(int amount) {
+		// TODO
+	}
+	
+	public void damageOther(int amount) {
+		// TODO: damage other player
+	}
 }
