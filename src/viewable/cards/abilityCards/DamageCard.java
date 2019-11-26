@@ -1,5 +1,8 @@
 package viewable.cards.abilityCards;
 
+import java.io.File;
+import java.io.IOException;
+
 import viewable.cards.Card;
 import viewable.gameObjects.Player;
 
@@ -20,6 +23,16 @@ public class DamageCard extends Card {
 	@Override
 	public void Ability(Player p) {
 		p.damageOther(damageAmount);
+	}
+	
+	@Override
+	public String getResource() {
+		try {
+			return (new File("./resources/images/")).getCanonicalPath();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			return "";
+		}
 	}
 
 }
