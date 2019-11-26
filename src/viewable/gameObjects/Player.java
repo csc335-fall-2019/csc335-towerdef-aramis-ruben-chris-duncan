@@ -83,6 +83,8 @@ public class Player implements Observer {
 	
 	public void damageOther(int amount) {
 		// TODO: damage other player
+	}
+	
 	public int getGold() {
 		return gold;
 	}
