@@ -8,6 +8,10 @@ public class TowerDefenseController {
 	public TowerDefenseController(TowerDefenseView view) {
 		board = new TowerDefenseBoard(view);
 	}
+	
+	public TowerDefenseController(TowerDefenseView2 view) {
+		board = new TowerDefenseBoard(view);
+	}
 
 	public Viewable[][][] getBoard() {
 		// TODO Auto-generated method stub
