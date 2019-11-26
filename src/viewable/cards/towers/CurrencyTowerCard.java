@@ -6,6 +6,9 @@
  */
 package viewable.cards.towers;
 
+import java.io.File;
+import java.io.IOException;
+
 import viewable.cards.Card;
 import viewable.gameObjects.CurrencyTower;
 import viewable.gameObjects.Player;
@@ -28,5 +31,15 @@ public class CurrencyTowerCard extends Card {
 	@Override
 	public void Ability(Player p) {
 		// TODO Auto-generated method stub
+	}
+	
+	@Override
+	public String getResource() {
+		try {
+			return (new File("./resources/images/currencyTowerCard.png")).getCanonicalPath();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			return "";
+		}
 	}
 }
