@@ -13,8 +13,8 @@ public class IncreaseRewardCard extends Card {
 	private static final int cardCost = 1;
 	private static final int minionsWithBonus = 5;
 
-	public IncreaseRewardCard(String name, int id, int cost) {
-		super(name, id, cost);
+	public IncreaseRewardCard() {
+		super(cardName, cardId, cardCost);
 		// TODO Auto-generated constructor stub
 	}
 

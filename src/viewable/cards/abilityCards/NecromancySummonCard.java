@@ -15,8 +15,8 @@ public class NecromancySummonCard extends Card {
 	private static final int lifeCost = 2;
 	private static final int minionsSummoned = 5;
 
-	public NecromancySummonCard(String name, int id, int cost) {
-		super(name, id, cost);
+	public NecromancySummonCard() {
+		super(cardName, cardId, cardCost);
 		// TODO Auto-generated constructor stub
 	}
 
