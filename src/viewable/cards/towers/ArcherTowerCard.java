@@ -35,6 +35,12 @@ public class ArcherTowerCard extends Card {
 	
 	@Override
 	public String getResource() {
-		
+		try {
+			return (new File("./resources/images/archerTowerCard.png")).getCanonicalPath();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			return "";
+		}
 	}
+	
 }
