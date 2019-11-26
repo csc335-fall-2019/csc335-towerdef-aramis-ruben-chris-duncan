@@ -1,5 +1,6 @@
 package chat;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,12 +8,16 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-public class Chat{
+public class Chat implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3718984659768678611L;
 	private ObservableList<Message> messages;
 	private User thisUser;
-	private String recipient;
+	private Sender recipient;
 	
-	public Chat(User user, String sendTo) {
+	public Chat(User user, Sender sendTo) {
 		messages = FXCollections.observableList(new ArrayList<Message>());
 		thisUser = user;
 		recipient = sendTo;
@@ -31,7 +36,7 @@ public class Chat{
 		return messages;
 	}
 	
-	public String getRecipient() {
+	public Sender getRecipient() {
 		return recipient;
 	}
 	
