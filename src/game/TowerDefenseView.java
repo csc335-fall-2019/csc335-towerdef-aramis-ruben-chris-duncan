@@ -37,12 +37,15 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.TilePane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import viewable.Viewable;
+import viewable.cards.Card;
+import viewable.gameObjects.Player;
 import viewable.gameObjects.TowerType;
 
 public class TowerDefenseView extends Application implements Observer{
@@ -55,6 +58,7 @@ public class TowerDefenseView extends Application implements Observer{
 	private TowerDefenseController controller;
 	private ViewModel model;
 	private GridPane grid;
+	private Player player;
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -62,6 +66,8 @@ public class TowerDefenseView extends Application implements Observer{
 		controller = new TowerDefenseController(this);
 		model = new ViewModel(1080,1920);
 		stage = primaryStage;
+		player = new Player();
+		
 		AnchorPane root = new AnchorPane();
 		
 		// Set Up Other Player Area
@@ -184,7 +190,14 @@ public class TowerDefenseView extends Application implements Observer{
 		Label mp2 = new Label("Gold: ");
 		stat2.getChildren().add(hp2);
 		stat2.getChildren().add(mp2);
+		
+		TilePane pane = new TilePane();
+		for(Card c: player.getHand()) {
+			pane.getChildren().add(getResource(c, 0, 0));
+		}
+		
 		bottom.getChildren().add(stat2);
+		bottom.getChildren().add(pane);
 		input.close();
 		return bottom;
 	}
@@ -242,6 +255,7 @@ public class TowerDefenseView extends Application implements Observer{
 			view = new ImageView(new Image(new FileInputStream(Viewable.getDefaultResource())));
 			view.setUserData(obj);
 		}else {
+			System.out.println(obj.getResource());
 			view = new ImageView(new Image(new FileInputStream(obj.getResource())));
 			view.setUserData(obj);
 		}

@@ -39,6 +39,10 @@ public class Player implements Observer {
 		}
 	}
 	
+	public List<Card> getHand(){
+		return hand;
+	}
+	
 	public void addToDiscard(Card card) {
 		discard.add(card);
 	}
