@@ -15,13 +15,12 @@ public class IncreaseRewardCard extends Card {
 
 	public IncreaseRewardCard() {
 		super(cardName, cardId, cardCost);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void Ability(Player p) {
 		// TODO Auto-generated method stub
-		
+		p.buffReward(minionsWithBonus);
 	}
 
 }

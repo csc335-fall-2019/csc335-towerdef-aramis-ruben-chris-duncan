@@ -15,13 +15,11 @@ public class DamageCard extends Card {
 
 	public DamageCard() {
 		super(cardName, cardId, cardCost);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void Ability(Player p) {
-		// TODO Auto-generated method stub
-		
+		p.damageOther(damageAmount);
 	}
 
 }

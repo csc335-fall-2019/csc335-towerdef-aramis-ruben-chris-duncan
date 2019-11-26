@@ -13,17 +13,16 @@ public class NecromancySummonCard extends Card {
 	private static final String cardName = "Necromancy";
 	private static final int cardCost = 1;
 	private static final int lifeCost = 2;
-	private static final int minionsSummoned = 5;
+	private static final int minionsToSummon = 5;
 
 	public NecromancySummonCard() {
 		super(cardName, cardId, cardCost);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void Ability(Player p) {
-		// TODO Auto-generated method stub
-		
+		p.payLife(lifeCost);
+		p.summonMinion(minionsToSummon);
 	}
 
 }

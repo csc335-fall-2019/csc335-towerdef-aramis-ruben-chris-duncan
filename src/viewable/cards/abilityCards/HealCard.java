@@ -18,8 +18,7 @@ public class HealCard extends Card {
 
 	@Override
 	public void Ability(Player p) {
-		// TODO Auto-generated method stub
-		
+		p.gainLife(healAmount);
 	}
 
 }
