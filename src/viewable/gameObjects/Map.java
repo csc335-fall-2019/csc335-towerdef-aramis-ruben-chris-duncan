@@ -21,6 +21,7 @@ public class Map implements Serializable{
 	private static final int STACK_SIZE = 100;
 	
 	private Viewable[][][] board;
+	
 	public Map() {
 		board = new Viewable[NUM_COLS][NUM_ROWS][STACK_SIZE];
 	}

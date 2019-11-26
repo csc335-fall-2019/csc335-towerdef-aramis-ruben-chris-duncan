@@ -14,6 +14,11 @@ public class TowerDefenseBoard extends Observable{
 		addObserver(view);
 	}
 	
+	public TowerDefenseBoard(TowerDefenseView2 view) {
+		board = new Map();
+		addObserver(view);
+	}
+
 	public void addTower(int row, int col, TowerType type){
 		Viewable[][][] boardArr = board.getBoard();
 		switch(type) {

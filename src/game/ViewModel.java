@@ -6,14 +6,21 @@ public class ViewModel {
 	private int menuHeight;
 	private int currentRow;
 	private int currentCol;
-	private TowerDefenseView view;
+	//private TowerDefenseView view;
+	private TowerDefenseView2 view;
 	
 	public ViewModel(int height, int width, TowerDefenseView view) {
 		screenHeight = height;
 		screenWidth = width;
-		this.view = view;
+		//this.view = view;
 	}
 	
+	public ViewModel(int height, int width, TowerDefenseView2 view) {
+		screenHeight = height;
+		screenWidth = width;
+		this.view = view;
+	}
+
 	public int getHeight() {
 		return screenHeight;
 	}
