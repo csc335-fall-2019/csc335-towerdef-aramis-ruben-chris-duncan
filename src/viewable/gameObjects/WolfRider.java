@@ -9,7 +9,6 @@ public class WolfRider extends Minion {
 
 	public WolfRider(Integer health, Integer damage, Integer speed, Integer reward) {
 		super(defaultHealth, defaultDamage, defaultSpeed, defaultReward);
-		// TODO Auto-generated constructor stub
 	}
 
 }

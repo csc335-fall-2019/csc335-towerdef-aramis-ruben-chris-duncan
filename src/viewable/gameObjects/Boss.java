@@ -9,7 +9,6 @@ public class Boss extends Minion {
 
 	public Boss(Integer health, Integer damage, Integer speed, Integer reward) {
 		super(defaultHealth, defaultDamage, defaultSpeed, defaultReward);
-		// TODO Auto-generated constructor stub
 	}
 
 }
