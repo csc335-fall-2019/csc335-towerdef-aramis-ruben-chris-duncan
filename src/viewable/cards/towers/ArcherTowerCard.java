@@ -6,6 +6,9 @@
  */
 package viewable.cards.towers;
 
+import java.io.File;
+import java.io.IOException;
+
 import viewable.cards.Card;
 import viewable.gameObjects.ArcherTower;
 import viewable.gameObjects.Player;
@@ -28,6 +31,16 @@ public class ArcherTowerCard extends Card {
 	@Override
 	public void Ability(Player p) {
 		// TODO Auto-generated method stub
+	}
+	
+	@Override
+	public String getResource() {
+		try {
+			return (new File("./resources/images/archerTowerCard.png")).getCanonicalPath();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			return "";
+		}
 	}
 	
 }
