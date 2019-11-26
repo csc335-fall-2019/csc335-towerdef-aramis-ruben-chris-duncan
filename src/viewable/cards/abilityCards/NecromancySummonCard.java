@@ -1,5 +1,8 @@
 package viewable.cards.abilityCards;
 
+import java.io.File;
+import java.io.IOException;
+
 import viewable.cards.Card;
 import viewable.gameObjects.Player;
 
@@ -23,6 +26,16 @@ public class NecromancySummonCard extends Card {
 	public void Ability(Player p) {
 		p.payLife(lifeCost);
 		p.summonMinion(minionsToSummon);
+	}
+	
+	@Override
+	public String getResource() {
+		try {
+			return (new File("./resources/images/tst.jpeg")).getCanonicalPath();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			return "";
+		}
 	}
 
 }
