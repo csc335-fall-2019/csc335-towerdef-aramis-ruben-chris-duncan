@@ -7,12 +7,14 @@
 package viewable.gameObjects;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import viewable.cards.*;
 import viewable.cards.abilityCards.PlunderCard;
 import viewable.cards.towers.ArcherTowerCard;
 
-public class Player {
+public class Player implements Observer {
 	
 	private int health;
 	private List<Card> hand;
@@ -81,5 +83,21 @@ public class Player {
 	
 	public void damageOther(int amount) {
 		// TODO: damage other player
+	public int getGold() {
+		return gold;
+	}
+ 	
+	public void damageTaken(int amount) {
+		health -= amount;
+	}
+	
+	public int getHealth() {
+		return health;
+	}
+
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		// TODO Auto-generated method stub
+		
 	}
 }
