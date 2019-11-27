@@ -11,6 +11,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import handlers.ExitHandler;
+import handlers.MapEditorHandler;
 import handlers.NewGameHandler;
 import handlers.PanHandler;
 import handlers.SoundHandler;
@@ -88,11 +89,7 @@ public class TowerDefenseView extends Application implements Observer{
 		pane.setTop(top);
 		pane.setBottom(bottom);
 
-		primaryStage.setScene(new Scene(root, model.getWidth(), model.getHeight()));
-
-		MapEditor mapEditor = new MapEditor();
-		Stage stage = mapEditor.create();
-		stage.show();
+		primaryStage.setScene(new Scene(root, model.getWidth(), model.getHeight()));	
 		
 		primaryStage.getScene().setOnMouseMoved(new PanHandler(model, primaryStage));
 		primaryStage.setResizable(false);
@@ -265,12 +262,15 @@ public class TowerDefenseView extends Application implements Observer{
 		newGame.setText("New Game");
 		newGame.setOnAction(new NewGameHandler());
 		
+		MenuItem mapEditor = new MenuItem();
+		mapEditor.setText("Open Map Editor");
+		mapEditor.setOnAction(new MapEditorHandler());
+		
 		MenuItem exit = new MenuItem();
 		exit.setText("Exit");
 		exit.setOnAction(new ExitHandler());
 		
-		file.getItems().add(newGame);
-		file.getItems().add(exit);
+		file.getItems().addAll(newGame, mapEditor, exit);
 		file.setText("File");
 		return file;
 	}
