@@ -24,7 +24,7 @@ public class SummonMinionCard extends Card {
 	@Override
 	public String getResource() {
 		try {
-			return (new File("./resources/images/tst.jpeg")).getCanonicalPath();
+			return (new File("./resources/images/summonMinionCard.png")).getCanonicalPath();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			return "";
