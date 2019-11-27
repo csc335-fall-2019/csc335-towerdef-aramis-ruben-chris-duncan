@@ -62,48 +62,37 @@ public class TowerDefenseView extends Application implements Observer{
 		controller = new TowerDefenseController(this);
 		model = new ViewModel(1080,1920);
 		stage = primaryStage;
-		AnchorPane root = new AnchorPane();
 		
 		// Set Up Other Player Area
 		HBox top = createTop();
 		
-		AnchorPane.setRightAnchor(top, 0.0);
-		AnchorPane.setTopAnchor(top, 25.0);
-		
 		// Set Up Primary Player
 		HBox bottom = createBottom();
-		
-		AnchorPane.setRightAnchor(bottom, 0.0);
-		AnchorPane.setBottomAnchor(bottom, 0.0);
-		
 		// Set Up Market
 		VBox market = createMarket();
-
-		AnchorPane.setLeftAnchor(market, 0.0);
-		AnchorPane.setBottomAnchor(market, 0.0);
-		AnchorPane.setTopAnchor(market, 25.0);
-		
 		setupGrid();
-
-		AnchorPane.setRightAnchor(grid, 0.0);
 		//StackPane stack = new StackPane();
 		//stack.getChildren().add(pane);
 		//stack.getChildren().add(createChatBottom(p2p));
 		//stack.setPickOnBounds(false);
 		// Set Up Menu Bar
 		MenuBar menu = createMenuBar();
-		menu.setLayoutX(0);
-		menu.setLayoutY(0);
-		menu.setPrefWidth(1920);
-		//root.setCenter(stack);
-		root.getChildren().add(menu);
-		root.getChildren().add(grid);
-		root.getChildren().add(top);
-		root.getChildren().add(bottom);
-		root.getChildren().add(market);
+		setupGrid();
+		
+		BorderPane root = new BorderPane();
+		BorderPane pane = new BorderPane();
+		root.setCenter(pane);
+		root.setLeft(market);
+		root.setTop(menu);
+		pane.setCenter(grid);
+		pane.setTop(top);
+		pane.setBottom(bottom);
 
-		primaryStage.setScene(new Scene(root, model.getWidth(), model.getHeight() + 150));
+		primaryStage.setScene(new Scene(root, model.getWidth(), model.getHeight()));
 
+		MapEditor mapEditor = new MapEditor();
+		Stage stage = mapEditor.create();
+		stage.show();
 		
 		primaryStage.getScene().setOnMouseMoved(new PanHandler(model, primaryStage));
 		primaryStage.setResizable(false);
@@ -117,10 +106,6 @@ public class TowerDefenseView extends Application implements Observer{
 	private void setupGrid() throws IOException {
 		// Set Up Grid
 		grid = createGrid();
-		grid.setLayoutX(288);
-		grid.setLayoutY(250);
-		grid.setPrefHeight(672);
-		grid.setPrefWidth(1632);
 		grid.setStyle("-fx-border-color: black;");
 		
 		FileInputStream input = new FileInputStream("./resources/images/map1.png");
@@ -168,16 +153,16 @@ public class TowerDefenseView extends Application implements Observer{
 	
 	private HBox createBottom() throws IOException {
 		HBox bottom = new HBox();
-		bottom.setLayoutX(288);
-		bottom.setLayoutY(873);
-		bottom.setPrefHeight(207);
-		bottom.setPrefWidth(1632);
 		bottom.setStyle("-fx-border-color: black;");
 		FileInputStream input = new FileInputStream("./resources/images/playmat1.png");
 		Image image = new Image(input);
-		BackgroundImage player1 = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+		BackgroundImage player1 = new BackgroundImage(image, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
 		Background background = new Background(player1);
 		bottom.setBackground(background);
+		
+		int prefHeight = 215;
+		bottom.setPrefHeight(prefHeight);
+		model.addSubHeight(prefHeight);
 		
 		VBox stat2 = new VBox();
 		Label hp2 = new Label("Health: ");
@@ -192,18 +177,14 @@ public class TowerDefenseView extends Application implements Observer{
 	private HBox createTop() throws IOException {
 		// Set Up Other Player Area
 		HBox top = new HBox();
-		top.setLayoutX(288);
-		top.setLayoutY(1);
-		top.setPrefHeight(207);
-		top.setPrefWidth(1632);
 		top.setStyle("-fx-border-color: black;");
 		
 		FileInputStream input = new FileInputStream("./resources/images/playmat2.png");
 		Image image = new Image(input);
-		BackgroundImage player2 = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+		BackgroundImage player2 = new BackgroundImage(image, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
 		Background background = new Background(player2);
 		top.setBackground(background);
-		int prefHeight = 200;
+		int prefHeight = 215;
 		top.setPrefHeight(prefHeight);
 		
 		VBox stat1 = new VBox();
@@ -221,17 +202,16 @@ public class TowerDefenseView extends Application implements Observer{
 	private VBox createMarket() throws IOException {
 		// Set Up Market
 		VBox market = new VBox();
-		market.setLayoutX(0);
-		market.setLayoutY(0);
-		market.setPrefHeight(1055);
-		market.setPrefWidth(288);
 		market.setStyle("-fx-border-color: black;");
 		
 		FileInputStream input = new FileInputStream("./resources/images/market.png");
 		Image image = new Image(input);
-		BackgroundImage marketBg = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+		BackgroundImage marketBg = new BackgroundImage(image, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
 		Background background = new Background(marketBg);
 		market.setBackground(background);
+		int prefWidth = 350;
+		model.addSubWidth(prefWidth);
+		market.setPrefWidth(prefWidth);
 		input.close();
 		return market;
 	}

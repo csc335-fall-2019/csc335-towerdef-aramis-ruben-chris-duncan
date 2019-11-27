@@ -10,4 +10,10 @@ public class Goblin extends Minion {
 	public Goblin(Integer health, Integer damage, Integer speed, Integer reward) {
 		super(defaultHealth, defaultDamage, defaultSpeed, defaultReward);
 	}
+
+	@Override
+	public String getResource() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
