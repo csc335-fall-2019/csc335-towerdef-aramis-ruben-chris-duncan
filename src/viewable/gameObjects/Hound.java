@@ -11,4 +11,10 @@ public class Hound extends Minion {
 		super(defaultHealth, defaultDamage, defaultSpeed, defaultReward);
 	}
 
+	@Override
+	public String getResource() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
