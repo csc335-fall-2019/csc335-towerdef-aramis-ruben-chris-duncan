@@ -26,6 +26,9 @@ public class Deck {
 	}
 	
 	public Card drawCard() {
+		if(deck.size()==0) {
+			return null;
+		}
 		Card card = deck.get(0);
 		deck.remove(0);
 		return card;

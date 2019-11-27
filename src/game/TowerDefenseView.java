@@ -19,13 +19,19 @@ import handlers.PanHandler;
 import handlers.SoundHandler;
 import handlers.VideoHandler;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
@@ -47,7 +53,9 @@ import javafx.scene.layout.TilePane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import viewable.Viewable;
 import viewable.cards.Card;
 import viewable.gameObjects.Player;
@@ -78,10 +86,7 @@ public class TowerDefenseView extends Application implements Observer{
 		// Set Up Market
 		VBox market = createMarket();
 		grid = createGrid();
-		//StackPane stack = new StackPane();
-		//stack.getChildren().add(pane);
-		//stack.getChildren().add(createChatBottom(p2p));
-		//stack.setPickOnBounds(false);
+
 		// Set Up Menu Bar
 		MenuBar menu = createMenuBar();
 		
@@ -94,9 +99,8 @@ public class TowerDefenseView extends Application implements Observer{
 		pane.setTop(top);
 		pane.setBottom(bottom);
 
-		primaryStage.setScene(new Scene(root, model.getWidth(), model.getHeight()));	
-		
-		primaryStage.getScene().setOnMouseMoved(new PanHandler(model, primaryStage));
+		primaryStage.setScene(new Scene(root, model.getWidth(), model.getHeight()));
+		primaryStage.getScene().getStylesheets().add(getClass().getResource("mainView.css").toExternalForm());
 		primaryStage.setResizable(false);
 		primaryStage.setFullScreen(true);
 		primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
@@ -151,19 +155,47 @@ public class TowerDefenseView extends Application implements Observer{
 		VBox stat2 = new VBox();
 		Label hp2 = new Label("Health: ");
 		Label mp2 = new Label("Gold: ");
-		stat2.getChildren().add(hp2);
-		stat2.getChildren().add(mp2);
+		Text health = new Text();
+		health.setText(player.getHealth()+"");
+		Text gold = new Text();
+		gold.setText(player.getGold()+"");
+		player.getViewableHealth().addListener(new ChangeListener<Number>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Number> arg0, Number arg1, Number arg2) {
+				// TODO Auto-generated method stub
+				health.setText(arg2.toString());
+			}
+			
+		});
 		
-		TilePane pane = new TilePane();
-		for(Card c: player.getHand()) {
-			ImageView view = getResource(c);
+		player.getViewableGold().addListener(new ChangeListener<Number>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Number> arg0, Number arg1, Number arg2) {
+				// TODO Auto-generated method stubs
+				gold.setText(arg2.toString());
+			}
 			
-			view.setFitHeight(CARD_HEIGHT);
-			view.setFitWidth(CARD_WIDTH);
+		});
+		stat2.getChildren().addAll(hp2, health, mp2, gold);
+		
+		ListView<ImageView> pane = new ListView<ImageView>();
+		pane.setItems(player.getHand());
+		pane.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+		pane.setOrientation(Orientation.HORIZONTAL);
+		pane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<ImageView>() {
+
+			@Override
+			public void changed(ObservableValue arg0, ImageView arg1, ImageView arg2) {
+				if(arg2!=null) {
+					((ImageView)arg2).getOnMouseClicked().handle(null);
+				}
+			}
 			
-			view.setOnMouseClicked(new CardObjectClickedHandler(c, player));
-			pane.getChildren().add(view);
-		}
+		});
+		pane.setPrefWidth(1000);
+		pane.setBackground(Background.EMPTY);
 		
 		bottom.getChildren().add(stat2);
 		bottom.getChildren().add(pane);
@@ -187,8 +219,8 @@ public class TowerDefenseView extends Application implements Observer{
 		VBox stat1 = new VBox();
 		Label hp1 = new Label("Health: ");
 		Label mp1 = new Label("Gold: ");
-		stat1.getChildren().add(hp1);
-		stat1.getChildren().add(mp1);
+		stat1.getChildren().addAll(hp1, mp1);		
+		
 		top.getChildren().add(stat1);
 		
 		model.addSubHeight(prefHeight);
@@ -217,10 +249,8 @@ public class TowerDefenseView extends Application implements Observer{
 		ImageView view;
 		if(obj == null) {
 			view = new ImageView(new Image(new FileInputStream(Viewable.getDefaultResource())));
-			view.setUserData(obj);
 		}else {
 			view = new ImageView(new Image(new FileInputStream(obj.getResource())));
-			view.setUserData(obj);
 		}
 		
 		return view;

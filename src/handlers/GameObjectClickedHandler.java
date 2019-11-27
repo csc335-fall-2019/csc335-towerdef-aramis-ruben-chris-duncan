@@ -1,5 +1,7 @@
 package handlers;
 
+import java.io.FileNotFoundException;
+
 import game.TowerDefenseController;
 import javafx.event.EventHandler;
 import javafx.scene.image.ImageView;
@@ -34,11 +36,16 @@ public class GameObjectClickedHandler implements EventHandler<MouseEvent>{
 					vals = t;
 				}
 			}
-			System.out.println(vals);
+			if(vals==null) {
+				return;
+			}
+			if(player.getGold()<=0) {
+				return;
+			}
 			controller.addTower(row, col, vals);
+			player.increaseGold(-1*player.getSelectedCard().getCost());
 			player.addToDiscard(player.getSelectedCard());
 			player.setSelectedCard(null);
-			player.drawCards(1);
 		}
 	}
 }
