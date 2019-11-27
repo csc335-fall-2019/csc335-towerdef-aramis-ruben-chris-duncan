@@ -12,8 +12,9 @@ import java.io.IOException;
 import viewable.cards.Card;
 import viewable.gameObjects.CurrencyTower;
 import viewable.gameObjects.Player;
+import viewable.gameObjects.Tower;
 
-public class CurrencyTowerCard extends Card {
+public class CurrencyTowerCard extends TowerCard {
 	private static final int cardId 		= 4;
 	private static final String cardName 	= "Currency Tower";
 	private static final int cardCost       = 1;
@@ -41,5 +42,11 @@ public class CurrencyTowerCard extends Card {
 			// TODO Auto-generated catch block
 			return "";
 		}
+	}
+
+	@Override
+	public Class<? extends Tower> getTower() {
+		// TODO Auto-generated method stub
+		return CurrencyTower.class;
 	}
 }

@@ -1,5 +1,6 @@
 package game;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -20,6 +21,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.TilePane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import viewable.Viewable;
 import viewable.gameObjects.Map;
@@ -31,6 +33,7 @@ public class MapEditor {
 	private GridPane grid;
 	private int[] currentLocation = new int[2];
 	private Viewable[] currentObject = new Viewable[1];	
+	
 	public Stage create() throws FileNotFoundException {
 		Stage stage = new Stage();
 		BorderPane root = new BorderPane();
@@ -38,7 +41,7 @@ public class MapEditor {
 		grid = createGrid();
 		
 		root.setCenter(grid);
-		root.setTop(createMenuBar());
+		root.setTop(createMenuBar(stage));
 		root.setBottom(createTowerMenu());
 		
 		stage.setScene(new Scene(root, 1920, 1080));
@@ -69,7 +72,6 @@ public class MapEditor {
 				@Override
 				public void handle(MouseEvent e) {
 					currentObject[0] = v;
-					System.out.println(v.getResource());
 				}
 			});
 			pane.getChildren().add(view);
@@ -77,11 +79,11 @@ public class MapEditor {
 		return pane;
 	}
 	
-	private MenuBar createMenuBar() {
+	private MenuBar createMenuBar(Stage stage) {
 		// Create the menu bar.
 		MenuBar bar = new MenuBar();
 		
-		bar.getMenus().add(createFileMenu());
+		bar.getMenus().add(createFileMenu(stage));
 		bar.getMenus().add(createOptionMenu());
 		int menuHeight = 30;
 		bar.setMinHeight(menuHeight);
@@ -90,7 +92,7 @@ public class MapEditor {
 		return bar;
 	}
 	
-	private Menu createFileMenu() {
+	private Menu createFileMenu(Stage stage) {
 		// Create the file menu option, will hold save and exit commands.
 		Menu file = new Menu();
 		
@@ -100,7 +102,22 @@ public class MapEditor {
 			@Override
 			public void handle(ActionEvent e) {
 				try {
-					map.save();
+					FileChooser fileChooser = new FileChooser();
+					
+					File initDir = new File("./saves");
+					initDir.mkdir();
+					
+					fileChooser.setInitialDirectory(initDir);
+					  
+					//Set extension filter
+					FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
+					fileChooser.getExtensionFilters().add(extFilter);
+  
+					//Show save file dialog
+					File file = fileChooser.showSaveDialog(stage);
+					if(file!=null) {
+						map.save(file.getCanonicalPath());
+					}
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -114,8 +131,19 @@ public class MapEditor {
 			@Override
 			public void handle(ActionEvent e) {
 				try {
-					map.load();
-					repaintGrid();
+					FileChooser fileChooser = new FileChooser();
+					
+					File initDir = new File("./saves");
+					initDir.mkdir();
+					
+					fileChooser.setInitialDirectory(initDir);
+					
+					fileChooser.setTitle("Open Resource File");
+					File path = fileChooser.showOpenDialog(stage);
+					if(path!=null) {
+						map.load(path.getCanonicalPath());
+						repaintGrid();
+					}
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

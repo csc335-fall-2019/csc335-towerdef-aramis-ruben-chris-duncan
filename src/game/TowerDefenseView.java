@@ -10,52 +10,67 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import handlers.CardObjectClickedHandler;
 import handlers.ExitHandler;
+import handlers.GameObjectClickedHandler;
 import handlers.MapEditorHandler;
 import handlers.NewGameHandler;
 import handlers.PanHandler;
 import handlers.SoundHandler;
 import handlers.VideoHandler;
 import javafx.application.Application;
-import javafx.event.EventHandler;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.TilePane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import viewable.Viewable;
-import viewable.gameObjects.TowerType;
+import viewable.cards.Card;
+import viewable.gameObjects.Market;
+import viewable.gameObjects.Player;
 
 public class TowerDefenseView extends Application implements Observer{
 	public static Stage MESSAGE_RECEIVED;
-	
-	private static final int VIEWABLE_ROWS = 13;
-	private static final int VIEWABLE_COLS = 34;
 	private static final int SIZE_IMAGE = 47;
+	private static final int CARD_WIDTH = 128;
+	private static final int CARD_HEIGHT = 196;
 	private Stage stage;
 	private TowerDefenseController controller;
 	private ViewModel model;
 	private GridPane grid;
+	private Player player;
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -63,7 +78,7 @@ public class TowerDefenseView extends Application implements Observer{
 		controller = new TowerDefenseController(this);
 		model = new ViewModel(1080,1920);
 		stage = primaryStage;
-		
+		player = new Player();
 		// Set Up Other Player Area
 		HBox top = createTop();
 		
@@ -71,14 +86,10 @@ public class TowerDefenseView extends Application implements Observer{
 		HBox bottom = createBottom();
 		// Set Up Market
 		VBox market = createMarket();
-		setupGrid();
-		//StackPane stack = new StackPane();
-		//stack.getChildren().add(pane);
-		//stack.getChildren().add(createChatBottom(p2p));
-		//stack.setPickOnBounds(false);
+		grid = createGrid();
+
 		// Set Up Menu Bar
 		MenuBar menu = createMenuBar();
-		setupGrid();
 		
 		BorderPane root = new BorderPane();
 		BorderPane pane = new BorderPane();
@@ -89,9 +100,8 @@ public class TowerDefenseView extends Application implements Observer{
 		pane.setTop(top);
 		pane.setBottom(bottom);
 
-		primaryStage.setScene(new Scene(root, model.getWidth(), model.getHeight()));	
-		
-		primaryStage.getScene().setOnMouseMoved(new PanHandler(model, primaryStage));
+		primaryStage.setScene(new Scene(root, model.getWidth(), model.getHeight()));
+		primaryStage.getScene().getStylesheets().add(getClass().getResource("mainView.css").toExternalForm());
 		primaryStage.setResizable(false);
 		primaryStage.setFullScreen(true);
 		primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
@@ -100,45 +110,27 @@ public class TowerDefenseView extends Application implements Observer{
 		primaryStage.sizeToScene();
 	}
 	
-	private void setupGrid() throws IOException {
-		// Set Up Grid
-		grid = createGrid();
-		grid.setStyle("-fx-border-color: black;");
-		
-		FileInputStream input = new FileInputStream("./resources/images/map1.png");
-		Image image = new Image(input);
-		BackgroundImage map = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
-		Background background = new Background(map);
-		grid.setBackground(background);
-		input.close();
-	}
-	
-	public GridPane createGrid() {
+	public GridPane createGrid() throws FileNotFoundException {
 		GridPane grid = new GridPane();
-		for (int i = 0; i < VIEWABLE_COLS; i++) {
-			for (int j = 0; j < VIEWABLE_ROWS; j++) {
-				Rectangle x = new Rectangle(SIZE_IMAGE, SIZE_IMAGE);
-				x.setFill(Color.TRANSPARENT);
-				x.setStroke(Color.BLACK);
-				x.setStrokeWidth(1);
-				int row = j;
-				int col = i;
-				x.setOnMouseClicked(new EventHandler<MouseEvent>() {
-					@Override
-					public void handle(MouseEvent e) {
-						Node v = (Node)e.getTarget();
-						if(v.getUserData()==null) {
-							controller.addTower(row, col, TowerType.BASICTOWER);
-							e.consume();
-						}else {
-							System.out.println("tower");
-						}
-					}
-				});
-				grid.add(x, i, j);
+		Viewable[][][] board = controller.getBoard();
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board[i].length; j++) {
+				HBox box = new HBox();
+				box.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1,1,1,1), Insets.EMPTY)));
+				ImageView view = createGridResource(board[i][j][0], i, j);
+				box.getChildren().add(view);
+				grid.add(box, i, j);
 			}
 		}
 		return grid;	
+	}
+	
+	private ImageView createGridResource(Viewable obj, int row, int col) throws FileNotFoundException {
+		ImageView x = getResource(obj);
+		x.setFitHeight(SIZE_IMAGE);
+		x.setFitWidth(SIZE_IMAGE);
+		x.setOnMouseClicked(new GameObjectClickedHandler(obj, row, col, player, controller));
+		return x;
 	}
 
 	public void update() {
@@ -164,9 +156,50 @@ public class TowerDefenseView extends Application implements Observer{
 		VBox stat2 = new VBox();
 		Label hp2 = new Label("Health: ");
 		Label mp2 = new Label("Gold: ");
-		stat2.getChildren().add(hp2);
-		stat2.getChildren().add(mp2);
+		Text health = new Text();
+		health.setText(player.getHealth()+"");
+		Text gold = new Text();
+		gold.setText(player.getGold()+"");
+		player.getViewableHealth().addListener(new ChangeListener<Number>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Number> arg0, Number arg1, Number arg2) {
+				// TODO Auto-generated method stub
+				health.setText(arg2.toString());
+			}
+			
+		});
+		
+		player.getViewableGold().addListener(new ChangeListener<Number>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Number> arg0, Number arg1, Number arg2) {
+				// TODO Auto-generated method stubs
+				gold.setText(arg2.toString());
+			}
+			
+		});
+		stat2.getChildren().addAll(hp2, health, mp2, gold);
+		
+		ListView<ImageView> pane = new ListView<ImageView>();
+		pane.setItems(player.getHand());
+		pane.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+		pane.setOrientation(Orientation.HORIZONTAL);
+		pane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<ImageView>() {
+
+			@Override
+			public void changed(ObservableValue arg0, ImageView arg1, ImageView arg2) {
+				if(arg2!=null) {
+					((ImageView)arg2).getOnMouseClicked().handle(null);
+				}
+			}
+			
+		});
+		pane.setPrefWidth(1000);
+		pane.setBackground(Background.EMPTY);
+		
 		bottom.getChildren().add(stat2);
+		bottom.getChildren().add(pane);
 		input.close();
 		return bottom;
 	}
@@ -187,8 +220,8 @@ public class TowerDefenseView extends Application implements Observer{
 		VBox stat1 = new VBox();
 		Label hp1 = new Label("Health: ");
 		Label mp1 = new Label("Gold: ");
-		stat1.getChildren().add(hp1);
-		stat1.getChildren().add(mp1);
+		stat1.getChildren().addAll(hp1, mp1);		
+		
 		top.getChildren().add(stat1);
 		
 		model.addSubHeight(prefHeight);
@@ -206,6 +239,10 @@ public class TowerDefenseView extends Application implements Observer{
 		BackgroundImage marketBg = new BackgroundImage(image, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
 		Background background = new Background(marketBg);
 		market.setBackground(background);
+		
+		Market m = controller.getMarket();
+		
+		
 		int prefWidth = 350;
 		model.addSubWidth(prefWidth);
 		market.setPrefWidth(prefWidth);
@@ -213,30 +250,14 @@ public class TowerDefenseView extends Application implements Observer{
 		return market;
 	}
 	
-	private ImageView getResource(Viewable obj, int row, int col) throws FileNotFoundException {
+	private ImageView getResource(Viewable obj) throws FileNotFoundException {
 		ImageView view;
 		if(obj == null) {
 			view = new ImageView(new Image(new FileInputStream(Viewable.getDefaultResource())));
-			view.setUserData(obj);
 		}else {
 			view = new ImageView(new Image(new FileInputStream(obj.getResource())));
-			view.setUserData(obj);
 		}
-		view.setFitHeight(SIZE_IMAGE);
-		view.setFitWidth(SIZE_IMAGE);
 		
-		view.setOnMouseClicked(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-				ImageView v = (ImageView)e.getTarget();
-				if(v.getUserData()==null) {
-					controller.addTower(row, col, TowerType.BASICTOWER);
-					e.consume();
-				}else {
-					System.out.println("tower");
-				}
-			}
-		});
 		return view;
 	}
 	
@@ -363,9 +384,15 @@ public class TowerDefenseView extends Application implements Observer{
 		Node toRemove = null;
 		for(Node n: grid.getChildren()) {
 			if(GridPane.getColumnIndex(n)==col&&GridPane.getRowIndex(n)==row) {
-				node = getResource(obj, row, col);
+				node = createGridResource(obj, row, col);
+				toRemove = n;
 			}
 		}
+		if(node == null || toRemove == null) {
+			return;
+		}
+
+		grid.getChildren().remove(toRemove);
 		grid.add(node, col, row);
 	}
 }
