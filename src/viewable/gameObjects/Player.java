@@ -6,6 +6,7 @@
 
 package viewable.gameObjects;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -37,10 +38,12 @@ public class Player implements Observer {
 		for (int i = 0; i < 5; i++) {
 			hand.add(draw.drawCard());
 		}
+		Collections.shuffle(hand);
 	}
 	
 	public void addToDiscard(Card card) {
 		discard.add(card);
+		hand.remove(card);
 	}
 	
 	public void resetDraw() {

@@ -7,7 +7,7 @@ public class Charger extends Minion {
 	private static final int defaultSpeed = 2;
 	private static final int defaultReward = 10;
 
-	public Charger(Integer health, Integer damage, Integer speed, Integer reward) {
+	public Charger() {
 		super(defaultHealth, defaultDamage, defaultSpeed, defaultReward);
 	}
 
