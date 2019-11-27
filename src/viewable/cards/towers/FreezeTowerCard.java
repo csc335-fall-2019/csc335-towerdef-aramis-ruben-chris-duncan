@@ -12,8 +12,9 @@ import java.io.IOException;
 import viewable.cards.Card;
 import viewable.gameObjects.FreezeTower;
 import viewable.gameObjects.Player;
+import viewable.gameObjects.Tower;
 
-public class FreezeTowerCard extends Card {
+public class FreezeTowerCard extends TowerCard {
 	private static final int cardId 		= 3;
 	private static final String cardName 	= "Freeze Tower";
 	private static final int cardCost       = 1;
@@ -41,5 +42,11 @@ public class FreezeTowerCard extends Card {
 			// TODO Auto-generated catch block
 			return "";
 		}
+	}
+
+	@Override
+	public Class<? extends Tower> getTower() {
+		// TODO Auto-generated method stub
+		return FreezeTower.class;
 	}
 }

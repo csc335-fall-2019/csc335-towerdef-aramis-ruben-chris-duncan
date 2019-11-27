@@ -36,8 +36,8 @@ public class Map implements Serializable{
 		return board;
 	}
 	
-	public void save() throws IOException {
-		File file = new File("saves/save.txt");
+	public void save(String path) throws IOException {
+		File file = new File(path);
 		file.createNewFile();
 		ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
 		out.writeObject(this);
@@ -45,8 +45,8 @@ public class Map implements Serializable{
 		out.close();
 	}
 	
-	public void load() throws Exception {
-		File file = new File("saves/save.txt");
+	public void load(String path) throws Exception {
+		File file = new File(path);
 		if(!file.exists()) { // Would use UI to have user select file?
 			throw new Exception("File not found.");
 		}

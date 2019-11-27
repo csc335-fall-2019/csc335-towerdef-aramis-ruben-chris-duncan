@@ -21,6 +21,7 @@ public class Player implements Observer {
 	private Deck draw;
 	private Deck discard;
 	private int gold;
+	private Card selectedCard;
 	
 	public Player() {
 		health = 20;
@@ -101,6 +102,14 @@ public class Player implements Observer {
 		return health;
 	}
 
+	public void setSelectedCard(Card s) {
+		selectedCard = s;
+	}
+	
+	public Card getSelectedCard() {
+		return selectedCard;
+	}
+	
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		// TODO Auto-generated method stub

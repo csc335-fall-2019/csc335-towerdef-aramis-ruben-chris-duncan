@@ -21,6 +21,7 @@ public class TowerDefenseBoard extends Observable{
 
 	public void addTower(int row, int col, TowerType type){
 		Viewable[][][] boardArr = board.getBoard();
+		System.out.println(row +" "+col);
 		switch(type) {
 			case BASICTOWER:
 				boardArr[col][row][0] = new ArcherTower();

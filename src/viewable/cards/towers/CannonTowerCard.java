@@ -13,8 +13,9 @@ import java.io.IOException;
 import viewable.cards.Card;
 import viewable.gameObjects.CannonTower;
 import viewable.gameObjects.Player;
+import viewable.gameObjects.Tower;
 
-public class CannonTowerCard extends Card {
+public class CannonTowerCard extends TowerCard {
 	private static final int cardId 		= 1;
 	private static final String cardName 	= "Cannon Tower";
 	private static final int cardCost       = 1;
@@ -42,5 +43,11 @@ public class CannonTowerCard extends Card {
 			// TODO Auto-generated catch block
 			return "";
 		}
+	}
+
+	@Override
+	public Class<? extends Tower> getTower() {
+		// TODO Auto-generated method stub
+		return CannonTower.class;
 	}
 }

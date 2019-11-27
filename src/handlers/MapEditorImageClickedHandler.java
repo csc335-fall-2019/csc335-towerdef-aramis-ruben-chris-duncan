@@ -34,7 +34,6 @@ public class MapEditorImageClickedHandler implements EventHandler<MouseEvent>{
 	public void handle(MouseEvent e) {
 		currentLocation[0] = col;
 		currentLocation[1] = row;
-		System.out.println(currentObject[0]);
 		if(currentObject[0]!=null) {
 			try {
 				grid.getChildren().removeIf(node -> GridPane.getRowIndex(node) == col && GridPane.getColumnIndex(node)== row);

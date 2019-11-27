@@ -6,6 +6,7 @@ package viewable.cards;
 
 import viewable.Viewable;
 import viewable.gameObjects.Player;
+import viewable.gameObjects.Tower;
 
 public abstract class Card extends Viewable {
 	private String name;

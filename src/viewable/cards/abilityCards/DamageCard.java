@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import viewable.cards.Card;
 import viewable.gameObjects.Player;
+import viewable.gameObjects.Tower;
 
 // deals 1 damage to opposing player
 // should be a high cost card and appear infrequently in market
