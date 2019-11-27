@@ -7,8 +7,14 @@ public class Boss extends Minion {
 	private static final int defaultSpeed = 1;
 	private static final int defaultReward = 100;
 
-	public Boss(Integer health, Integer damage, Integer speed, Integer reward) {
+	public Boss() {
 		super(defaultHealth, defaultDamage, defaultSpeed, defaultReward);
+	}
+
+	@Override
+	public String getResource() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

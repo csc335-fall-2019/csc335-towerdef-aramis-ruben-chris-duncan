@@ -7,8 +7,14 @@ public class Hound extends Minion {
 	private static final int defaultSpeed = 2;
 	private static final int defaultReward = 2;
 
-	public Hound(Integer health, Integer damage, Integer speed, Integer reward) {
+	public Hound() {
 		super(defaultHealth, defaultDamage, defaultSpeed, defaultReward);
+	}
+
+	@Override
+	public String getResource() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
