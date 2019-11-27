@@ -12,10 +12,7 @@ public abstract class Viewable implements Serializable{
 	
 	public String getResource;
 
-	public String getResource() {
-		// TODO Auto-generated method stub
-		return "";
-	}
+	public abstract String getResource();
 	
 	public static String getDefaultResource() {
 		try {
