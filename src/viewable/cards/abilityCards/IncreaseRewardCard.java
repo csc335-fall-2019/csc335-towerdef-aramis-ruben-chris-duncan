@@ -1,5 +1,8 @@
 package viewable.cards.abilityCards;
 
+import java.io.File;
+import java.io.IOException;
+
 import viewable.cards.Card;
 import viewable.gameObjects.Player;
 
@@ -21,6 +24,16 @@ public class IncreaseRewardCard extends Card {
 	public void Ability(Player p) {
 		// TODO Auto-generated method stub
 		p.buffReward(minionsWithBonus);
+	}
+	
+	@Override
+	public String getResource() {
+		try {
+			return (new File("./resources/images/tst.jpeg")).getCanonicalPath();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			return "";
+		}
 	}
 
 }
