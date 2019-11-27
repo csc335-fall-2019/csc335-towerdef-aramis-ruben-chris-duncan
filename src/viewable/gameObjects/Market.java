@@ -62,4 +62,19 @@ public class Market {
 		}
 	}
 	
+	public void removeFromForSale(int position) {
+		forSale.add(position, null);;
+	}
+	
+	public void repopulateForSale() {
+		for (int i = 0; i < 6; i++) {
+			if (forSale.get(i) == null) {
+				forSale.add(i, market.drawCard());
+			}
+		}
+	}
+	
+	public List<Card> getForSale() {
+		return forSale;
+	}
 }

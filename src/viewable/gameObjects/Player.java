@@ -9,6 +9,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
 
 import handlers.CardObjectClickedHandler;
@@ -61,6 +62,7 @@ public class Player{
 			hand.add(view);
 			mapCards.put(c, view);
 		}
+		Collections.shuffle(hand);
 	}
 	
 	private ImageView getResource(Card obj) throws FileNotFoundException {
@@ -86,6 +88,7 @@ public class Player{
 	public void addToDiscard(Card card) {
 		hand.removeAll(mapCards.get(card));
 		discard.add(card);
+		hand.remove(card);
 	}
 	
 	public void resetDraw() {
