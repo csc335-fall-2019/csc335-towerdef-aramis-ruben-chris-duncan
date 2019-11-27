@@ -58,6 +58,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import viewable.Viewable;
 import viewable.cards.Card;
+import viewable.gameObjects.Market;
 import viewable.gameObjects.Player;
 
 public class TowerDefenseView extends Application implements Observer{
@@ -238,6 +239,10 @@ public class TowerDefenseView extends Application implements Observer{
 		BackgroundImage marketBg = new BackgroundImage(image, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
 		Background background = new Background(marketBg);
 		market.setBackground(background);
+		
+		Market m = controller.getMarket();
+		
+		
 		int prefWidth = 350;
 		model.addSubWidth(prefWidth);
 		market.setPrefWidth(prefWidth);
