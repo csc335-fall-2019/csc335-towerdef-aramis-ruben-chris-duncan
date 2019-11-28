@@ -24,6 +24,7 @@ import javafx.util.Callback;
 
 public class ChatView{
 	private static Stage MESSAGE_RECEIVED; 
+	private Thread thread;
 	
 	public Stage create(int portNum) throws IOException {
 		Stage primaryStage = new Stage();
@@ -37,8 +38,7 @@ public class ChatView{
 		MESSAGE_RECEIVED.initModality(Modality.WINDOW_MODAL);
 		MESSAGE_RECEIVED.initOwner(primaryStage);
 		PeerToPeerSocket p2p = new PeerToPeerSocket("localhost", portNum);
-		Thread thread = new Thread(p2p);
-		thread.start();
+		thread = new Thread(p2p);
 		BorderPane pane = createChatBottom(p2p);
 		primaryStage.setScene(new Scene(pane, 400, 400));
 		primaryStage.setTitle(portNum+"");
@@ -126,6 +126,7 @@ public class ChatView{
 					if(p2p.login("Tester","Fuck you")) {
 						System.out.println(p2p.getUser());
 						System.out.println("Logged in.");
+						thread.start();
 						hbox.getChildren().remove(login);
 						hbox.getChildren().add(input);
 						hbox.getChildren().add(send);

@@ -11,6 +11,9 @@ public class Interim extends Application{
 		ChatView view = new ChatView();
 		try {
 			primaryStage = view.create(7000);
+			ChatView view2 = new ChatView();
+			Stage stage = view2.create(6000);
+			stage.show();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

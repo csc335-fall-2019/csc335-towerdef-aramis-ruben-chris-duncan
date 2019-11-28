@@ -1,6 +1,7 @@
 package chat;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 import javafx.application.Platform;
@@ -36,7 +37,7 @@ public class LoggedInUser{
 		});
 	}
 	
-	public void addOwnMessage(Message m) throws IOException {
+	public void addOwnMessage(Message m) throws IOException, NoSuchAlgorithmException {
 		for(Chat c: openChats) {
 			if(c.getRecipient()!=null&&c.getRecipient().matches(m.getFrom().getUser())) {
 				c.addMessage(m);

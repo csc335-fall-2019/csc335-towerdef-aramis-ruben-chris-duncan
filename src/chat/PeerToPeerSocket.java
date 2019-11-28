@@ -10,8 +10,11 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import game.TowerDefenseView;
 import javafx.application.Platform;
@@ -22,9 +25,10 @@ public class PeerToPeerSocket implements Runnable{
 	private volatile List<ServerSocket> servers;
 	private volatile List<Socket> activeConnections;
 	private volatile List<Sender> currentConnections;
-	private volatile String host;
-	private volatile LoggedInUser user;
-	private volatile Sender from;
+	private Map<Socket, Object[]> mapConnections;
+	private String host;
+	private LoggedInUser user;
+	private Sender from;
 	private Thread failedGeneric;
 	
 	public PeerToPeerSocket() throws IOException {
@@ -33,6 +37,7 @@ public class PeerToPeerSocket implements Runnable{
 	
 	public PeerToPeerSocket(String host, int offset) throws IOException {
 		this.host = host;
+		mapConnections = new HashMap<Socket, Object[]>();
 		servers = new ArrayList<ServerSocket>();
 		currentConnections = new ArrayList<Sender>();
 		for(int i = offset;i<offset+5;i++) {
@@ -60,11 +65,9 @@ public class PeerToPeerSocket implements Runnable{
 	@Override
 	public void run() {
 		while(true) {
-			while(user==null) {
-				user = null;
-			}
 			checkServers();
 			checkSockets();
+			System.out.println("Listening");
 		}
 	}
 	
@@ -74,11 +77,11 @@ public class PeerToPeerSocket implements Runnable{
 			try {
 				server.setSoTimeout(100);
 				Socket s = server.accept();
-				
+				System.out.println("Accepted");
 				// If connection is accepted, send the initial user information.
 				ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
-				out.writeObject(new Message(from, new Query(host, server.getLocalPort()),""));
 				ObjectInputStream in = new ObjectInputStream(s.getInputStream());
+				out.writeObject(new Message(from, new Query(host, server.getLocalPort()),""));
 				
 				// Get the response object which should inform us about the other PC.
 				Message res = (Message)in.readObject();
@@ -87,6 +90,7 @@ public class PeerToPeerSocket implements Runnable{
 				mesFrom.setPort(s.getPort());
 				currentConnections.add(res.getFrom());
 				activeConnections.add(s);
+				mapConnections.put(s, new Object[] {out, in});
 				
 				// Ensure we don't try to connect to this server again.
 				toRemove.add(server);
@@ -94,9 +98,11 @@ public class PeerToPeerSocket implements Runnable{
 				// TODO Auto-generated catch block
 				continue;
 			} catch(IOException e) {
+				e.printStackTrace();
 				return;
 			}
 			catch(Exception ex) {
+				ex.printStackTrace();
 				// In the case that something unexpected happens, check to make sure that the sockets all connect.
 				List<Socket> connections = new ArrayList<Socket>();
 				for(Socket con: activeConnections) {
@@ -131,8 +137,13 @@ public class PeerToPeerSocket implements Runnable{
 		for(Socket s: activeConnections) {
 			try {
 				// Try to read in an object.
-				ObjectInputStream in = new ObjectInputStream(s.getInputStream());
+				ObjectInputStream in = (ObjectInputStream)(mapConnections.get(s)[1]);
+				if(in.available()==0) {
+					System.out.println("Stream "+s.getPort()+" has no objects to read.");
+					continue;
+				}
 				Object obj = in.readObject();
+				System.out.println(obj);
 				
 				// Handle the message case.
 				if(obj instanceof Message){
@@ -162,12 +173,13 @@ public class PeerToPeerSocket implements Runnable{
 			if(!currentConnections.contains(message.getFrom())) {
 				
 			}
-			ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
+			//ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
 			// Write an acknowledge message to the user we received the message from.
 			// [TODO] make this write the message directly to the user, ie connect to the user and then write the message.
-			out.writeObject(new AckMessage(from, message.getFrom()));
+			//out.writeObject(new AckMessage(from, message.getFrom()));
 			currentConnections.add(message.getFrom());
 		}else {
+			System.out.println("???");
 			// Add the person we got this message from to the list of current known connections.
 			currentConnections.add(message.getFrom());
 			for(Socket socket: activeConnections) {
@@ -223,6 +235,7 @@ public class PeerToPeerSocket implements Runnable{
 			isDesiredHost = q.getDesiredHost().equals(host);
 		}
 		boolean isDesiredPort = q.getDesiredPort()==s.getLocalPort()||q.getDesiredPort()==s.getPort();
+		System.out.println(isDesiredHost+" "+isDesiredPort);
 		return isDesiredHost&&isDesiredPort;
 	}
 	
@@ -260,13 +273,16 @@ public class PeerToPeerSocket implements Runnable{
 					System.out.println("Couldn't connect.");
 					failed.start();
 					return;
+				}else {
+					System.out.println("Connected");
 				}
 				try {
 					// Try to read in the connection data.
+					ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
 					ObjectInputStream in = new ObjectInputStream(s.getInputStream());
 					Message init = (Message)in.readObject();
 					currentConnections.add(init.getFrom());
-					ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
+					mapConnections.put(s, new Object[] {out, in});
 					out.writeObject(new Message(from, new Query(init.getFrom().getUser()),""));
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -302,7 +318,7 @@ public class PeerToPeerSocket implements Runnable{
 				if(user!=null) {
 					try {
 						user.addOwnMessage(new Message(from, new Query(hostname), message));
-					} catch (IOException e) {
+					} catch (IOException | NoSuchAlgorithmException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
@@ -313,6 +329,7 @@ public class PeerToPeerSocket implements Runnable{
 					try {
 						ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
 						out.writeObject(m);
+						System.out.println("Message sent");
 					}catch(Exception ex) {
 						continue;
 					}
@@ -336,7 +353,7 @@ public class PeerToPeerSocket implements Runnable{
 					Message m = new Message(from, to, message);
 					try {
 						user.addOwnMessage(m);
-					} catch (IOException e) {
+					} catch (IOException | NoSuchAlgorithmException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
@@ -345,8 +362,11 @@ public class PeerToPeerSocket implements Runnable{
 				Message m = new Message(from, query, message);
 				for(Socket s: activeConnections) {
 					try {
-						ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
-						out.writeObject(m);
+						if(s.getInetAddress().getHostAddress().equals(s.getInetAddress().getHostAddress())&&s.getPort()==port) {
+							ObjectOutputStream out = (ObjectOutputStream)(mapConnections.get(s)[0]);
+							out.writeObject(m);
+							System.out.println("Message sent");
+						}
 					}catch(Exception ex) {
 						continue;
 					}
@@ -356,7 +376,7 @@ public class PeerToPeerSocket implements Runnable{
 		connect(hostTo, port, thread2, failedGeneric);
 	}
 	
-	public boolean login(String username, String password) throws IOException {
+	public boolean login(String username, String password) throws IOException, NoSuchAlgorithmException {
 		File users = new File("users.txt");
 		users.createNewFile();
 		User user = new User(username, password);
@@ -367,10 +387,8 @@ public class PeerToPeerSocket implements Runnable{
 	            User testUser = (User)(in.readObject());
 	            if(testUser.getUsername().equals(username)) {
 	            	if(testUser.checkPassword(password)) {
-	            		setUser(new LoggedInUser(testUser));
-	            		if(this.user==null) {
-	            			return false;
-	            		}
+	            		this.user = new LoggedInUser(testUser);
+	            		System.out.println(this.user);
 	            		from = new Sender(testUser.getUsername());
 	            		return true;
 	            	}
@@ -386,14 +404,11 @@ public class PeerToPeerSocket implements Runnable{
 	        if (in != null)
 	            in.close();
 	    }
-		setUser(new LoggedInUser(user));
-		if(this.user==null) {
-			return false;
-		}
+		this.user = new LoggedInUser(user);
+		System.out.println(this.user);
 		ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(users));
 		out.writeObject(user);
 		out.close();
-		
 		from = new Sender(user.getUsername());
 		return true;
 	}
