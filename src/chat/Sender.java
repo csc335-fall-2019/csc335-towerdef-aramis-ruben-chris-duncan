@@ -17,7 +17,7 @@ public class Sender implements Serializable{
 	private int port;
 	
 	public Sender(String username) throws UnknownHostException {
-		this(username, InetAddress.getLocalHost().getHostAddress(),0);
+		this(username, InetAddress.getLocalHost().getHostAddress().toString(),0);
 	}
 	
 	public Sender(String username, String host, int port) {

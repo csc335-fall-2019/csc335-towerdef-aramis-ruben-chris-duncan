@@ -33,8 +33,8 @@ public class PeerToPeerSocket implements Runnable{
 		this(6881);
 	}
 	
-	public PeerToPeerSocket(String host, int offset) throws IOException {
-		this.host = host;
+	public PeerToPeerSocket(int offset) throws IOException {
+		this.host = InetAddress.getLocalHost().getHostAddress().toString();
 		mapConnections = new HashMap<Socket, Object[]>();
 		servers = new ArrayList<ServerSocket>();
 		currentConnections = new ArrayList<Sender>();
@@ -64,17 +64,15 @@ public class PeerToPeerSocket implements Runnable{
 			try {
 				server.setSoTimeout(100);
 				Socket s = server.accept();
-				System.out.println("Accepted");
+				
 				// If connection is accepted, send the initial user information.
 				ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
 				ObjectInputStream in = new ObjectInputStream(s.getInputStream());
 				out.writeObject(new Message(from, new Query(host, server.getLocalPort()),""));
-				System.out.println("Sending message...");
 				
 				// Get the response object which should inform us about the other PC.
 				Message res = (Message)in.readObject();
 				Sender mesFrom = res.getFrom();
-				System.out.println("Getting message...");
 				mesFrom.setHost(s.getInetAddress().getHostAddress());
 				mesFrom.setPort(s.getPort());
 				currentConnections.add(res.getFrom());
@@ -125,12 +123,11 @@ public class PeerToPeerSocket implements Runnable{
 	private void checkSockets() {
 		for(Socket s: activeConnections) {
 			try {
+				ObjectOutputStream out = (ObjectOutputStream)(mapConnections.get(s)[0]);
+				out.writeObject(new KeepAlive());
 				// Try to read in an object.
 				ObjectInputStream in = (ObjectInputStream)(mapConnections.get(s)[1]);
-				if(in.available()==0) {
-					System.out.println("Stream "+s.getPort()+" has no objects to read.");
-					continue;
-				}
+
 				Object obj = in.readObject();
 				System.out.println(obj);
 				

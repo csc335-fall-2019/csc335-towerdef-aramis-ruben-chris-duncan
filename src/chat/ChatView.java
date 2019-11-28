@@ -44,7 +44,7 @@ public class ChatView{
 		MESSAGE_RECEIVED.setScene(new Scene(textPane, 100,100));
 		MESSAGE_RECEIVED.initModality(Modality.WINDOW_MODAL);
 		MESSAGE_RECEIVED.initOwner(primaryStage);
-		PeerToPeerSocket p2p = new PeerToPeerSocket("localhost", portNum);
+		PeerToPeerSocket p2p = new PeerToPeerSocket(portNum);
 		thread = new Thread(p2p);
 		BorderPane pane = createChatBottom(p2p);
 		primaryStage.setScene(new Scene(pane, 400, 400));
