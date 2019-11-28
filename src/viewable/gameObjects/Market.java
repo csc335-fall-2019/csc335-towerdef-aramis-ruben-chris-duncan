@@ -1,11 +1,15 @@
 package viewable.gameObjects;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import handlers.ImageResourceLoadingHandler;
 import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.image.ImageView;
 import viewable.cards.*;
 import viewable.cards.abilityCards.DamageCard;
@@ -27,6 +31,9 @@ public class Market {
 	private ListProperty<ImageView> forSale;
 	
 	public Market() throws FileNotFoundException {
+		market = new Deck();
+		ObservableList<ImageView> observableList = FXCollections.observableArrayList(new ArrayList<ImageView>());
+		forSale = new SimpleListProperty<ImageView>(observableList);
 		fillMarket();
 		market.shuffle();
 		populateForSale();
@@ -55,26 +62,33 @@ public class Market {
 		for (int i = 0; i < x; i++) {
 			Card c = market.drawCard();
 			if(c==null) {
-				return;
+				ImageView v = ImageResourceLoadingHandler.getResource(c);
+				forSale.addAll(v);
+			}else {
+				ImageView v = ImageResourceLoadingHandler.getResource(c);
+				forSale.addAll(v);
 			}
-			ImageView v = ImageResourceLoadingHandler.getResource(c);
-			forSale.add(v);
 		}
 	}
 	
 	public void removeFromForSale(int position) {
-		forSale.add(position, null);;
+		forSale.add(position, null);
 	}
 	
-	public void repopulateForSale() {
+	public void repopulateForSale() throws FileNotFoundException {
 		for (int i = 0; i < 6; i++) {
 			if (forSale.get(i) == null) {
-				forSale.add(i, market.drawCard());
+				Card c = market.drawCard();
+				if(c==null) {
+					break;
+				}
+				ImageView v = ImageResourceLoadingHandler.getResource(c);
+				forSale.add(i, v);
 			}
 		}
 	}
 	
-	public List<Card> getForSale() {
+	public ListProperty<ImageView> getForSale() {
 		return forSale;
 	}
 }
