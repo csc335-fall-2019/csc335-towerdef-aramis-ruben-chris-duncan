@@ -84,12 +84,12 @@ public class TowerDefenseView extends Application implements Observer{
 		primaryStage.setResizable(false);
 		//loadMusic();
 		
-		ChatView view = new ChatView();
-		Stage chat = view.create();
-		int height = (int)(Screen.getPrimary().getBounds().getHeight()/2);
-		chat.setX(10);
-		chat.setY(height);
-		chat.show();
+//		ChatView view = new ChatView();
+//		Stage chat = view.create();
+//		int height = (int)(Screen.getPrimary().getBounds().getHeight()/2);
+//		chat.setX(10);
+//		chat.setY(height);
+//		chat.show();
 		
 		primaryStage.show();
 		primaryStage.sizeToScene();

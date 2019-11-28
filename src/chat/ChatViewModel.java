@@ -4,7 +4,7 @@ public class ChatViewModel {
 	private String selectedUser;
 	
 	public ChatViewModel() {
-		
+		selectedUser = "";
 	}
 	
 	public String getSelectedUser() {

@@ -39,11 +39,11 @@ public class Sender implements Serializable{
 	}
 	
 	public String getUser() {
-		return username;
+		return username==null?"":username;
 	}
 	
 	public String getHost() {
-		return host;
+		return host==null?"":host;
 	}
 	
 	public int getPort() {

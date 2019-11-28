@@ -19,12 +19,12 @@ public class LoggedInUser{
 	
 	public void addChat(Message m) {
 		for(Chat c: openChats) {
-			if(c.getRecipient()!=null&&c.getRecipient().matches(m.getFrom().getUser())) {
+			if(c.getRecipient()!=null&&c.getRecipient().getUser().matches(m.getFrom().getUser())) {
 				c.addMessage(m);
 				return;
 			}
 		}
-		Chat addedChat = new Chat(user, m.getFrom().getUser());
+		Chat addedChat = new Chat(user, m.getFrom());
 		addMessageOnMainThread(addedChat);
 	}
 	
@@ -39,12 +39,12 @@ public class LoggedInUser{
 	
 	public void addOwnMessage(Message m) throws IOException, NoSuchAlgorithmException {
 		for(Chat c: openChats) {
-			if(c.getRecipient()!=null&&c.getRecipient().matches(m.getFrom().getUser())) {
+			if(c.getRecipient()!=null&&c.getRecipient().getUser().matches(m.getFrom().getUser())) {
 				c.addMessage(m);
 				return;
 			}
 		}
-		Chat addedChat = new Chat(new User(m.getFrom().getUser(),""), user.getUsername());
+		Chat addedChat = new Chat(new User(m.getFrom().getUser(),""), m.getFrom());
 		addMessageOnMainThread(addedChat);
 		addedChat.addMessage(m);
 	}
