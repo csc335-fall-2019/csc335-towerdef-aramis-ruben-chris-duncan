@@ -27,6 +27,7 @@ public class Chat implements Serializable{
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
+				System.out.println("Message Added");
 				messages.add(m);
 			}
 		});

@@ -9,7 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class LoggedInUser{
-	private ObservableList<Chat> openChats;
+	private volatile ObservableList<Chat> openChats;
 	private User user;
 	
 	public LoggedInUser(User u) {
@@ -24,8 +24,10 @@ public class LoggedInUser{
 				return;
 			}
 		}
+		System.out.println("Added message: "+m.getFrom().getPort());
 		Chat addedChat = new Chat(user, m.getFrom());
 		addMessageOnMainThread(addedChat);
+		addedChat.addMessage(m);
 	}
 	
 	public void addMessageOnMainThread(Chat c) {
@@ -38,13 +40,15 @@ public class LoggedInUser{
 	}
 	
 	public void addOwnMessage(Message m) throws IOException, NoSuchAlgorithmException {
+		System.out.println(m.getMessage());
 		for(Chat c: openChats) {
 			if(c.getRecipient()!=null&&c.getRecipient().getUser().matches(m.getFrom().getUser())) {
 				c.addMessage(m);
 				return;
 			}
 		}
-		Chat addedChat = new Chat(new User(m.getFrom().getUser(),""), m.getFrom());
+		System.out.println("Own message: "+m.getQuery().getDesiredPort());
+		Chat addedChat = new Chat(user, new Sender(m.getQuery().getDesiredHostName(), m.getQuery().getDesiredHost(), m.getQuery().getDesiredPort()));
 		addMessageOnMainThread(addedChat);
 		addedChat.addMessage(m);
 	}

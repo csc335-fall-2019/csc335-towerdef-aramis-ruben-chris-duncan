@@ -31,7 +31,7 @@ import javafx.util.Callback;
 public class ChatView{
 	private static Stage MESSAGE_RECEIVED; 
 	private Thread thread;
-	private static LoggedInUser user;
+	private LoggedInUser user;
 	
 	public Stage create(int portNum) throws IOException {
 		Stage primaryStage = new Stage();
@@ -71,11 +71,11 @@ public class ChatView{
 						e.consume();
 						return;
 					}
-					if(c.getSelectedUser().length()>0||name.getText().length()>0) {
-						p2p.sendMessage(c.getSelectedUser().length()>0?c.getSelectedUser():name.getText(), text.getText());
-					}else {
+//					if(c.getSelectedUser().length()>0||name.getText().length()>0) {
+//						p2p.sendMessage(c.getSelectedUser().length()>0?c.getSelectedUser():name.getText(), text.getText());
+//					}else {
 						p2p.sendMessage(address.getText(),Integer.parseInt(port.getText()), text.getText());
-					}
+					//}
 					if(box.getCenter()!=null) {
 						return;
 					}
@@ -87,15 +87,24 @@ public class ChatView{
 			}
 		});
 		
+		VBox loginInfo = new VBox();
+		TextField username = new TextField();
+		TextField password = new TextField();
+		loginInfo.getChildren().addAll(username, password);
 		Button login = new Button();
 		login.setText("Login");
 		login.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
 				try {
-					if(p2p.login("Tester","Fuck you")) {
-						System.out.println(p2p.getUser());
+					if(username.getText().trim().isEmpty()||password.getText().trim().isEmpty()) {
+						e.consume();
+						return;
+					}
+					System.out.println(username.getText());
+					if(p2p.login(username.getText(),password.getText())) {
 						System.out.println("Logged in.");
+						loginInfo.getChildren().clear();
 						thread.start();
 						hbox.getChildren().remove(login);
 						hbox.getChildren().add(input);
@@ -127,6 +136,9 @@ public class ChatView{
 								}
 								messages.setItems(newVal.getMessages());
 								box.setCenter(messages);
+								address.setText(newVal.getRecipient()==null?"":newVal.getRecipient().getHost());
+				                port.setText(newVal.getRecipient()==null?"":newVal.getRecipient().getPort()+"");
+				                name.setText(newVal.getRecipient().getUser());
 								//c.setSelectedUser("localhost");
 								//System.out.println(newVal.getUser().getUsername());
 								HBox backButton = createBackButton(box, view, input, send);
@@ -146,7 +158,7 @@ public class ChatView{
 				}
 			}
 		});
-		hbox.getChildren().add(login);
+		hbox.getChildren().addAll(loginInfo, login);
 		box.setBottom(hbox);
 		box.setPickOnBounds(false);
 		return box;
@@ -156,7 +168,7 @@ public class ChatView{
 		// TODO Auto-generated method stub
 		HBox box = new HBox();
 		Button goBack = new Button();
-		goBack.setText("<-");
+		goBack.setText("<");
 		goBack.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
@@ -215,8 +227,6 @@ public class ChatView{
             super.updateItem(item, empty);
             Text text = new Text();
             if (item != null) {
-                address.setText(item.getRecipient()==null?"":item.getRecipient().getHost());
-                port.setText(item.getRecipient()==null?"":item.getRecipient().getPort()+"");
                 text.setText(item.getRecipient().getUser());
                 setGraphic(text);
             }
@@ -232,8 +242,11 @@ public class ChatView{
 			text.setAlignment(Pos.BOTTOM_RIGHT);
 			Text textBox = new Text();
 			if(item!=null) {
+				System.out.println("this: "+user.getUser().getUsername()+" from: "+item.getFrom().getUser());
 				if(item.getFrom().getUser().equals(user.getUser().getUsername())) {
 					text.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+				}else {
+					text.setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
 				}
 				textBox.setText(item.getMessage());
 				text.getChildren().add(textBox);

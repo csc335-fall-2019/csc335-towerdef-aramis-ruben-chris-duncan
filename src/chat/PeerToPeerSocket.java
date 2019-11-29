@@ -54,7 +54,6 @@ public class PeerToPeerSocket implements Runnable{
 		while(true) {
 			checkServers();
 			checkSockets();
-			System.out.println("Listening");
 		}
 	}
 	
@@ -62,7 +61,7 @@ public class PeerToPeerSocket implements Runnable{
 		List<ServerSocket> toRemove = new ArrayList<ServerSocket>();
 		for(ServerSocket server: servers) {
 			try {
-				server.setSoTimeout(100);
+				server.setSoTimeout(30);
 				Socket s = server.accept();
 				
 				// If connection is accepted, send the initial user information.
@@ -129,7 +128,6 @@ public class PeerToPeerSocket implements Runnable{
 				ObjectInputStream in = (ObjectInputStream)(mapConnections.get(s)[1]);
 
 				Object obj = in.readObject();
-				System.out.println(obj);
 				
 				// Handle the message case.
 				if(obj instanceof Message){
@@ -155,8 +153,8 @@ public class PeerToPeerSocket implements Runnable{
 		Message message = (Message)obj;
 		// Can we verify that the message is meant for us?
 		if(verifyQuery(message.getQuery(),s)) {
+			message.getFrom().setPort(s.getPort());
 			user.addChat(message);
-			System.out.println(message.getMessage());
 			if(!currentConnections.contains(message.getFrom())) {
 				
 			}
@@ -166,7 +164,6 @@ public class PeerToPeerSocket implements Runnable{
 			//out.writeObject(new AckMessage(from, message.getFrom()));
 			currentConnections.add(message.getFrom());
 		}else {
-			System.out.println("???");
 			// Add the person we got this message from to the list of current known connections.
 			currentConnections.add(message.getFrom());
 			for(Socket socket: activeConnections) {
@@ -215,7 +212,6 @@ public class PeerToPeerSocket implements Runnable{
 	public boolean verifyQuery(Query q, Socket s) {
 		// Username takes preference. 
 		// [TODO] verify that the user we're connecting to has the correct salt and whatnot.
-		System.out.println(host+" "+q.getDesiredHost());
 		boolean isDesiredHost = q.getDesiredHost().equals(host);
 		boolean isDesiredPort = q.getDesiredPort()==s.getLocalPort()||q.getDesiredPort()==s.getPort();
 		System.out.println(isDesiredHost+" "+isDesiredPort+" "+(isDesiredHost&&isDesiredPort));
@@ -234,7 +230,6 @@ public class PeerToPeerSocket implements Runnable{
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				List<Socket> cons = activeConnections;
 				for(Socket s: activeConnections) {
 					// Do we already have this connection stored?
 					if(s.getPort()==port&&(s.getInetAddress().getHostName().equals(host)||s.getInetAddress().getHostAddress().equals(host))) {
@@ -246,7 +241,7 @@ public class PeerToPeerSocket implements Runnable{
 				// Poll for 10 seconds to ensure that the server we try to connect to is atleast open once.
 				Socket s = null;
 				long timer = System.currentTimeMillis();
-				while(timer+10000>System.currentTimeMillis()) {
+				while(timer+1000>System.currentTimeMillis()) {
 					try {
 						s = new Socket(host, port);
 						break;
@@ -266,12 +261,15 @@ public class PeerToPeerSocket implements Runnable{
 					ObjectOutputStream out = new ObjectOutputStream(s.getOutputStream());
 					ObjectInputStream in = new ObjectInputStream(s.getInputStream());
 					Message init = (Message)in.readObject();
-					currentConnections.add(init.getFrom());
+					Sender from = init.getFrom();
+					from.setPort(s.getPort());
+					System.out.println(s.getPort());
+					currentConnections.add(from);
+					System.out.println(init.getFrom().getUser());
 					mapConnections.put(s, new Object[] {out, in});
 					System.out.println("Read in on client side...");
 					out.writeObject(new Message(from, new Query(init.getFrom().getUser()),""));
 					System.out.println("Send out on client side...");
-					currentConnections.add(init.getFrom());
 					mapConnections.put(s, new Object[] {out, in});
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -354,7 +352,7 @@ public class PeerToPeerSocket implements Runnable{
 	
 	public void sendMessage(String hostTo, int port, String message) throws Exception {
 		if(hostTo.equals("localhost")) {
-			hostTo = InetAddress.getLocalHost().getCanonicalHostName();
+			hostTo = InetAddress.getLocalHost().getHostAddress();
 		}
 		String hostFinal = hostTo;
 		Thread thread2 = new Thread(new Runnable() {
@@ -363,7 +361,8 @@ public class PeerToPeerSocket implements Runnable{
 				if(user!=null) {
 					Query to = new Query(hostFinal, port);
 					for(Sender q: currentConnections) {
-						if(to.getDesiredHost().equals(q.getUser())) {
+						System.out.println("host: "+q.getHost()+" port: "+q.getPort()+" user: "+q.getUser()+" desired host: "+hostFinal+" desired port: "+port);
+						if(to.getDesiredHost().equals(q.getHost())&&to.getDesiredPort()==q.getPort()) {
 							to.setDesiredHostName(q.getUser());
 						}
 					}
@@ -416,6 +415,7 @@ public class PeerToPeerSocket implements Runnable{
 	
 	public boolean login(String username, String password) throws IOException, NoSuchAlgorithmException {
 		File users = new File("users.txt");
+		// Need to read in the file adding each user to an array and then adding the new user to the end if need be.
 		users.createNewFile();
 		User user = new User(username, password);
 		ObjectInputStream in = null;
@@ -444,7 +444,7 @@ public class PeerToPeerSocket implements Runnable{
 	    }
 		this.user = new LoggedInUser(user);
 		System.out.println(this.user);
-		ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(users));
+		AppendingObjectOutputStream out = new AppendingObjectOutputStream(new FileOutputStream(users, true));
 		out.writeObject(user);
 		out.close();
 		from = new Sender(user.getUsername());
