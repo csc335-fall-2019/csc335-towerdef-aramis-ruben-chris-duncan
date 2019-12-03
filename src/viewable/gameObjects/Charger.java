@@ -17,7 +17,7 @@ public class Charger extends Minion {
 	@Override
 	public String getResource() {
 		try {
-			return (new File("./resources/images/tst.png")).getCanonicalPath();
+			return (new File("./resources/images/Charger/Charger_01.png")).getCanonicalPath();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			return "";
