@@ -53,6 +53,10 @@ public class ViewModel extends Observable {
 		return screenHeight-subtractedHeight;
 	}
 	
+	public int getEffectiveBoardWidth() {
+		return screenWidth-subtractedWidth;
+	}
+	
 	public int getCurrentRow() {
 		return currentRow;
 	}
