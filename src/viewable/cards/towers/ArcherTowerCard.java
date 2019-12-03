@@ -12,8 +12,9 @@ import java.io.IOException;
 import viewable.cards.Card;
 import viewable.gameObjects.ArcherTower;
 import viewable.gameObjects.Player;
+import viewable.gameObjects.Tower;
 
-public class ArcherTowerCard extends Card {
+public class ArcherTowerCard extends TowerCard {
 	private static final int cardId 		= 0;
 	private static final String cardName 	= "Archer Tower";
 	private static final int cardCost       = 1;
@@ -41,6 +42,12 @@ public class ArcherTowerCard extends Card {
 			// TODO Auto-generated catch block
 			return "";
 		}
+	}
+
+	@Override
+	public Class<? extends Tower> getTower() {
+		// TODO Auto-generated method stub
+		return ArcherTower.class;
 	}
 	
 }

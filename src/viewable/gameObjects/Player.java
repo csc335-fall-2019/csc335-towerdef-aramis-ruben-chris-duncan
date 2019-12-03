@@ -5,43 +5,88 @@
  */
 
 package viewable.gameObjects;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Collections;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
-import viewable.cards.*;
+import handlers.CardObjectClickedHandler;
+import handlers.GameObjectClickedHandler;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.util.Callback;
+import viewable.Viewable;
+import viewable.cards.Card;
 import viewable.cards.abilityCards.PlunderCard;
 import viewable.cards.towers.ArcherTowerCard;
 
-public class Player implements Observer {
+public class Player{
 	
-	private int health;
-	private List<Card> hand;
+	private IntegerProperty health;
+	private ListProperty<ImageView> hand;
+	private java.util.Map<Card, ImageView> mapCards;
 	private Deck draw;
 	private Deck discard;
-	private int gold;
+	private IntegerProperty gold;
+	private Card selectedCard;
 	
-	public Player() {
-		health = 20;
-		hand = new ArrayList<Card>();
+	public Player() throws FileNotFoundException {
+		health = new SimpleIntegerProperty(20);
+		mapCards = new HashMap<Card, ImageView>();
+		ObservableList<ImageView> observableList = FXCollections.observableArrayList(new ArrayList<ImageView>());
+		hand = new SimpleListProperty<ImageView>(observableList);
 		draw = new Deck();
 		discard = new Deck();
-		gold = 0;
+		gold = new SimpleIntegerProperty(0);
 		for (int i = 0; i < 6; i++) {
 			draw.add(new ArcherTowerCard());
 		}
 		for (int i = 0; i < 4; i++) {
 			draw.add(new PlunderCard());
 		}
+		draw.shuffle();
 		for (int i = 0; i < 5; i++) {
-			hand.add(draw.drawCard());
+			Card c = draw.drawCard();
+			if(c==null) {
+				continue;
+			}
+			ImageView view = getResource(c);
+			hand.add(view);
+			mapCards.put(c, view);
 		}
 		Collections.shuffle(hand);
 	}
 	
+	private ImageView getResource(Card obj) throws FileNotFoundException {
+		ImageView view;
+		if(obj == null) {
+			view = new ImageView(new Image(new FileInputStream(Viewable.getDefaultResource())));
+		}else {
+			view = new ImageView(new Image(new FileInputStream(obj.getResource())));
+		}
+		
+		view.setFitHeight(196);
+		view.setFitWidth(128);
+		
+		view.setOnMouseClicked(new CardObjectClickedHandler(obj, this));
+		
+		return view;
+	}
+	
+	public ObservableList<ImageView> getHand(){
+		return hand;
+	}
+	
 	public void addToDiscard(Card card) {
+		hand.removeAll(mapCards.get(card));
 		discard.add(card);
 		hand.remove(card);
 	}
@@ -54,22 +99,28 @@ public class Player implements Observer {
 		discard.empty();
 	}
 	
-	public void drawCards(int x) {
+	public void drawCards(int x) throws FileNotFoundException {
 		for (int i = 0; i < x; i++) {
-			hand.add(draw.drawCard());
+			Card c = draw.drawCard();
+			if(c==null) {
+				continue;
+			}
+			ImageView view = getResource(c);
+			hand.add(view);
+			mapCards.put(c, view);
 		}
 	}
 	
 	public void increaseGold(int amount) {
-		gold += amount;
+		gold.setValue(amount+getGold());
 	}
 	
 	public void gainLife(int amount) {
-		health += amount;
+		health.setValue(amount+getHealth());
 	}
 	
 	public void payLife(int amount) {
-		health -= amount;
+		health.setValue(getHealth()-amount);
 	}
 	
 	public void summonMinion(int amount) {
@@ -89,20 +140,30 @@ public class Player implements Observer {
 	}
 	
 	public int getGold() {
-		return gold;
+		return gold.intValue();
 	}
  	
 	public void damageTaken(int amount) {
-		health -= amount;
+		health.setValue(getHealth()-amount);
 	}
 	
 	public int getHealth() {
-		return health;
+		return health.intValue();
 	}
 
-	@Override
-	public void update(Observable arg0, Object arg1) {
-		// TODO Auto-generated method stub
-		
+	public void setSelectedCard(Card s) {
+		selectedCard = s;
+	}
+	
+	public Card getSelectedCard() {
+		return selectedCard;
+	}
+	
+	public IntegerProperty getViewableHealth() {
+		return health;
+	}
+	
+	public IntegerProperty getViewableGold() {
+		return gold;
 	}
 }

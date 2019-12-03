@@ -12,8 +12,9 @@ import java.io.IOException;
 import viewable.cards.Card;
 import viewable.gameObjects.MageTower;
 import viewable.gameObjects.Player;
+import viewable.gameObjects.Tower;
 
-public class MageTowerCard extends Card {
+public class MageTowerCard extends TowerCard {
 	private static final int cardId 		= 2;
 	private static final String cardName 	= "Mage Tower";
 	private static final int cardCost       = 1;
@@ -41,5 +42,11 @@ public class MageTowerCard extends Card {
 			// TODO Auto-generated catch block
 			return "";
 		}
+	}
+
+	@Override
+	public Class<? extends Tower> getTower() {
+		// TODO Auto-generated method stub
+		return MageTower.class;
 	}
 }

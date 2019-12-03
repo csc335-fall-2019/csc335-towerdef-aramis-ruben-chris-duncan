@@ -18,7 +18,6 @@ public class Deck {
 	
 	public Deck() {
 		deck = new ArrayList<Card>();
-		deck.add(null);
 	}
 	
 	public Deck(int size) {
@@ -27,6 +26,9 @@ public class Deck {
 	}
 	
 	public Card drawCard() {
+		if(deck.size()==0) {
+			return null;
+		}
 		Card card = deck.get(0);
 		deck.remove(0);
 		return card;

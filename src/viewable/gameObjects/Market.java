@@ -1,8 +1,12 @@
 package viewable.gameObjects;
 
+import java.io.FileNotFoundException;
 import java.util.Collections;
 import java.util.List;
 
+import handlers.ImageResourceLoadingHandler;
+import javafx.beans.property.ListProperty;
+import javafx.scene.image.ImageView;
 import viewable.cards.*;
 import viewable.cards.abilityCards.DamageCard;
 import viewable.cards.abilityCards.DrawCard;
@@ -20,9 +24,9 @@ import viewable.cards.towers.MinionTowerCard;
 public class Market {
 	
 	private Deck market;
-	private List<Card> forSale;
+	private ListProperty<ImageView> forSale;
 	
-	public Market() {
+	public Market() throws FileNotFoundException {
 		fillMarket();
 		market.shuffle();
 		populateForSale();
@@ -46,10 +50,15 @@ public class Market {
 		Collections.shuffle(forSale);
 	}
 	
-	public void populateForSale() {
+	public void populateForSale() throws FileNotFoundException {
 		int x = 6 - forSale.size();
 		for (int i = 0; i < x; i++) {
-			forSale.add(market.drawCard());
+			Card c = market.drawCard();
+			if(c==null) {
+				return;
+			}
+			ImageView v = ImageResourceLoadingHandler.getResource(c);
+			forSale.add(v);
 		}
 	}
 	

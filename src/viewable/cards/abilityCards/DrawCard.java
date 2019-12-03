@@ -1,6 +1,7 @@
 package viewable.cards.abilityCards;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import viewable.cards.Card;
@@ -15,14 +16,19 @@ public class DrawCard extends Card {
 		super(cardName, cardId, cardCost);
 	}
 	@Override
-	public void Ability(Player p) {
-		p.drawCards(cardsToDraw);
+	public void Ability(Player p){
+		try {
+			p.drawCards(cardsToDraw);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
 	public String getResource() {
 		try {
-			return (new File("./resources/images/tst.jpeg")).getCanonicalPath();
+			return (new File("./resources/images/drawACard.png")).getCanonicalPath();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			return "";

@@ -85,4 +85,8 @@ public class WaveGenerator {
 		}
 		return sendEm;
 	}
+	
+	public void addMinions(int amount) {
+		
+	}
 }
