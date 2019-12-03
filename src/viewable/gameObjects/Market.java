@@ -69,12 +69,12 @@ public class Market {
 	public void repopulateForSale() {
 		for (int i = 0; i < 6; i++) {
 			if (forSale.get(i) == null) {
-				forSale.add(i, market.drawCard());
+				//forSale.add(i, market.drawCard());
 			}
 		}
 	}
 	
-	public List<Card> getForSale() {
+	public ListProperty<ImageView> getForSale() {
 		return forSale;
 	}
 }
