@@ -37,7 +37,7 @@ public class MinionTowerCard extends TowerCard {
 	@Override
 	public String getResource() {
 		try {
-			return (new File("./resources/images/currencyTowerCard.png")).getCanonicalPath();
+			return (new File("./resources/images/minionTowerCard.png")).getCanonicalPath();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			return "";
