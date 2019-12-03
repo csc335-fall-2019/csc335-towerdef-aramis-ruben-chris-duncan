@@ -1,11 +1,14 @@
 package game;
+import java.io.FileNotFoundException;
+
 import viewable.Viewable;
+import viewable.gameObjects.Market;
 import viewable.gameObjects.Tower;
 import viewable.gameObjects.TowerType;
 
 public class TowerDefenseController {
-	TowerDefenseBoard board;
-	public TowerDefenseController(TowerDefenseView view) {
+	private TowerDefenseBoard board;
+	public TowerDefenseController(TowerDefenseView view) throws FileNotFoundException {
 		board = new TowerDefenseBoard(view);
 	}
 	
@@ -24,5 +27,9 @@ public class TowerDefenseController {
 	
 	public void addTower(int row, int col, TowerType type) {
 		board.addTower(row, col, type);
+	}
+	
+	public Market getMarket() {
+		return board.getMarket();
 	}
 }

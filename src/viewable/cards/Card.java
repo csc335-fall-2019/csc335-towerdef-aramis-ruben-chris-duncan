@@ -6,8 +6,9 @@ package viewable.cards;
 
 import viewable.Viewable;
 import viewable.gameObjects.Player;
+import viewable.gameObjects.Tower;
 
-public abstract class Card extends Viewable {
+public abstract class Card extends Viewable{
 	private String name;
 	private int id;
 	private int cost;

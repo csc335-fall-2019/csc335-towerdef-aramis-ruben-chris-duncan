@@ -29,7 +29,7 @@ public class IncreaseRewardCard extends Card {
 	@Override
 	public String getResource() {
 		try {
-			return (new File("./resources/images/tst.jpeg")).getCanonicalPath();
+			return (new File("./resources/images/increaseRewardCard.png")).getCanonicalPath();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			return "";
