@@ -45,6 +45,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import viewable.Viewable;
 import viewable.gameObjects.TowerType;
+import viewable.gameObjects.WaveGenerator;
+import viewable.mapObjects.Path;
 
 public class TowerDefenseView extends Application implements Observer{
 	public static Stage MESSAGE_RECEIVED;
@@ -56,10 +58,14 @@ public class TowerDefenseView extends Application implements Observer{
 	private TowerDefenseController controller;
 	private ViewModel model;
 	private GridPane grid;
+	private int round;
+	private WaveGenerator wave;
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		// Initial Set Up
+		round = 0;
+		wave = new WaveGenerator();
 		controller = new TowerDefenseController(this);
 		model = new ViewModel(1080,1920);
 		stage = primaryStage;
@@ -143,6 +149,18 @@ public class TowerDefenseView extends Application implements Observer{
 
 	public void update() {
 		BorderPane pane = (BorderPane)stage.getScene().getRoot();
+		wave.generateRandom(round); 
+		Viewable[][][] map = controller.getBoard();
+		Viewable p1Start = null;
+		Viewable p2Start = null;
+		for (int i = 0; i < map[0].length; i++) {
+			if (map[0][i][0] instanceof Path) {
+				p1Start = map[0][i][0];
+			}
+			if (map[map.length-1][i][0] instanceof Path) {
+				p2Start = map[map.length - 1][i][0];
+			}
+		}
 		while(controller.canMove()) {
 			break;
 		}
