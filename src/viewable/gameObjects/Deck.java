@@ -32,16 +32,28 @@ public class Deck {
 		return card;
 	}
 	
-	private void shuffle() {
+	public void shuffle() {
 		Collections.shuffle(deck);
 	}
 	
 	public void add(Card card) {
 		deck.add(card);
 	}
+  
+	public Boolean isEmpty() {
+		return deck.isEmpty();
+	}
 	
-	public boolean isEmpty() {
-		return false;
+	public List<Card> getDeck() {
+		return deck;
+	}
+	
+	public void empty() {
+		deck.removeAll(deck);
+	}
+	
+	public int getSize() {
+		return deck.size();
 	}
 	
 }

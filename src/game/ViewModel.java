@@ -1,22 +1,22 @@
 package game;
 
-public class ViewModel {
+import java.util.Observable;
+
+public class ViewModel extends Observable {
 	private int screenHeight;
 	private int screenWidth;
-	private int menuHeight;
+	private int subtractedHeight;
+	private int subtractedWidth;
 	private int currentRow;
 	private int currentCol;
-	private TowerDefenseView view;
-	private int topHeight;
-	private int bottomHeight;
-	private int leftWidth;
 	
-	public ViewModel(int height, int width, TowerDefenseView view) {
+	public ViewModel(int height, int width) {
 		screenHeight = height;
 		screenWidth = width;
-		this.view = view;
+		subtractedHeight = 0;
+		subtractedWidth = 0;
 	}
-	
+
 	public int getHeight() {
 		return screenHeight;
 	}
@@ -41,24 +41,32 @@ public class ViewModel {
 		return screenWidth;
 	}
 	
+	public int getEffectiveWidth() {
+		return screenWidth-subtractedWidth;
+	}
+	
+	public void addSubWidth(int m) {
+		subtractedWidth += m;
+	}
+	
 	public void setWidth(int w) {
 		screenWidth = w;
 	}
 	
-	public int getMenuHeight() {
-		return menuHeight;
+	public int getSubtractedHeight() {
+		return subtractedHeight;
 	}
 	
-	public void setMenuHeight(int m) {
-		menuHeight = m;
+	public void addSubHeight(int m) {
+		subtractedHeight += m;
 	}
 	
 	public int getEffectiveBoardHeight() {
-		return screenHeight-menuHeight-topHeight-bottomHeight;
+		return screenHeight-subtractedHeight;
 	}
 	
 	public int getEffectiveBoardWidth() {
-		return screenWidth-leftWidth;
+		return screenWidth-subtractedWidth;
 	}
 	
 	public int getCurrentRow() {

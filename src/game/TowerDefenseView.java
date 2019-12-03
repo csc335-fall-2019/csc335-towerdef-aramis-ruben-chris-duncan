@@ -1,6 +1,4 @@
 package game;
-import javafx.event.*;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -15,6 +13,7 @@ import java.util.Observer;
 import chat.ChatView;
 import chat.PeerToPeerSocket;
 import handlers.ExitHandler;
+import handlers.MapEditorHandler;
 import handlers.NewGameHandler;
 import handlers.PanHandler;
 import handlers.SoundHandler;
@@ -23,17 +22,21 @@ import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -42,6 +45,8 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import viewable.Viewable;
 import viewable.gameObjects.TowerType;
@@ -49,8 +54,9 @@ import viewable.gameObjects.TowerType;
 public class TowerDefenseView extends Application implements Observer{
 	public static Stage MESSAGE_RECEIVED;
 	
-	private static final int VIEWABLE_ROWS = 8;
-	private static final int VIEWABLE_COLS = 8;
+	private static final int VIEWABLE_ROWS = 13;
+	private static final int VIEWABLE_COLS = 34;
+	private static final int SIZE_IMAGE = 47;
 	private Stage stage;
 	private TowerDefenseController controller;
 	private ViewModel model;
@@ -58,41 +64,86 @@ public class TowerDefenseView extends Application implements Observer{
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		// Initial Set Up
 		controller = new TowerDefenseController(this);
-		model = new ViewModel(900,1000, this);
+		model = new ViewModel(1080,1920);
 		stage = primaryStage;
+		
+		// Set Up Other Player Area
+		HBox top = createTop();
+		
+		// Set Up Primary Player
+		HBox bottom = createBottom();
+		// Set Up Market
+		VBox market = createMarket();
+		setupGrid();
+		//StackPane stack = new StackPane();
+		//stack.getChildren().add(pane);
+		//stack.getChildren().add(createChatBottom(p2p));
+		//stack.setPickOnBounds(false);
+		// Set Up Menu Bar
+		MenuBar menu = createMenuBar();
+		setupGrid();
+		
 		BorderPane root = new BorderPane();
-		
-		root.setTop(createMenuBar());
+		BorderPane pane = new BorderPane();
+		root.setCenter(pane);
+		root.setLeft(market);
+		root.setTop(menu);
+		pane.setCenter(grid);
+		pane.setTop(top);
+		pane.setBottom(bottom);
 
-		BorderPane border = createDeckLayout();
-		grid = createBoard();
-		StackPane stack = new StackPane();
-		border.setCenter(grid);
-		grid.setPickOnBounds(false);
-		stack.getChildren().add(border);
-		stack.setPickOnBounds(false);
-		
-		root.setCenter(stack);
-		
-		primaryStage.setScene(new Scene(root, model.getWidth(), model.getHeight()));
-		
-		//primaryStage.getScene().widthProperty().addListener(new ResizeHandler(model, primaryStage, pane));
-		//primaryStage.getScene().heightProperty().addListener(new ResizeHandler(model, primaryStage, pane));
+		primaryStage.setScene(new Scene(root, model.getWidth(), model.getHeight()));	
 		
 		primaryStage.getScene().setOnMouseMoved(new PanHandler(model, primaryStage));
 		primaryStage.setResizable(false);
+		primaryStage.setFullScreen(true);
+		primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 		//loadMusic();
-		
-//		ChatView view = new ChatView();
-//		Stage chat = view.create();
-//		int height = (int)(Screen.getPrimary().getBounds().getHeight()/2);
-//		chat.setX(10);
-//		chat.setY(height);
-//		chat.show();
-		
 		primaryStage.show();
 		primaryStage.sizeToScene();
+	}
+	
+	private void setupGrid() throws IOException {
+		// Set Up Grid
+		grid = createGrid();
+		grid.setStyle("-fx-border-color: black;");
+		
+		FileInputStream input = new FileInputStream("./resources/images/map1.png");
+		Image image = new Image(input);
+		BackgroundImage map = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+		Background background = new Background(map);
+		grid.setBackground(background);
+		input.close();
+	}
+	
+	public GridPane createGrid() {
+		GridPane grid = new GridPane();
+		for (int i = 0; i < VIEWABLE_COLS; i++) {
+			for (int j = 0; j < VIEWABLE_ROWS; j++) {
+				Rectangle x = new Rectangle(SIZE_IMAGE, SIZE_IMAGE);
+				x.setFill(Color.TRANSPARENT);
+				x.setStroke(Color.BLACK);
+				x.setStrokeWidth(1);
+				int row = j;
+				int col = i;
+				x.setOnMouseClicked(new EventHandler<MouseEvent>() {
+					@Override
+					public void handle(MouseEvent e) {
+						Node v = (Node)e.getTarget();
+						if(v.getUserData()==null) {
+							controller.addTower(row, col, TowerType.BASICTOWER);
+							e.consume();
+						}else {
+							System.out.println("tower");
+						}
+					}
+				});
+				grid.add(x, i, j);
+			}
+		}
+		return grid;	
 	}
 
 	public void update() {
@@ -102,56 +153,70 @@ public class TowerDefenseView extends Application implements Observer{
 		}
 	}
 	
-	private BorderPane createDeckLayout() {
-		BorderPane pane = new BorderPane();
-		// top hand
+	private HBox createBottom() throws IOException {
+		HBox bottom = new HBox();
+		bottom.setStyle("-fx-border-color: black;");
+		FileInputStream input = new FileInputStream("./resources/images/playmat1.png");
+		Image image = new Image(input);
+		BackgroundImage player1 = new BackgroundImage(image, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+		Background background = new Background(player1);
+		bottom.setBackground(background);
+		
+		int prefHeight = 215;
+		bottom.setPrefHeight(prefHeight);
+		model.addSubHeight(prefHeight);
+		
+		VBox stat2 = new VBox();
+		Label hp2 = new Label("Health: ");
+		Label mp2 = new Label("Gold: ");
+		stat2.getChildren().add(hp2);
+		stat2.getChildren().add(mp2);
+		bottom.getChildren().add(stat2);
+		input.close();
+		return bottom;
+	}
+	
+	private HBox createTop() throws IOException {
+		// Set Up Other Player Area
 		HBox top = new HBox();
+		top.setStyle("-fx-border-color: black;");
+		
+		FileInputStream input = new FileInputStream("./resources/images/playmat2.png");
+		Image image = new Image(input);
+		BackgroundImage player2 = new BackgroundImage(image, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+		Background background = new Background(player2);
+		top.setBackground(background);
+		int prefHeight = 215;
+		top.setPrefHeight(prefHeight);
+		
 		VBox stat1 = new VBox();
-		Label hp1 = new Label("HP");
-		Label mp1 = new Label("MP");
+		Label hp1 = new Label("Health: ");
+		Label mp1 = new Label("Gold: ");
 		stat1.getChildren().add(hp1);
 		stat1.getChildren().add(mp1);
 		top.getChildren().add(stat1);
 		
-		int topHeight = 75;
-		top.setPrefHeight(topHeight);
-		model.setTopHeight(topHeight);
-		// bottom hand
-		HBox bottom = new HBox();
-		VBox stat2 = new VBox();
-		Label hp2 = new Label("HP");
-		Label mp2 = new Label("MP");
-		stat2.getChildren().add(hp2);
-		stat2.getChildren().add(mp2);
-		bottom.getChildren().add(stat2);
-		
-		int bottomHeight = 75;
-		bottom.setPrefHeight(bottomHeight);
-		model.setBottomHeight(bottomHeight);
-		
-		// left market
-		VBox market = new VBox();
-		int leftWidth = 100;
-		market.setPrefWidth(leftWidth);
-		model.setLeftWidth(leftWidth);
-		pane.setLeft(market);
-		pane.setBottom(bottom);
-		pane.setTop(top);
-		return pane;
+		model.addSubHeight(prefHeight);
+		input.close();
+		return top;
 	}
 
 	
-	private GridPane createBoard() throws FileNotFoundException {
-		GridPane pane = new GridPane();
+	private VBox createMarket() throws IOException {
+		// Set Up Market
+		VBox market = new VBox();
+		market.setStyle("-fx-border-color: black;");
 		
-		Viewable[][][] towers = controller.getBoard();
-		for(int i =model.getCurrentRow();i<model.getCurrentRow()+VIEWABLE_ROWS;i++) {
-			for(int j =model.getCurrentCol();j<model.getCurrentCol()+VIEWABLE_COLS;j++) {
-				pane.add(getResource(towers[j][i][0], i, j), j, i);
-			}
-		}
-
-		return pane;
+		FileInputStream input = new FileInputStream("./resources/images/market.png");
+		Image image = new Image(input);
+		BackgroundImage marketBg = new BackgroundImage(image, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+		Background background = new Background(marketBg);
+		market.setBackground(background);
+		int prefWidth = 350;
+		model.addSubWidth(prefWidth);
+		market.setPrefWidth(prefWidth);
+		input.close();
+		return market;
 	}
 	
 	private ImageView getResource(Viewable obj, int row, int col) throws FileNotFoundException {
@@ -163,8 +228,8 @@ public class TowerDefenseView extends Application implements Observer{
 			view = new ImageView(new Image(new FileInputStream(obj.getResource())));
 			view.setUserData(obj);
 		}
-		view.setFitHeight((double)model.getEffectiveBoardHeight()/VIEWABLE_ROWS);
-		view.setFitWidth((double)model.getEffectiveBoardWidth()/VIEWABLE_COLS);
+		view.setFitHeight(SIZE_IMAGE);
+		view.setFitWidth(SIZE_IMAGE);
 		
 		view.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
@@ -191,7 +256,7 @@ public class TowerDefenseView extends Application implements Observer{
 		bar.setMinHeight(menuHeight);
 		bar.setPrefHeight(menuHeight);
 		bar.setMaxHeight(menuHeight);
-		model.setMenuHeight(menuHeight);
+		model.addSubHeight(menuHeight);
 		return bar;
 	}
 	
@@ -203,12 +268,15 @@ public class TowerDefenseView extends Application implements Observer{
 		newGame.setText("New Game");
 		newGame.setOnAction(new NewGameHandler());
 		
+		MenuItem mapEditor = new MenuItem();
+		mapEditor.setText("Open Map Editor");
+		mapEditor.setOnAction(new MapEditorHandler());
+		
 		MenuItem exit = new MenuItem();
 		exit.setText("Exit");
 		exit.setOnAction(new ExitHandler());
 		
-		file.getItems().add(newGame);
-		file.getItems().add(exit);
+		file.getItems().addAll(newGame, mapEditor, exit);
 		file.setText("File");
 		return file;
 	}
@@ -302,10 +370,8 @@ public class TowerDefenseView extends Application implements Observer{
 		for(Node n: grid.getChildren()) {
 			if(GridPane.getColumnIndex(n)==col&&GridPane.getRowIndex(n)==row) {
 				node = getResource(obj, row, col);
-				toRemove = n;
 			}
 		}
-		grid.getChildren().remove(toRemove);
 		grid.add(node, col, row);
 	}
 }
