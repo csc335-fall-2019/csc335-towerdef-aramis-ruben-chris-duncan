@@ -45,7 +45,7 @@ public class Player{
 		hand = new SimpleListProperty<ImageView>(observableList);
 		draw = new Deck();
 		discard = new Deck();
-		gold = new SimpleIntegerProperty(0);
+		gold = new SimpleIntegerProperty(5);
 		for (int i = 0; i < 6; i++) {
 			draw.add(new ArcherTowerCard());
 		}
