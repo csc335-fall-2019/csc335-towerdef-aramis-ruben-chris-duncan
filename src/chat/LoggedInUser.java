@@ -40,7 +40,7 @@ public class LoggedInUser{
 		});
 	}
 	
-	public void addOwnMessage(Message m) throws IOException, NoSuchAlgorithmException {
+	public void addOwnMessage(Message m) throws IOException {
 		for(Chat c: openChats) {
 			System.out.println("Own message host: "+c.getRecipient().getHost()+":"+c.getRecipient().getPort()+" sent from: "+m.getQuery().getDesiredHost()+":"+m.getQuery().getDesiredPort());
 		if(c.getRecipient()!=null&&c.getRecipient().getHost().equals(m.getQuery().getDesiredHost())&&c.getRecipient().getPort()==m.getQuery().getDesiredPort()) {

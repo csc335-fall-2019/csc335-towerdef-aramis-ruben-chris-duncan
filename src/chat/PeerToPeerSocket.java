@@ -305,7 +305,7 @@ public class PeerToPeerSocket implements Runnable{
 				if(user!=null) {
 					try {
 						user.addOwnMessage(new Message(from, new Query(hostname), message));
-					} catch (IOException | NoSuchAlgorithmException e) {
+					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
@@ -369,7 +369,7 @@ public class PeerToPeerSocket implements Runnable{
 					Message m = new Message(from, to, message);
 					try {
 						user.addOwnMessage(m);
-					} catch (IOException | NoSuchAlgorithmException e) {
+					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
@@ -436,15 +436,31 @@ public class PeerToPeerSocket implements Runnable{
 	    } catch (EOFException ignored) {
 	        // as expected
 	    } catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 	        if (in != null)
 	            in.close();
 	    }
 		this.user = new LoggedInUser(user);
-		System.out.println(this.user);
-		AppendingObjectOutputStream out = new AppendingObjectOutputStream(new FileOutputStream(users, true));
+		in = null;
+		List<Object> previous = new ArrayList<Object>();
+		try {
+			in = new ObjectInputStream(new FileInputStream(users));
+	        while (true) {
+	            previous.add(in.readObject());
+	        }
+	    } catch (EOFException ignored) {
+	        // as expected
+	    } catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+	        if (in != null)
+	            in.close();
+	    }
+		ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(users));
+		for(int i =0;i<previous.size();i++) {
+			out.writeObject(previous.get(i));
+		}
 		out.writeObject(user);
 		out.close();
 		from = new Sender(user.getUsername());
