@@ -13,6 +13,7 @@ import java.util.Observer;
 import handlers.CardObjectClickedHandler;
 import handlers.ExitHandler;
 import handlers.GameObjectClickedHandler;
+import handlers.ImageResourceLoadingHandler;
 import handlers.MapEditorHandler;
 import handlers.NewGameHandler;
 import handlers.PanHandler;
@@ -133,7 +134,7 @@ public class TowerDefenseView extends Application implements Observer{
 	}
 	
 	private ImageView createGridResource(Viewable obj, int row, int col) throws FileNotFoundException {
-		ImageView x = getResource(obj);
+		ImageView x = ImageResourceLoadingHandler.getResource(obj);
 		x.setFitHeight(SIZE_IMAGE);
 		x.setFitWidth(SIZE_IMAGE);
 		x.setOnMouseClicked(new GameObjectClickedHandler(obj, row, col, player, controller));
@@ -259,25 +260,17 @@ public class TowerDefenseView extends Application implements Observer{
 		Background background = new Background(marketBg);
 		market.setBackground(background);
 		
+		ListView<ImageView> view = new ListView<ImageView>();
 		Market m = controller.getMarket();
-		
+		view.setItems(m.getForSale());
+		view.setPrefHeight(model.getHeight());
+		market.getChildren().add(view);
 		
 		int prefWidth = 350;
 		model.addSubWidth(prefWidth);
 		market.setPrefWidth(prefWidth);
 		input.close();
 		return market;
-	}
-	
-	private ImageView getResource(Viewable obj) throws FileNotFoundException {
-		ImageView view;
-		if(obj == null) {
-			view = new ImageView(new Image(new FileInputStream(Viewable.getDefaultResource())));
-		}else {
-			view = new ImageView(new Image(new FileInputStream(obj.getResource())));
-		}
-		
-		return view;
 	}
 	
 	private MenuBar createMenuBar() {
