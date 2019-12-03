@@ -1,5 +1,8 @@
 package viewable.gameObjects;
 
+import java.io.File;
+import java.io.IOException;
+
 public class WolfRider extends Minion {
 	
 	private static final int defaultHealth = 10;
@@ -13,8 +16,12 @@ public class WolfRider extends Minion {
 
 	@Override
 	public String getResource() {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			return (new File("./resources/images/WolfRider/WolfRider_01.png")).getCanonicalPath();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			return "";
+		}
 	}
 
 }
