@@ -9,7 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class LoggedInUser{
-	private volatile ObservableList<Chat> openChats;
+	private ObservableList<Chat> openChats;
 	private User user;
 	
 	public LoggedInUser(User u) {
@@ -19,7 +19,8 @@ public class LoggedInUser{
 	
 	public void addChat(Message m) {
 		for(Chat c: openChats) {
-			if(c.getRecipient()!=null&&c.getRecipient().getUser().matches(m.getFrom().getUser())) {
+			System.out.println("Recipient: "+c.getRecipient().getUser()+" sent from: "+m.getFrom().getUser());
+			if(c.getRecipient()!=null&&c.getRecipient().getHost().equals(m.getFrom().getHost())&&c.getRecipient().getPort()==m.getFrom().getPort()) {
 				c.addMessage(m);
 				return;
 			}
@@ -40,14 +41,15 @@ public class LoggedInUser{
 	}
 	
 	public void addOwnMessage(Message m) throws IOException, NoSuchAlgorithmException {
-		System.out.println(m.getMessage());
 		for(Chat c: openChats) {
-			if(c.getRecipient()!=null&&c.getRecipient().getUser().matches(m.getFrom().getUser())) {
+			System.out.println("Own message host: "+c.getRecipient().getHost()+":"+c.getRecipient().getPort()+" sent from: "+m.getQuery().getDesiredHost()+":"+m.getQuery().getDesiredPort());
+		if(c.getRecipient()!=null&&c.getRecipient().getHost().equals(m.getQuery().getDesiredHost())&&c.getRecipient().getPort()==m.getQuery().getDesiredPort()) {
 				c.addMessage(m);
 				return;
 			}
 		}
 		System.out.println("Own message: "+m.getQuery().getDesiredPort());
+		System.out.println(m.getQuery().getDesiredHostName());
 		Chat addedChat = new Chat(user, new Sender(m.getQuery().getDesiredHostName(), m.getQuery().getDesiredHost(), m.getQuery().getDesiredPort()));
 		addMessageOnMainThread(addedChat);
 		addedChat.addMessage(m);

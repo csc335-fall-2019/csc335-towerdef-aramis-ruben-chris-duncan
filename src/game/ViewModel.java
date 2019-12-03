@@ -25,18 +25,6 @@ public class ViewModel extends Observable {
 		screenHeight = h;
 	}
 	
-	public void setTopHeight(int t) {
-		topHeight = t;
-	}
-	
-	public void setBottomHeight(int b) {
-		bottomHeight = b;
-	}
-	
-	public void setLeftWidth(int l) {
-		leftWidth = l;
-	}
-	
 	public int getWidth() {
 		return screenWidth;
 	}
