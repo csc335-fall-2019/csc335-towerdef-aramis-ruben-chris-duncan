@@ -16,7 +16,7 @@ public abstract class Viewable implements Serializable{
 	
 	public static String getDefaultResource() {
 		try {
-			return (new File("./resources/images/tree.png")).getCanonicalPath();
+			return (new File("./resources/images/Grass.png")).getCanonicalPath();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
