@@ -70,6 +70,7 @@ import viewable.gameObjects.WaveGenerator;
 import viewable.mapObjects.Path;
 import viewable.cards.Card;
 import viewable.gameObjects.Market;
+import viewable.gameObjects.Minion;
 import viewable.gameObjects.Player;
 
 public class TowerDefenseView extends Application implements Observer{
@@ -187,13 +188,7 @@ public class TowerDefenseView extends Application implements Observer{
 
 	public void update() {
 		BorderPane pane = (BorderPane)stage.getScene().getRoot();
-		wave.generateRandom(round); 
-		while(controller.canMove()) {
-			break;
-		}
-	}
-	
-	public void generatePath() {
+		List<Minion> currentWave = wave.generateRandom(round); 
 		Viewable[][][] map = controller.getBoard();
 		int x = 0;
 		int y = 0;
