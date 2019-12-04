@@ -87,7 +87,7 @@ public class TowerDefenseView extends Application implements Observer{
 		VBox vbox = new VBox(25);
 		vbox.setPadding(new Insets(20));
 
-		Image logo = new Image(new FileInputStream("./resources/images/tst.jpeg"));
+		Image logo = new Image(new FileInputStream("./resources/images/splashScreen.gif"));
 		ImageView logoView = new ImageView(logo);
 		
 		HBox buttons = new HBox(15);
