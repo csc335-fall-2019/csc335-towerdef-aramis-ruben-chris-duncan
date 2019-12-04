@@ -30,11 +30,6 @@ public class MageTowerCard extends TowerCard {
 	}
 	
 	@Override
-	public void Ability(Player p) {
-		// TODO Auto-generated method stub
-	}
-	
-	@Override
 	public String getResource() {
 		try {
 			return (new File("./resources/images/mageTowerCard.png")).getCanonicalPath();

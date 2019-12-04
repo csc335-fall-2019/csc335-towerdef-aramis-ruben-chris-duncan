@@ -3,13 +3,14 @@ package viewable.cards.abilityCards;
 import java.io.File;
 import java.io.IOException;
 
+import viewable.cards.AbilityCard;
 import viewable.cards.Card;
 import viewable.gameObjects.Player;
 
 // increases the gold reward of minions killed
 // last a certain amount of time or # minions killed
 
-public class IncreaseRewardCard extends Card {
+public class IncreaseRewardCard extends AbilityCard {
 	
 	private static final int cardId = 11;
 	private static final String cardName = "Plentiful Bounty";
@@ -21,7 +22,7 @@ public class IncreaseRewardCard extends Card {
 	}
 
 	@Override
-	public void Ability(Player p) {
+	public void ability(Player p) {
 		// TODO Auto-generated method stub
 		p.buffReward(minionsWithBonus);
 	}

@@ -28,11 +28,6 @@ public class CurrencyTowerCard extends TowerCard {
 		m.setRange(m.getRange() + 0);
 		m.setAttackSpeed(m.getAttackSpeed() + .1);
 	}
-
-	@Override
-	public void Ability(Player p) {
-		// TODO Auto-generated method stub
-	}
 	
 	@Override
 	public String getResource() {
