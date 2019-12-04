@@ -21,7 +21,7 @@ public class MinionTower extends Tower {
 	@Override
 	public String getResource() {
 		try {
-			return (new File("./resources/images/tst.jpeg")).getCanonicalPath();
+			return (new File("./resources/images/MinionTower_Default.png")).getCanonicalPath();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			return "";
