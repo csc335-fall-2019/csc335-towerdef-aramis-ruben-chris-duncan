@@ -29,7 +29,7 @@ public class DamageCard extends Card {
 	@Override
 	public String getResource() {
 		try {
-			return (new File("./resources/images/test.jpg")).getCanonicalPath();
+			return (new File("./resources/images/damageCard.png")).getCanonicalPath();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			return "";
