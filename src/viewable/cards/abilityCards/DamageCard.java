@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import viewable.cards.Card;
 import viewable.gameObjects.Player;
+import viewable.gameObjects.Tower;
 
 // deals 1 damage to opposing player
 // should be a high cost card and appear infrequently in market
@@ -28,7 +29,7 @@ public class DamageCard extends Card {
 	@Override
 	public String getResource() {
 		try {
-			return (new File("./resources/images/")).getCanonicalPath();
+			return (new File("./resources/images/damageCard.png")).getCanonicalPath();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			return "";

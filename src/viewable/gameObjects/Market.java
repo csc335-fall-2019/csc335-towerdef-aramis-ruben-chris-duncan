@@ -1,8 +1,16 @@
 package viewable.gameObjects;
 
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import handlers.ImageResourceLoadingHandler;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.image.ImageView;
 import viewable.cards.*;
 import viewable.cards.abilityCards.DamageCard;
 import viewable.cards.abilityCards.DrawCard;
@@ -20,9 +28,12 @@ import viewable.cards.towers.MinionTowerCard;
 public class Market {
 	
 	private Deck market;
-	private List<Card> forSale;
+	private ListProperty<ImageView> forSale;
 	
-	public Market() {
+	public Market() throws FileNotFoundException {
+		market = new Deck();
+		ObservableList<ImageView> observableList = FXCollections.observableArrayList(new ArrayList<ImageView>());
+		forSale = new SimpleListProperty<ImageView>(observableList);
 		fillMarket();
 		market.shuffle();
 		populateForSale();
@@ -46,26 +57,38 @@ public class Market {
 		Collections.shuffle(forSale);
 	}
 	
-	public void populateForSale() {
+	public void populateForSale() throws FileNotFoundException {
 		int x = 6 - forSale.size();
 		for (int i = 0; i < x; i++) {
-			forSale.add(market.drawCard());
-		}
-	}
-	
-	public void removeFromForSale(int position) {
-		forSale.add(position, null);;
-	}
-	
-	public void repopulateForSale() {
-		for (int i = 0; i < 6; i++) {
-			if (forSale.get(i) == null) {
-				forSale.add(i, market.drawCard());
+			Card c = market.drawCard();
+			if(c==null) {
+				ImageView v = ImageResourceLoadingHandler.getResource(c);
+				forSale.addAll(v);
+			}else {
+				ImageView v = ImageResourceLoadingHandler.getResource(c);
+				forSale.addAll(v);
 			}
 		}
 	}
 	
-	public List<Card> getForSale() {
+	public void removeFromForSale(int position) {
+		forSale.add(position, null);
+	}
+	
+	public void repopulateForSale() throws FileNotFoundException {
+		for (int i = 0; i < 6; i++) {
+			if (forSale.get(i) == null) {
+				Card c = market.drawCard();
+				if(c==null) {
+					break;
+				}
+				ImageView v = ImageResourceLoadingHandler.getResource(c);
+				forSale.add(i, v);
+			}
+		}
+	}
+	
+	public ListProperty<ImageView> getForSale() {
 		return forSale;
 	}
 }

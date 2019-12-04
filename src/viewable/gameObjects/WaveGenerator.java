@@ -40,6 +40,7 @@ public class WaveGenerator {
 	}
 	
 	public List<Minion> generateRandom(int round) {
+		sendEm = new ArrayList<Minion>();
 		int enemyPoints = round * 12;
 		List<String> useableMinions = null;
 		Minion minion = null;
@@ -83,5 +84,9 @@ public class WaveGenerator {
 			enemyPoints -= points;
 		}
 		return sendEm;
+	}
+	
+	public void addMinions(int amount) {
+		
 	}
 }
