@@ -81,6 +81,7 @@ public class TowerDefenseView extends Application implements Observer{
 	private int round;
 	private WaveGenerator wave;
 	private Player player;
+	private List<Path> lsPath;
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -128,6 +129,7 @@ public class TowerDefenseView extends Application implements Observer{
 		model = new ViewModel(1080,1920);
 		stage = primaryStage;
 		player = new Player();
+		lsPath = new ArrayList<Path>();
 		// Set Up Other Player Area
 		HBox top = createTop();
 		
@@ -184,19 +186,56 @@ public class TowerDefenseView extends Application implements Observer{
 
 	public void update() {
 		BorderPane pane = (BorderPane)stage.getScene().getRoot();
-		List<Minion> currentWave = wave.generateRandom(round); 
+		wave.generateRandom(round); 
+	}
+	
+	public void generatePath() {
 		Viewable[][][] map = controller.getBoard();
-		Viewable p1Start = null;
-		Viewable p2Start = null;
+		int x = 0;
+		int y = 0;
 		for (int i = 0; i < map[0].length; i++) {
 			if (map[0][i][0] instanceof Path) {
-				p1Start = map[0][i][0];
-			}
-			if (map[map.length-1][i][0] instanceof Path) {
-				p2Start = map[map.length - 1][i][0];
+				lsPath.add((Path)map[0][i][0]);
+				y = i;
 			}
 		}
-		
+		while (true) {
+			int topy = y - 1;
+			int boty = y + 1;
+			int leftx = x - 1;
+			int rightx = x + 1;
+			if (leftx >= 0) {
+				if (map[leftx][y][0] instanceof Path) {
+					lsPath.add((Path)map[leftx][y][0]);
+					x = leftx;
+					continue;
+				}
+			}
+			if (topy >= 0) {
+				if (map[x][topy][0] instanceof Path) {
+					lsPath.add((Path)map[x][topy][0]);
+					y = topy;
+					continue;
+				}
+			}
+			if (rightx < map.length) {
+				if (map[rightx][y][0] instanceof Path) {
+					lsPath.add((Path)map[rightx][y][0]);
+					x = rightx;
+					continue;
+				}
+			}
+			if (boty < map[0].length) {
+				if (map[x][boty][0] instanceof Path) {
+					lsPath.add((Path)map[x][boty][0]);
+					y = boty;
+					continue;
+				}
+			}
+			if (x == map.length) {
+				break;
+			}
+		}
 	}
 	
 	private HBox createBottom() throws IOException {
@@ -215,9 +254,13 @@ public class TowerDefenseView extends Application implements Observer{
 		VBox stat2 = new VBox();
 		Label hp2 = new Label("Health: ");
 		Label mp2 = new Label("Gold: ");
+		hp2.setTextFill(Color.WHITE);
+		mp2.setTextFill(Color.WHITE);
 		Text health = new Text();
+		health.setFill(Color.WHITE);
 		health.setText(player.getHealth()+"");
 		Text gold = new Text();
+		gold.setFill(Color.WHITE);
 		gold.setText(player.getGold()+"");
 		player.getViewableHealth().addListener(new ChangeListener<Number>() {
 
@@ -272,7 +315,34 @@ public class TowerDefenseView extends Application implements Observer{
 		VBox stat1 = new VBox();
 		Label hp1 = new Label("Health: ");
 		Label mp1 = new Label("Gold: ");
-		stat1.getChildren().addAll(hp1, mp1);		
+		hp1.setTextFill(Color.WHITE);
+		mp1.setTextFill(Color.WHITE);
+		Text health = new Text();
+		health.setFill(Color.WHITE);
+		health.setText(player.getHealth()+"");
+		Text gold = new Text();
+		gold.setFill(Color.WHITE);
+		gold.setText(player.getGold()+"");
+		player.getViewableHealth().addListener(new ChangeListener<Number>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Number> arg0, Number arg1, Number arg2) {
+				// TODO Auto-generated method stub
+				health.setText(arg2.toString());
+			}
+			
+		});
+		
+		player.getViewableGold().addListener(new ChangeListener<Number>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Number> arg0, Number arg1, Number arg2) {
+				// TODO Auto-generated method stubs
+				gold.setText(arg2.toString());
+			}
+			
+		});
+		stat1.getChildren().addAll(hp1, health, mp1, gold);		
 		
 		top.getChildren().add(stat1);
 		
