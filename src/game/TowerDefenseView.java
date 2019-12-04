@@ -77,6 +77,7 @@ public class TowerDefenseView extends Application implements Observer{
 	private int round;
 	private WaveGenerator wave;
 	private Player player;
+	private List<Path> lsPath;
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -87,6 +88,7 @@ public class TowerDefenseView extends Application implements Observer{
 		model = new ViewModel(1080,1920);
 		stage = primaryStage;
 		player = new Player();
+		lsPath = new ArrayList<Path>();
 		// Set Up Other Player Area
 		HBox top = createTop();
 		
@@ -144,19 +146,54 @@ public class TowerDefenseView extends Application implements Observer{
 	public void update() {
 		BorderPane pane = (BorderPane)stage.getScene().getRoot();
 		wave.generateRandom(round); 
-		Viewable[][][] map = controller.getBoard();
-		Viewable p1Start = null;
-		Viewable p2Start = null;
-		for (int i = 0; i < map[0].length; i++) {
-			if (map[0][i][0] instanceof Path) {
-				p1Start = map[0][i][0];
-			}
-			if (map[map.length-1][i][0] instanceof Path) {
-				p2Start = map[map.length - 1][i][0];
-			}
-		}
 		while(controller.canMove()) {
 			break;
+		}
+	}
+	
+	public void generatePath() {
+		Viewable[][][] map = controller.getBoard();
+		int x = 0;
+		int y = 0;
+		for (int i = 0; i < map[0].length; i++) {
+			if (map[0][i][0] instanceof Path) {
+				lsPath.add((Path)map[0][i][0]);
+				y = i;
+			}
+		}
+		while (true) {
+			int topy = y - 1;
+			int boty = y + 1;
+			int leftx = x - 1;
+			int rightx = x + 1;
+			if (leftx >= 0) {
+				if (map[leftx][y][0] instanceof Path) {
+					lsPath.add((Path)map[leftx][y][0]);
+					x = leftx;
+					continue;
+				}
+			}
+			if (topy >= 0) {
+				if (map[x][topy][0] instanceof Path) {
+					lsPath.add((Path)map[x][topy][0]);
+					y = topy;
+					continue;
+				}
+			}
+			if (rightx < map.length) {
+				if (map[rightx][y][0] instanceof Path) {
+					lsPath.add((Path)map[rightx][y][0]);
+					x = rightx;
+					continue;
+				}
+			}
+			if (boty < map[0].length) {
+				if (map[x][boty][0] instanceof Path) {
+					lsPath.add((Path)map[x][boty][0]);
+					y = boty;
+					continue;
+				}
+			}
 		}
 	}
 	
