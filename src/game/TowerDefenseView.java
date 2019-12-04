@@ -244,15 +244,8 @@ public class TowerDefenseView extends Application implements Observer{
 		pane.setItems(player.getHand());
 		pane.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 		pane.setOrientation(Orientation.HORIZONTAL);
-		pane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<ImageView>() {
-
-			@Override
-			public void changed(ObservableValue arg0, ImageView arg1, ImageView arg2) {
-				if(arg2!=null) {
-					((ImageView)arg2).getOnMouseClicked().handle(null);
-				}
-			}
-			
+		pane.setOnMouseClicked((e)->{
+			pane.getSelectionModel().getSelectedItem().getOnMouseClicked().handle(e);
 		});
 		pane.setPrefWidth(1000);
 		pane.setBackground(Background.EMPTY);
@@ -304,6 +297,10 @@ public class TowerDefenseView extends Application implements Observer{
 		view.setItems(m.getForSale());
 		view.setPrefHeight(model.getHeight());
 		market.getChildren().add(view);
+		
+		view.setOnMouseClicked((e)->{
+			view.getSelectionModel().getSelectedItem().getOnMouseClicked().handle(e);
+		});
 		
 		int prefWidth = 350;
 		model.addSubWidth(prefWidth);
