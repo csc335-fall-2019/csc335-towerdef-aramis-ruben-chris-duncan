@@ -254,9 +254,13 @@ public class TowerDefenseView extends Application implements Observer{
 		VBox stat2 = new VBox();
 		Label hp2 = new Label("Health: ");
 		Label mp2 = new Label("Gold: ");
+		hp2.setTextFill(Color.WHITE);
+		mp2.setTextFill(Color.WHITE);
 		Text health = new Text();
+		health.setFill(Color.WHITE);
 		health.setText(player.getHealth()+"");
 		Text gold = new Text();
+		gold.setFill(Color.WHITE);
 		gold.setText(player.getGold()+"");
 		player.getViewableHealth().addListener(new ChangeListener<Number>() {
 
@@ -318,7 +322,34 @@ public class TowerDefenseView extends Application implements Observer{
 		VBox stat1 = new VBox();
 		Label hp1 = new Label("Health: ");
 		Label mp1 = new Label("Gold: ");
-		stat1.getChildren().addAll(hp1, mp1);		
+		hp1.setTextFill(Color.WHITE);
+		mp1.setTextFill(Color.WHITE);
+		Text health = new Text();
+		health.setFill(Color.WHITE);
+		health.setText(player.getHealth()+"");
+		Text gold = new Text();
+		gold.setFill(Color.WHITE);
+		gold.setText(player.getGold()+"");
+		player.getViewableHealth().addListener(new ChangeListener<Number>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Number> arg0, Number arg1, Number arg2) {
+				// TODO Auto-generated method stub
+				health.setText(arg2.toString());
+			}
+			
+		});
+		
+		player.getViewableGold().addListener(new ChangeListener<Number>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Number> arg0, Number arg1, Number arg2) {
+				// TODO Auto-generated method stubs
+				gold.setText(arg2.toString());
+			}
+			
+		});
+		stat1.getChildren().addAll(hp1, health, mp1, gold);		
 		
 		top.getChildren().add(stat1);
 		
@@ -344,6 +375,17 @@ public class TowerDefenseView extends Application implements Observer{
 		view.setItems(m.getForSale());
 		view.setPrefHeight(model.getHeight());
 		market.getChildren().add(view);
+		
+		view.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<ImageView>() {
+
+			@Override
+			public void changed(ObservableValue arg0, ImageView arg1, ImageView arg2) {
+				if(arg2!=null && controller.getMarket().getForSale().contains(arg1)) {
+					((ImageView)arg2).getOnMouseClicked().handle(null);
+				}
+			}
+			
+		});
 		
 		int prefWidth = 350;
 		model.addSubWidth(prefWidth);
