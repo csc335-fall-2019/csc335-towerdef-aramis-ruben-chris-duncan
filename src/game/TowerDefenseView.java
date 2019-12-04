@@ -20,12 +20,14 @@ import handlers.PanHandler;
 import handlers.SoundHandler;
 import handlers.VideoHandler;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
@@ -80,6 +82,41 @@ public class TowerDefenseView extends Application implements Observer{
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		VBox vbox = new VBox(25);
+		vbox.setPadding(new Insets(20));
+		
+		HBox buttons = new HBox();
+		Button newGame = new Button("New Game");
+		Button mapEditor = new Button("Map Editor");
+		Button exit = new Button("Exit");
+		buttons.getChildren().add(newGame);
+		buttons.getChildren().add(mapEditor);
+		buttons.getChildren().add(exit);
+		vbox.getChildren().add(buttons);
+		
+		newGame.setOnAction((e) -> {
+			try {
+				newGame(primaryStage);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		});
+		
+		mapEditor.setOnAction((e) -> {
+			
+		});
+		
+		exit.setOnAction((e) -> {
+			Platform.exit();
+		});
+		
+		Scene scene = new Scene(vbox);
+		primaryStage.setScene(scene);
+		primaryStage.show();
+	}
+	
+	public void newGame(Stage primaryStage) throws IOException {
 		// Initial Set Up
 		round = 0;
 		wave = new WaveGenerator();
