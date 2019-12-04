@@ -16,7 +16,6 @@ public class MarketObjectClickedHandler implements EventHandler<MouseEvent>{
 
 	@Override
 	public void handle(MouseEvent arg0) {
-		System.out.println("here");
 		market.removeFromForSale(card);
 	}
 

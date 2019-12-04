@@ -20,12 +20,15 @@ import handlers.PanHandler;
 import handlers.SoundHandler;
 import handlers.VideoHandler;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
@@ -63,6 +66,7 @@ import viewable.gameObjects.WaveGenerator;
 import viewable.mapObjects.Path;
 import viewable.cards.Card;
 import viewable.gameObjects.Market;
+import viewable.gameObjects.Minion;
 import viewable.gameObjects.Player;
 
 public class TowerDefenseView extends Application implements Observer{
@@ -81,6 +85,43 @@ public class TowerDefenseView extends Application implements Observer{
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		VBox vbox = new VBox(25);
+		vbox.setPadding(new Insets(20));
+
+		Image logo = new Image(new FileInputStream("./resources/images/splashScreen.gif"));
+		ImageView logoView = new ImageView(logo);
+		
+		HBox buttons = new HBox(15);
+
+		Button newGame = new Button("New Game");
+		Button mapEditor = new Button("Map Editor");
+		Button exit = new Button("Exit");
+		buttons.getChildren().add(newGame);
+		buttons.getChildren().add(mapEditor);
+		buttons.getChildren().add(exit);
+
+		buttons.setAlignment(Pos.CENTER);
+		vbox.getChildren().add(logoView);
+		vbox.getChildren().add(buttons);
+		
+		newGame.setOnAction((e) -> {
+			try {
+				newGame(primaryStage);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		});
+		
+		mapEditor.setOnAction(new MapEditorHandler());
+		exit.setOnAction(new ExitHandler());
+		
+		Scene scene = new Scene(vbox);
+		primaryStage.setTitle("Power Tower");
+		primaryStage.setScene(scene);
+		primaryStage.show();
+	}
+	
+	public void newGame(Stage primaryStage) throws IOException {
 		// Initial Set Up
 		round = 0;
 		wave = new WaveGenerator();
@@ -146,9 +187,6 @@ public class TowerDefenseView extends Application implements Observer{
 	public void update() {
 		BorderPane pane = (BorderPane)stage.getScene().getRoot();
 		wave.generateRandom(round); 
-		while(controller.canMove()) {
-			break;
-		}
 	}
 	
 	public void generatePath() {
@@ -337,15 +375,8 @@ public class TowerDefenseView extends Application implements Observer{
 		view.setPrefHeight(model.getHeight());
 		market.getChildren().add(view);
 		
-		view.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<ImageView>() {
-
-			@Override
-			public void changed(ObservableValue arg0, ImageView arg1, ImageView arg2) {
-				if(arg2!=null && controller.getMarket().getForSale().contains(arg1)) {
-					((ImageView)arg2).getOnMouseClicked().handle(null);
-				}
-			}
-			
+		view.setOnMouseClicked((e)->{
+			view.getSelectionModel().getSelectedItem().getOnMouseClicked().handle(null);
 		});
 		
 		int prefWidth = 350;
