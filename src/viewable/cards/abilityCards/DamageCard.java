@@ -3,6 +3,7 @@ package viewable.cards.abilityCards;
 import java.io.File;
 import java.io.IOException;
 
+import viewable.cards.AbilityCard;
 import viewable.cards.Card;
 import viewable.gameObjects.Player;
 import viewable.gameObjects.Tower;
@@ -10,7 +11,7 @@ import viewable.gameObjects.Tower;
 // deals 1 damage to opposing player
 // should be a high cost card and appear infrequently in market
 
-public class DamageCard extends Card {
+public class DamageCard extends AbilityCard {
 	
 	private static final int cardId = 10;
 	private static final String cardName = "Bombing Pigeon";
@@ -22,7 +23,7 @@ public class DamageCard extends Card {
 	}
 
 	@Override
-	public void Ability(Player p) {
+	public void ability(Player p) {
 		p.damageOther(damageAmount);
 	}
 	

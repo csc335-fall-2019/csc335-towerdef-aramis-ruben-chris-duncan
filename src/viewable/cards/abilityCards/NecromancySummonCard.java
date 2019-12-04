@@ -3,6 +3,7 @@ package viewable.cards.abilityCards;
 import java.io.File;
 import java.io.IOException;
 
+import viewable.cards.AbilityCard;
 import viewable.cards.Card;
 import viewable.gameObjects.Player;
 
@@ -10,7 +11,7 @@ import viewable.gameObjects.Player;
 // 2 life for 5 normal minions
 // maybe 2 life for 1 powerful minion
 
-public class NecromancySummonCard extends Card {
+public class NecromancySummonCard extends AbilityCard {
 	
 	private static final int cardId = 12;
 	private static final String cardName = "Necromancy";
@@ -23,7 +24,7 @@ public class NecromancySummonCard extends Card {
 	}
 
 	@Override
-	public void Ability(Player p) {
+	public void ability(Player p) {
 		p.payLife(lifeCost);
 		p.summonMinion(minionsToSummon);
 	}
