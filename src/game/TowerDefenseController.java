@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import viewable.Viewable;
+import viewable.gameObjects.Map;
 import viewable.gameObjects.Market;
 import viewable.gameObjects.Tower;
 import viewable.gameObjects.TowerType;
@@ -31,7 +32,7 @@ public class TowerDefenseController {
 		moves = new ArrayList<TowerDefenseMoveMessage>();
 	}
 
-	public Viewable[][][] getBoard() {
+	public Map getBoard() {
 		// TODO Auto-generated method stub
 		return board.getBoard();
 	}

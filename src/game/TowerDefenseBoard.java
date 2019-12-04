@@ -29,8 +29,8 @@ public class TowerDefenseBoard extends Observable{
 		notifyObservers(row+" "+col);
 	}
 	
-	public Viewable[][][] getBoard() {
-		return board.getBoard();
+	public Map getBoard() {
+		return board;
 	}
 	
 	public Market getMarket() {

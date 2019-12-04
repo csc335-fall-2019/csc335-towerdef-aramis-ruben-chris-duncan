@@ -58,6 +58,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import viewable.Viewable;
@@ -65,6 +66,7 @@ import viewable.gameObjects.TowerType;
 import viewable.gameObjects.WaveGenerator;
 import viewable.mapObjects.Path;
 import viewable.cards.Card;
+import viewable.gameObjects.Map;
 import viewable.gameObjects.Market;
 import viewable.gameObjects.Minion;
 import viewable.gameObjects.Player;
@@ -85,6 +87,7 @@ public class TowerDefenseView extends Application implements Observer{
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		controller = new TowerDefenseController(this);
 		VBox vbox = new VBox(25);
 		vbox.setPadding(new Insets(20));
 
@@ -106,7 +109,22 @@ public class TowerDefenseView extends Application implements Observer{
 		
 		newGame.setOnAction((e) -> {
 			try {
+				
+				FileChooser fileChooser = new FileChooser();
+				
+				File initDir = new File("./saves");
+				initDir.mkdir();
+				
+				fileChooser.setInitialDirectory(initDir);
+				
+				fileChooser.setTitle("Open Resource File");
+				File path = fileChooser.showOpenDialog(stage);
+				if (path != null) {
+					controller.getBoard();
+				}
+				
 				newGame(primaryStage);
+				
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
@@ -163,7 +181,7 @@ public class TowerDefenseView extends Application implements Observer{
 	
 	public GridPane createGrid() throws FileNotFoundException {
 		GridPane grid = new GridPane();
-		Viewable[][][] board = controller.getBoard();
+		Viewable[][][] board = controller.getBoard().getBoard();
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board[i].length; j++) {
 				HBox box = new HBox();
@@ -186,13 +204,10 @@ public class TowerDefenseView extends Application implements Observer{
 
 	public void update() {
 		BorderPane pane = (BorderPane)stage.getScene().getRoot();
-		wave.generateRandom(round); 
-	}
-	
-	public void generatePath() {
-		Viewable[][][] map = controller.getBoard();
-		int x = 0;
-		int y = 0;
+		List<Minion> currentWave = wave.generateRandom(round); 
+		Viewable[][][] map = controller.getBoard().getBoard();
+		Viewable p1Start = null;
+		Viewable p2Start = null;
 		for (int i = 0; i < map[0].length; i++) {
 			if (map[0][i][0] instanceof Path) {
 				lsPath.add((Path)map[0][i][0]);
@@ -490,7 +505,7 @@ public class TowerDefenseView extends Application implements Observer{
 	}
 	
 	private void setBoard(int row, int col) throws FileNotFoundException {
-		Viewable[][][] board = controller.getBoard();
+		Viewable[][][] board = controller.getBoard().getBoard();
 		int i =0;
 		for(int j =0;j<board[col][row].length;j++) {
 			if(board[col][row][j]!=null) {
