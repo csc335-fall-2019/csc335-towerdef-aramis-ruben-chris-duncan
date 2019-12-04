@@ -29,11 +29,6 @@ public class CannonTowerCard extends TowerCard {
 		c.setRange(c.getRange() + 1);
 		c.setAttackSpeed(c.getAttackSpeed() + .1);
 	}
-
-	@Override
-	public void Ability(Player p) {
-		// TODO Auto-generated method stub
-	}
 	
 	@Override
 	public String getResource() {

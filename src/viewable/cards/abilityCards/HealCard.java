@@ -3,12 +3,13 @@ package viewable.cards.abilityCards;
 import java.io.File;
 import java.io.IOException;
 
+import viewable.cards.AbilityCard;
 import viewable.cards.Card;
 import viewable.gameObjects.Player;
 
 // heals 1 life
 
-public class HealCard extends Card {
+public class HealCard extends AbilityCard {
 	
 	private static final int cardId = 9;
 	private static final String cardName = "Heal";
@@ -20,7 +21,7 @@ public class HealCard extends Card {
 	}
 
 	@Override
-	public void Ability(Player p) {
+	public void ability(Player p) {
 		p.gainLife(healAmount);
 	}
 	

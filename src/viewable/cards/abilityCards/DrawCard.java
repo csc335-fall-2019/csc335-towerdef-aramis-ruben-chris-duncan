@@ -4,10 +4,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import viewable.cards.AbilityCard;
 import viewable.cards.Card;
 import viewable.gameObjects.Player;
 
-public class DrawCard extends Card {
+public class DrawCard extends AbilityCard {
 	private static final int cardId 		= 7;
 	private static final String cardName 	= "Draw A Card";
 	private static final int cardsToDraw	= 1;
@@ -16,7 +17,7 @@ public class DrawCard extends Card {
 		super(cardName, cardId, cardCost);
 	}
 	@Override
-	public void Ability(Player p){
+	public void ability(Player p){
 		try {
 			p.drawCards(cardsToDraw);
 		} catch (FileNotFoundException e) {

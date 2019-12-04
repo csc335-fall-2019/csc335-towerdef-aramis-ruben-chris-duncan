@@ -211,7 +211,7 @@ public class TowerDefenseView extends Application implements Observer{
 		for (int i = 0; i < map[0].length; i++) {
 			if (map[0][i][0] instanceof Path) {
 				lsPath.add((Path)map[0][i][0]);
-				y = i;
+				int y = i;
 			}
 		}
 		while (true) {
