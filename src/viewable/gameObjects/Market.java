@@ -3,9 +3,11 @@ package viewable.gameObjects;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import handlers.ImageResourceLoadingHandler;
+import handlers.MarketObjectClickedHandler;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
@@ -29,11 +31,13 @@ public class Market {
 	
 	private Deck market;
 	private ListProperty<ImageView> forSale;
+	private java.util.Map<Card, ImageView> marketCards;
 	
 	public Market() throws FileNotFoundException {
 		market = new Deck();
 		ObservableList<ImageView> observableList = FXCollections.observableArrayList(new ArrayList<ImageView>());
 		forSale = new SimpleListProperty<ImageView>(observableList);
+		marketCards = new HashMap<Card, ImageView>();
 		fillMarket();
 		market.shuffle();
 		populateForSale();
@@ -66,13 +70,16 @@ public class Market {
 				forSale.addAll(v);
 			}else {
 				ImageView v = ImageResourceLoadingHandler.getResource(c);
+				marketCards.put(c, v);
+				v.setOnMouseClicked(new MarketObjectClickedHandler(c, this));
 				forSale.addAll(v);
 			}
 		}
 	}
 	
-	public void removeFromForSale(int position) {
-		forSale.add(position, null);
+	public void removeFromForSale(Card card) {
+		ImageView view = marketCards.get(card);
+		forSale.remove(view);
 	}
 	
 	public void repopulateForSale() throws FileNotFoundException {
