@@ -230,6 +230,9 @@ public class TowerDefenseView extends Application implements Observer{
 					continue;
 				}
 			}
+			if (x == map.length) {
+				break;
+			}
 		}
 	}
 	
