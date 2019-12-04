@@ -111,13 +111,8 @@ public class TowerDefenseView extends Application implements Observer{
 			}
 		});
 		
-		mapEditor.setOnAction((e) -> {
-			// TODO
-		});
-		
-		exit.setOnAction((e) -> {
-			Platform.exit();
-		});
+		mapEditor.setOnAction(new MapEditorHandler());
+		exit.setOnAction(new ExitHandler());
 		
 		Scene scene = new Scene(vbox);
 		primaryStage.setTitle("Power Tower");
