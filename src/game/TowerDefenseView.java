@@ -19,6 +19,7 @@ import handlers.NewGameHandler;
 import handlers.PanHandler;
 import handlers.SoundHandler;
 import handlers.VideoHandler;
+import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -61,6 +62,7 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import javafx.util.Duration;
 import viewable.Viewable;
 import viewable.gameObjects.TowerType;
 import viewable.gameObjects.WaveGenerator;
@@ -83,7 +85,8 @@ public class TowerDefenseView extends Application implements Observer{
 	private int round;
 	private WaveGenerator wave;
 	private Player player;
-	private List<Path> lsPath;
+	private List<ImageView> lsPath;
+	private List<Integer> direction;
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -147,7 +150,8 @@ public class TowerDefenseView extends Application implements Observer{
 		model = new ViewModel(1080,1920);
 		stage = primaryStage;
 		player = new Player();
-		lsPath = new ArrayList<Path>();
+		lsPath = new ArrayList<ImageView>();
+		direction = new ArrayList<Integer>();
 		// Set Up Other Player Area
 		HBox top = createTop();
 		
@@ -203,15 +207,40 @@ public class TowerDefenseView extends Application implements Observer{
 	}
 
 	public void update() {
-		BorderPane pane = (BorderPane)stage.getScene().getRoot();
 		List<Minion> currentWave = wave.generateRandom(round); 
-		Viewable[][][] map = controller.getBoard().getBoard();
-		Viewable p1Start = null;
-		Viewable p2Start = null;
+		for(int k =0;k<lsPath.size();k++) {
+			ImageView path = lsPath.get(k);
+			int dir = direction.get(k);
+			for(int i =0;i<currentWave.size();i++) {
+				TranslateTransition t = new TranslateTransition(Duration.millis(1000), path);
+				t.autoReverseProperty();
+				if(dir == 2|| dir == 4) {
+					t.setByX(dir==4?-SIZE_IMAGE:SIZE_IMAGE);
+				}else {
+					t.setByY(dir==3?-SIZE_IMAGE:SIZE_IMAGE);
+				}
+				t.play();
+			}
+		}
+	}
+	
+	private Node findNode(int row, int col) {
+		for(Node n: grid.getChildren()) {
+			if(GridPane.getColumnIndex(n)==col&&GridPane.getRowIndex(n)==row) {
+				return n;
+			}
+		}
+		return null;
+	}
+	
+	public void generatePath() {
+		Viewable[][][] map = controller.getBoard();
+		int x = 0;
+		int y = 0;
 		for (int i = 0; i < map[0].length; i++) {
 			if (map[0][i][0] instanceof Path) {
-				lsPath.add((Path)map[0][i][0]);
-				int y = i;
+				lsPath.add((ImageView)findNode(0,i));
+				y = i;
 			}
 		}
 		while (true) {
@@ -220,29 +249,30 @@ public class TowerDefenseView extends Application implements Observer{
 			int leftx = x - 1;
 			int rightx = x + 1;
 			if (leftx >= 0) {
-				if (map[leftx][y][0] instanceof Path) {
-					lsPath.add((Path)map[leftx][y][0]);
+				if (map[leftx][y][0] instanceof Path&&!lsPath.contains(findNode(y, leftx))) {
+					lsPath.add((ImageView)findNode(leftx, y));
+					direction.add(1);
 					x = leftx;
 					continue;
 				}
 			}
 			if (topy >= 0) {
-				if (map[x][topy][0] instanceof Path) {
-					lsPath.add((Path)map[x][topy][0]);
+				if (map[x][topy][0] instanceof Path&&!lsPath.contains(findNode(topy, x))) {
+					lsPath.add((ImageView)findNode(x, topy));
 					y = topy;
 					continue;
 				}
 			}
 			if (rightx < map.length) {
-				if (map[rightx][y][0] instanceof Path) {
-					lsPath.add((Path)map[rightx][y][0]);
+				if (map[rightx][y][0] instanceof Path&&!lsPath.contains(findNode(y, rightx))) {
+					lsPath.add((ImageView)findNode(y, rightx));
 					x = rightx;
 					continue;
 				}
 			}
 			if (boty < map[0].length) {
-				if (map[x][boty][0] instanceof Path) {
-					lsPath.add((Path)map[x][boty][0]);
+				if (map[x][boty][0] instanceof Path && !lsPath.contains(findNode(boty, x))) {
+					lsPath.add((ImageView)findNode(boty, x));
 					y = boty;
 					continue;
 				}
@@ -250,7 +280,9 @@ public class TowerDefenseView extends Application implements Observer{
 			if (x == map.length) {
 				break;
 			}
+			
 		}
+		
 	}
 	
 	private HBox createBottom() throws IOException {
@@ -414,17 +446,29 @@ public class TowerDefenseView extends Application implements Observer{
 		
 		MenuItem newGame = new MenuItem();
 		newGame.setText("New Game");
-		newGame.setOnAction(new NewGameHandler());
+		newGame.setOnAction((e) -> {
+			try {
+				newGame(stage);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		});
 		
 		MenuItem mapEditor = new MenuItem();
 		mapEditor.setText("Open Map Editor");
 		mapEditor.setOnAction(new MapEditorHandler());
 		
+		MenuItem testUpdate = new MenuItem();
+		testUpdate.setText("Test Update");
+		testUpdate.setOnAction((e)->{
+			update();
+		});
+		
 		MenuItem exit = new MenuItem();
 		exit.setText("Exit");
 		exit.setOnAction(new ExitHandler());
 		
-		file.getItems().addAll(newGame, mapEditor, exit);
+		file.getItems().addAll(newGame, mapEditor, testUpdate, exit);
 		file.setText("File");
 		return file;
 	}
