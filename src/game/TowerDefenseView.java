@@ -85,16 +85,19 @@ public class TowerDefenseView extends Application implements Observer{
 	public void start(Stage primaryStage) throws Exception {
 		VBox vbox = new VBox(25);
 		vbox.setPadding(new Insets(20));
+
 		Image logo = new Image(new FileInputStream("./resources/images/tst.jpeg"));
 		ImageView logoView = new ImageView(logo);
 		
 		HBox buttons = new HBox(15);
+
 		Button newGame = new Button("New Game");
 		Button mapEditor = new Button("Map Editor");
 		Button exit = new Button("Exit");
 		buttons.getChildren().add(newGame);
 		buttons.getChildren().add(mapEditor);
 		buttons.getChildren().add(exit);
+
 		buttons.setAlignment(Pos.CENTER);
 		vbox.getChildren().add(logoView);
 		vbox.getChildren().add(buttons);
