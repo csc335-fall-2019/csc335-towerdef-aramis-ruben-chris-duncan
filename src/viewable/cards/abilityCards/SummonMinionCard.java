@@ -3,10 +3,11 @@ package viewable.cards.abilityCards;
 import java.io.File;
 import java.io.IOException;
 
+import viewable.cards.AbilityCard;
 import viewable.cards.Card;
 import viewable.gameObjects.Player;
 
-public class SummonMinionCard extends Card {
+public class SummonMinionCard extends AbilityCard {
 	private static final int cardId 			= 8;
 	private static final String cardName 		= "Summon Minions";
 	private static final int minionsToSummon	= 2;
@@ -17,7 +18,7 @@ public class SummonMinionCard extends Card {
 	}
 	
 	@Override
-	public void Ability(Player p) {
+	public void ability(Player p) {
 		p.summonMinion(minionsToSummon);
 	}
 	

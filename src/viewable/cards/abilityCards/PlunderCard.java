@@ -3,10 +3,11 @@ package viewable.cards.abilityCards;
 import java.io.File;
 import java.io.IOException;
 
+import viewable.cards.AbilityCard;
 import viewable.cards.Card;
 import viewable.gameObjects.Player;
 
-public class PlunderCard extends Card {
+public class PlunderCard extends AbilityCard {
 	private static final int cardId 		= 6;
 	private static final String cardName 	= "Plunder";
 	private static final int goldToIncrease = 1;
@@ -17,7 +18,7 @@ public class PlunderCard extends Card {
 	}
 	
 	@Override
-	public void Ability(Player p) {
+	public void ability(Player p) {
 		p.increaseGold(goldToIncrease);
 	}
 	
