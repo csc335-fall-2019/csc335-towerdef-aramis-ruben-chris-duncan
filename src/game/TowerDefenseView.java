@@ -10,15 +10,14 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-import handlers.CardObjectClickedHandler;
 import handlers.ExitHandler;
 import handlers.GameObjectClickedHandler;
 import handlers.ImageResourceLoadingHandler;
 import handlers.MapEditorHandler;
-import handlers.NewGameHandler;
-import handlers.PanHandler;
 import handlers.SoundHandler;
 import handlers.VideoHandler;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -54,43 +53,58 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.TilePane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import javafx.util.Duration;
 import viewable.Viewable;
-import viewable.gameObjects.TowerType;
 import viewable.gameObjects.WaveGenerator;
 import viewable.mapObjects.Path;
-import viewable.cards.Card;
-import viewable.gameObjects.Map;
 import viewable.gameObjects.Market;
 import viewable.gameObjects.Minion;
 import viewable.gameObjects.Player;
+import viewable.gameObjects.Tower;
 
 public class TowerDefenseView extends Application implements Observer{
 	public static Stage MESSAGE_RECEIVED;
 	private static final int SIZE_IMAGE = 47;
 	private static final int CARD_WIDTH = 128;
 	private static final int CARD_HEIGHT = 196;
+	private static final int MINION_MAX_SPEED = 1000;
+	private static final int TOWER_MAX_ATTACK_SPEED = 10;
 	private Stage stage;
 	private TowerDefenseController controller;
 	private ViewModel model;
 	private GridPane grid;
+	private GridPane animationGrid;
+	private Pane attackGrid;
 	private int round;
 	private WaveGenerator wave;
 	private Player player;
 	private List<ImageView> lsPath;
 	private List<Integer> direction;
+	private int currentYVal;
+	private int currentXVal;
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		controller = new TowerDefenseController(this);
+		stage = primaryStage;
+		currentYVal = 0;
+		currentXVal = 0;
+		
+		Scene scene = new Scene(mainMenu());
+		primaryStage.setTitle("Power Tower");
+		primaryStage.setScene(scene);
+		primaryStage.show();
+	}
+	
+	private VBox mainMenu() throws FileNotFoundException {
 		VBox vbox = new VBox(25);
 		vbox.setPadding(new Insets(20));
 
@@ -123,32 +137,29 @@ public class TowerDefenseView extends Application implements Observer{
 				fileChooser.setTitle("Open Resource File");
 				File path = fileChooser.showOpenDialog(stage);
 				if (path != null) {
-					controller.getBoard();
+					controller.getBoard().load(path.getCanonicalPath());
+					newGame();
 				}
 				
-				newGame(primaryStage);
 				
 			} catch (IOException e1) {
+				e1.printStackTrace();
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		});
 		
 		mapEditor.setOnAction(new MapEditorHandler());
 		exit.setOnAction(new ExitHandler());
-		
-		Scene scene = new Scene(vbox);
-		primaryStage.setTitle("Power Tower");
-		primaryStage.setScene(scene);
-		primaryStage.show();
+		return vbox;
 	}
 	
-	public void newGame(Stage primaryStage) throws IOException {
+	public void newGame() throws IOException {
 		// Initial Set Up
-		round = 0;
+		round = 1;
 		wave = new WaveGenerator();
-		controller = new TowerDefenseController(this);
 		model = new ViewModel(1080,1920);
-		stage = primaryStage;
 		player = new Player();
 		lsPath = new ArrayList<ImageView>();
 		direction = new ArrayList<Integer>();
@@ -160,27 +171,62 @@ public class TowerDefenseView extends Application implements Observer{
 		// Set Up Market
 		VBox market = createMarket();
 		grid = createGrid();
+		animationGrid = createClearGrid();
+		attackGrid = createClickThrough();
 
 		// Set Up Menu Bar
 		MenuBar menu = createMenuBar();
+		
+		StackPane stack = new StackPane();
+		stack.getChildren().add(grid);
+		stack.getChildren().add(animationGrid);
+		stack.getChildren().add(attackGrid);
 		
 		BorderPane root = new BorderPane();
 		BorderPane pane = new BorderPane();
 		root.setCenter(pane);
 		root.setLeft(market);
 		root.setTop(menu);
-		pane.setCenter(grid);
+		pane.setCenter(stack);
 		pane.setTop(top);
 		pane.setBottom(bottom);
 
-		primaryStage.setScene(new Scene(root, model.getWidth(), model.getHeight()));
-		primaryStage.getScene().getStylesheets().add(getClass().getResource("mainView.css").toExternalForm());
-		primaryStage.setResizable(false);
-		primaryStage.setFullScreen(true);
-		primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+		stage.setScene(new Scene(root, model.getWidth(), model.getHeight()));
+		stage.getScene().getStylesheets().add(getClass().getResource("mainView.css").toExternalForm());
+		stage.setResizable(false);
+		stage.setFullScreen(true);
+		stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+
+		stage.sizeToScene();
 		//loadMusic();
-		primaryStage.show();
-		primaryStage.sizeToScene();
+		stage.show();
+	}
+	
+	private Pane createClickThrough() {
+		Pane box = new Pane();
+		box.setPrefHeight(model.getEffectiveBoardHeight());
+		box.setPrefWidth(model.getEffectiveWidth());
+		box.setMouseTransparent(true);
+		box.setPickOnBounds(false);
+		return box;
+	}
+	
+	private GridPane createClearGrid() throws FileNotFoundException {
+		GridPane grid = new GridPane();
+		Viewable[][][] board = controller.getBoard().getBoard();
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board[i].length; j++) {
+				ImageView view = new ImageView();
+				view.setImage(new Image(new FileInputStream("./resources/images/Grass.png")));
+				view.setFitHeight(SIZE_IMAGE+2);
+				view.setFitWidth(SIZE_IMAGE+2);
+				view.setOpacity(0);
+				grid.add(view, i, j);
+			}
+		}
+		grid.setMouseTransparent(true);
+		grid.setPickOnBounds(false);
+		return grid;
 	}
 	
 	public GridPane createGrid() throws FileNotFoundException {
@@ -207,32 +253,140 @@ public class TowerDefenseView extends Application implements Observer{
 	}
 
 	public void update() {
-		List<Minion> currentWave = wave.generateRandom(round); 
-		for(int k =0;k<lsPath.size();k++) {
-			ImageView path = lsPath.get(k);
-			int dir = direction.get(k);
-			for(int i =0;i<currentWave.size();i++) {
-				TranslateTransition t = new TranslateTransition(Duration.millis(1000), path);
-				t.autoReverseProperty();
-				if(dir == 2|| dir == 4) {
-					t.setByX(dir==4?-SIZE_IMAGE:SIZE_IMAGE);
-				}else {
-					t.setByY(dir==3?-SIZE_IMAGE:SIZE_IMAGE);
+		Thread thread = new Thread(()-> {
+			List<Minion> currentWave = wave.generateRandom(round); 
+			List<ImageView> minions = new ArrayList<ImageView>();
+			for(Minion m: currentWave) {
+				try {
+					ImageView view = ImageResourceLoadingHandler.getResource(m);
+					view.setFitHeight(SIZE_IMAGE+2);
+					view.setFitWidth(SIZE_IMAGE+2);
+					System.out.println(view);
+					minions.add(view);
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-				t.play();
+			}
+			for(Node n: grid.getChildren()) {
+				if(GridPane.getColumnIndex(n)==currentXVal&&GridPane.getRowIndex(n)==currentYVal) {
+					int finY = currentYVal;
+					Platform.runLater(()->{
+						for(int i =0;i<minions.size();i++) {
+							animationGrid.add(minions.get(i), round-1, finY);
+						}
+					});
+				}
+			}
+			for(int i =0;i<currentWave.size();i++) {
+				try {
+					move(i, currentWave.get(i), minions, currentWave);
+				}catch(Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		});
+		generatePath(thread);
+	}
+	
+	private void move(int index, Minion minion, List<ImageView> minions, List<Minion> minionsL) throws FileNotFoundException {
+		if(minion.isDead()) {
+			Platform.runLater(()->{
+				animationGrid.getChildren().remove(minions.get(index));
+			});
+			player.increaseGold(minion.getReward());
+			return;
+		}
+		int x = 0;
+		int y = currentYVal;
+		for(int k =0;k<minion.getStep();k++) {
+			int dir = direction.get(k);
+			if(dir==4||dir==2) {
+				x+=dir==4?1:-1;
+			}else {
+				y+=dir==1?-1:1;
+			}
+		}
+		checkTowers(minion, x, y);
+		if(minion.isDead()) {
+			Platform.runLater(()->{
+				animationGrid.getChildren().remove(minions.get(index));
+			});
+			player.increaseGold(2);
+			return;
+		}
+		int xFin = x;
+		int yFin = y;
+		Timeline t = new Timeline(new KeyFrame(Duration.millis(MINION_MAX_SPEED/minion.getSpeed()), (e)-> {
+			if(minion.getStep()>=direction.size()-1) {
+				minion.takeDamage(minion.getHealth());
+				animationGrid.getChildren().remove(minions.get(index));
+			}else {
+				minion.incrementStep();
+				animationGrid.getChildren().remove(minions.get(index));
+				animationGrid.add(minions.get(index), xFin, yFin);
+				try {
+					move(index, minion, minions, minionsL);
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		}));
+		t.play();
+	}
+	
+	private void checkTowers(Minion minion, int x, int y) throws FileNotFoundException {
+		Viewable[][][] map = controller.getBoard().getBoard();
+		for(int i =0;i<map.length;i++) {
+			for(int j =0;j<map[i].length;j++) {
+				if(map[i][j][0]!=null&&map[i][j][0] instanceof Tower) {
+					Tower t = (Tower)map[i][j][0];
+					int range = t.getRange();
+					if(range+i>=x&&-range+i<=x) {
+						if(range+j>=y&&j-range<=y) {
+							if(!t.canAttack()) {
+								continue;
+							}
+							ImageView view = new ImageView();
+							view.setImage(new Image(new FileInputStream("./resources/images/tst.jpeg")));
+							view.setFitHeight(10);
+							view.setFitWidth(10);
+							Platform.runLater(()->{
+								attackGrid.getChildren().add(view);
+							});
+							view.setX(i*SIZE_IMAGE+SIZE_IMAGE/2);
+							view.setY(j*SIZE_IMAGE+SIZE_IMAGE/2);
+							TranslateTransition tt = new TranslateTransition(Duration.millis((TOWER_MAX_ATTACK_SPEED/t.getAttackSpeed())*10), view);
+							tt.setByX((x-i)*SIZE_IMAGE);
+							tt.setByY((y-j)*SIZE_IMAGE);
+							tt.play();
+							t.startCooldown();
+							System.out.println("On cooldown");
+							tt.setOnFinished((e)->{
+								minion.takeDamage(t.getAttack());
+								attackGrid.getChildren().remove(view);
+								t.endCooldown();
+								System.out.println("Cooled down...");
+							});
+							return;
+						}
+					}
+				}
 			}
 		}
 	}
 	
-	private Node findNode(int row, int col) {
+	private Node findNode(int col, int row) {
 		for(Node n: grid.getChildren()) {
 			if(GridPane.getColumnIndex(n)==col&&GridPane.getRowIndex(n)==row) {
-				return n;
+				return ((HBox)n).getChildren().get(0);
 			}
 		}
 		return null;
 	}
 	
+<<<<<<< HEAD
 	public void generatePath() {
 		Viewable[][][] map = controller.getBoard().getBoard();
 		int x = 0;
@@ -254,35 +408,66 @@ public class TowerDefenseView extends Application implements Observer{
 					direction.add(1);
 					x = leftx;
 					continue;
+=======
+	public void generatePath(Thread callback) {
+		Thread thread = new Thread(()-> {
+			Viewable[][][] map = controller.getBoard().getBoard();
+			int x = 0;
+			int y = 0;
+			for (int i = 0; i < map[0].length; i++) {
+				if (map[0][i][0] instanceof Path) {
+					lsPath.add((ImageView)findNode(0,i));
+					y = i;
+					currentYVal = i;
+>>>>>>> develop
 				}
 			}
-			if (topy >= 0) {
-				if (map[x][topy][0] instanceof Path&&!lsPath.contains(findNode(topy, x))) {
-					lsPath.add((ImageView)findNode(x, topy));
-					y = topy;
-					continue;
+			while (true) {
+				int topy = y - 1;
+				int boty = y + 1;
+				int leftx = x - 1;
+				int rightx = x + 1;
+				if (leftx >= 0) {
+					if (map[leftx][y][0] instanceof Path&&!lsPath.contains(findNode(leftx, y))) {
+						lsPath.add((ImageView)findNode(leftx, y));
+						direction.add(2);
+						x = leftx;
+						continue;
+					}
 				}
-			}
-			if (rightx < map.length) {
-				if (map[rightx][y][0] instanceof Path&&!lsPath.contains(findNode(y, rightx))) {
-					lsPath.add((ImageView)findNode(y, rightx));
-					x = rightx;
-					continue;
+				if (topy >= 0) {
+					if (map[x][topy][0] instanceof Path&&!lsPath.contains(findNode(x, topy))) {
+						lsPath.add((ImageView)findNode(x, topy));
+						direction.add(1);
+						y = topy;
+						continue;
+					}
 				}
-			}
-			if (boty < map[0].length) {
-				if (map[x][boty][0] instanceof Path && !lsPath.contains(findNode(boty, x))) {
-					lsPath.add((ImageView)findNode(boty, x));
-					y = boty;
-					continue;
+				if (rightx < map.length) {
+					if (map[rightx][y][0] instanceof Path&&!lsPath.contains(findNode(rightx, y))) {
+						lsPath.add((ImageView)findNode(rightx, y));
+						direction.add(4);
+						x = rightx;
+						continue;
+					}
 				}
+				if (boty < map[0].length) {
+					if (map[x][boty][0] instanceof Path && !lsPath.contains(findNode(x, boty))) {
+						lsPath.add((ImageView)findNode(x, boty));
+						direction.add(3);
+						y = boty;
+						continue;
+					}
+				}
+				if (x == map.length-1) {
+					break;
+				}
+				
 			}
-			if (x == map.length) {
-				break;
-			}
-			
-		}
-		
+			callback.start();
+
+		});
+		thread.start();
 	}
 	
 	private HBox createBottom() throws IOException {
@@ -448,7 +633,7 @@ public class TowerDefenseView extends Application implements Observer{
 		newGame.setText("New Game");
 		newGame.setOnAction((e) -> {
 			try {
-				newGame(stage);
+				newGame();
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
@@ -462,6 +647,7 @@ public class TowerDefenseView extends Application implements Observer{
 		testUpdate.setText("Test Update");
 		testUpdate.setOnAction((e)->{
 			update();
+			System.out.println("Updating");
 		});
 		
 		MenuItem exit = new MenuItem();
