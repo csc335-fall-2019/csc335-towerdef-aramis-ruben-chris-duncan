@@ -386,6 +386,29 @@ public class TowerDefenseView extends Application implements Observer{
 		return null;
 	}
 	
+<<<<<<< HEAD
+	public void generatePath() {
+		Viewable[][][] map = controller.getBoard().getBoard();
+		int x = 0;
+		int y = 0;
+		for (int i = 0; i < map[0].length; i++) {
+			if (map[0][i][0] instanceof Path) {
+				lsPath.add((ImageView)findNode(0,i));
+				y = i;
+			}
+		}
+		while (true) {
+			int topy = y - 1;
+			int boty = y + 1;
+			int leftx = x - 1;
+			int rightx = x + 1;
+			if (leftx >= 0) {
+				if (map[leftx][y][0] instanceof Path&&!lsPath.contains(findNode(y, leftx))) {
+					lsPath.add((ImageView)findNode(leftx, y));
+					direction.add(1);
+					x = leftx;
+					continue;
+=======
 	public void generatePath(Thread callback) {
 		Thread thread = new Thread(()-> {
 			Viewable[][][] map = controller.getBoard().getBoard();
@@ -396,6 +419,7 @@ public class TowerDefenseView extends Application implements Observer{
 					lsPath.add((ImageView)findNode(0,i));
 					y = i;
 					currentYVal = i;
+>>>>>>> develop
 				}
 			}
 			while (true) {
