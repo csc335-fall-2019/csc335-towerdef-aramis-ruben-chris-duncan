@@ -234,20 +234,13 @@ public class TowerDefenseView extends Application implements Observer{
 	}
 	
 	public void generatePath() {
-		Viewable[][][] map = controller.getBoard();
+		Viewable[][][] map = controller.getBoard().getBoard();
 		int x = 0;
 		int y = 0;
 		for (int i = 0; i < map[0].length; i++) {
 			if (map[0][i][0] instanceof Path) {
-<<<<<<< HEAD
 				lsPath.add((ImageView)findNode(0,i));
 				y = i;
-=======
-
-				lsPath.add((ImageView)findNode(0,i));
-				y = i;
-
->>>>>>> f6121a0581167e7716b90e0dd957ab6337461b47
 			}
 		}
 		while (true) {
