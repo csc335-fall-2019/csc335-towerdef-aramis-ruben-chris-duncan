@@ -17,7 +17,7 @@ public class Hound extends Minion {
 	@Override
 	public String getResource() {
 		try {
-			return (new File("./resources/images/Hound/Hound_01.png")).getCanonicalPath();
+			return (new File("./resources/images/MonsterSprites/Hound.png")).getCanonicalPath();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			return "";

@@ -17,7 +17,7 @@ public class Goblin extends Minion {
 	@Override
 	public String getResource() {
 		try {
-			return (new File("./resources/images/Goblin/Goblin_01.png")).getCanonicalPath();
+			return (new File("./resources/images/MonsterSprites/Goblin.png")).getCanonicalPath();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			return "";

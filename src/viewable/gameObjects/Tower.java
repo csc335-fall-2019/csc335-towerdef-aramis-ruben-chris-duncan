@@ -12,6 +12,7 @@ public abstract class Tower extends Viewable{
 	private Integer range;
 	private double attackSpeed;
 	private String name;
+	private boolean onCooldown;
 	
 	public Tower(Integer attack, Integer range, double attackSpeed, String name) {
 		this.attack 		= attack;
@@ -67,5 +68,17 @@ public abstract class Tower extends Viewable{
 	 */
 	public String getName() {
 		return this.name;
+	}
+	
+	public void startCooldown() {
+		onCooldown = true;
+	}
+	
+	public void endCooldown() {
+		onCooldown = false;
+	}
+	
+	public boolean canAttack() {
+		return onCooldown == false;
 	}
 }
