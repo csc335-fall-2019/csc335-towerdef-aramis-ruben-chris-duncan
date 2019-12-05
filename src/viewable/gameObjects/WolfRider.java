@@ -17,7 +17,7 @@ public class WolfRider extends Minion {
 	@Override
 	public String getResource() {
 		try {
-			return (new File("./resources/images/WolfRider/WolfRider_01.png")).getCanonicalPath();
+			return (new File("./resources/images/MonsterSprites/WolfRider.png")).getCanonicalPath();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			return "";

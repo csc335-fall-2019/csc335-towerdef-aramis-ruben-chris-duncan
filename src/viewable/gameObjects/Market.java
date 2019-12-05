@@ -67,6 +67,7 @@ public class Market {
 			Card c = market.drawCard();
 			if(c==null) {
 				ImageView v = ImageResourceLoadingHandler.getResource(c);
+				v.setOnMouseClicked(new MarketObjectClickedHandler(c, this));
 				forSale.addAll(v);
 			}else {
 				ImageView v = ImageResourceLoadingHandler.getResource(c);
@@ -78,6 +79,9 @@ public class Market {
 	}
 	
 	public void removeFromForSale(Card card) {
+		if(card==null) {
+			return;
+		}
 		ImageView view = marketCards.get(card);
 		forSale.remove(view);
 	}
