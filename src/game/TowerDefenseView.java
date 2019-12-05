@@ -75,8 +75,8 @@ public class TowerDefenseView extends Application implements Observer{
 	private static final int SIZE_IMAGE = 47;
 	private static final int CARD_WIDTH = 128;
 	private static final int CARD_HEIGHT = 196;
-	private static final int MINION_MAX_SPEED = 1000;
-	private static final int TOWER_MAX_ATTACK_SPEED = 10;
+	private static final int MINION_MAX_SPEED = 100;
+	private static final int TOWER_MAX_ATTACK_SPEED = 3;
 	private Stage stage;
 	private TowerDefenseController controller;
 	private ViewModel model;
@@ -255,13 +255,13 @@ public class TowerDefenseView extends Application implements Observer{
 	public void update() {
 		Thread thread = new Thread(()-> {
 			List<Minion> currentWave = wave.generateRandom(round); 
+			round++;
 			List<ImageView> minions = new ArrayList<ImageView>();
 			for(Minion m: currentWave) {
 				try {
 					ImageView view = ImageResourceLoadingHandler.getResource(m);
 					view.setFitHeight(SIZE_IMAGE+2);
 					view.setFitWidth(SIZE_IMAGE+2);
-					System.out.println(view);
 					minions.add(view);
 				} catch (FileNotFoundException e) {
 					// TODO Auto-generated catch block
@@ -273,7 +273,7 @@ public class TowerDefenseView extends Application implements Observer{
 					int finY = currentYVal;
 					Platform.runLater(()->{
 						for(int i =0;i<minions.size();i++) {
-							animationGrid.add(minions.get(i), round-1, finY);
+							animationGrid.add(minions.get(i), 0, finY);
 						}
 					});
 				}
@@ -289,12 +289,8 @@ public class TowerDefenseView extends Application implements Observer{
 		generatePath(thread);
 	}
 	
-	private void move(int index, Minion minion, List<ImageView> minions, List<Minion> minionsL) throws FileNotFoundException {
+	private void move(int index, Minion minion, List<ImageView> minions, List<Minion> minionsL) {
 		if(minion.isDead()) {
-			Platform.runLater(()->{
-				animationGrid.getChildren().remove(minions.get(index));
-			});
-			player.increaseGold(minion.getReward());
 			return;
 		}
 		int x = 0;
@@ -307,30 +303,31 @@ public class TowerDefenseView extends Application implements Observer{
 				y+=dir==1?-1:1;
 			}
 		}
-		checkTowers(minion, x, y);
-		if(minion.isDead()) {
-			Platform.runLater(()->{
-				animationGrid.getChildren().remove(minions.get(index));
-			});
-			player.increaseGold(2);
-			return;
-		}
 		int xFin = x;
 		int yFin = y;
 		Timeline t = new Timeline(new KeyFrame(Duration.millis(MINION_MAX_SPEED/minion.getSpeed()), (e)-> {
+			try {
+				checkTowers(minion, xFin, yFin);
+			} catch (FileNotFoundException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+			if(minion.isDead()) {
+				Platform.runLater(()->{
+					animationGrid.getChildren().remove(minions.get(index));
+				});
+				player.increaseGold(minion.getReward());
+				return;
+			}
 			if(minion.getStep()>=direction.size()-1) {
+				controller.damageOther(minion.getDamage());
 				minion.takeDamage(minion.getHealth());
 				animationGrid.getChildren().remove(minions.get(index));
 			}else {
 				minion.incrementStep();
 				animationGrid.getChildren().remove(minions.get(index));
 				animationGrid.add(minions.get(index), xFin, yFin);
-				try {
-					move(index, minion, minions, minionsL);
-				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				move(index, minion, minions, minionsL);
 			}
 		}));
 		t.play();
@@ -360,15 +357,13 @@ public class TowerDefenseView extends Application implements Observer{
 							TranslateTransition tt = new TranslateTransition(Duration.millis((TOWER_MAX_ATTACK_SPEED/t.getAttackSpeed())*10), view);
 							tt.setByX((x-i)*SIZE_IMAGE);
 							tt.setByY((y-j)*SIZE_IMAGE);
-							tt.play();
 							t.startCooldown();
-							System.out.println("On cooldown");
 							tt.setOnFinished((e)->{
 								minion.takeDamage(t.getAttack());
 								attackGrid.getChildren().remove(view);
 								t.endCooldown();
-								System.out.println("Cooled down...");
 							});
+							tt.play();
 							return;
 						}
 					}
@@ -414,6 +409,11 @@ public class TowerDefenseView extends Application implements Observer{
 					
 	public void generatePath(Thread callback) {
 		Thread thread = new Thread(()-> {
+			System.out.println("Started.");
+			if(lsPath.size()>0&&direction.size()>0) {
+				callback.start();
+				return;
+			}
 			Viewable[][][] map = controller.getBoard().getBoard();
 			int x = 0;
 			int y = 0;
@@ -649,7 +649,6 @@ public class TowerDefenseView extends Application implements Observer{
 		testUpdate.setText("Test Update");
 		testUpdate.setOnAction((e)->{
 			update();
-			System.out.println("Updating");
 		});
 		
 		MenuItem exit = new MenuItem();
