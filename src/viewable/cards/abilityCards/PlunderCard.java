@@ -3,7 +3,6 @@ package viewable.cards.abilityCards;
 import java.io.File;
 import java.io.IOException;
 
-import viewable.cards.AbilityCard;
 import viewable.cards.Card;
 import viewable.gameObjects.Player;
 
