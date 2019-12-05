@@ -386,7 +386,6 @@ public class TowerDefenseView extends Application implements Observer{
 		return null;
 	}
 	
-<<<<<<< HEAD
 	public void generatePath() {
 		Viewable[][][] map = controller.getBoard().getBoard();
 		int x = 0;
@@ -408,7 +407,11 @@ public class TowerDefenseView extends Application implements Observer{
 					direction.add(1);
 					x = leftx;
 					continue;
-=======
+				}
+			}
+		}
+	}
+					
 	public void generatePath(Thread callback) {
 		Thread thread = new Thread(()-> {
 			Viewable[][][] map = controller.getBoard().getBoard();
@@ -419,7 +422,6 @@ public class TowerDefenseView extends Application implements Observer{
 					lsPath.add((ImageView)findNode(0,i));
 					y = i;
 					currentYVal = i;
->>>>>>> develop
 				}
 			}
 			while (true) {
