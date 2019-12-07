@@ -79,7 +79,7 @@ public class TowerDefenseView extends Application implements Observer{
 	private static final int SIZE_IMAGE = 47;
 	private static final int CARD_WIDTH = 128;
 	private static final int CARD_HEIGHT = 196;
-	private static final int MINION_MAX_SPEED = 100;
+	private static final int MINION_MAX_SPEED = 200;
 	private static final int TOWER_MAX_ATTACK_SPEED = 3;
 	private Stage stage;
 	private TowerDefenseController controller;
@@ -263,21 +263,21 @@ public class TowerDefenseView extends Application implements Observer{
 			List<ImageView> minions = new ArrayList<ImageView>();
 			for(Minion m: currentWave) {
 				try {
+					
 					ImageView view = ImageResourceLoadingHandler.getResource(m);
-					
-					///
-					
-					SpriteAnimation anim = new SpriteAnimation(
-							view, m.getResource,
-							3, 1, totalNumberOfFrames,
-							SIZE_IMAGE, SIZE_IMAGE, 60);
-					anim.start();
-					
-					Timeline t = new Timeline(new KeyFrame(Duration.millis(100), new AnimationHandler()));
-					Rectangle2D viewportRect = new Rectangle2D(SIZE_IMAGE, SIZE_IMAGE, SIZE_IMAGE + 2, SIZE_IMAGE + 2);
-					view.setViewport(viewportRect);
-					
-					///
+					view.setViewport(new Rectangle2D(0, 0, SIZE_IMAGE, SIZE_IMAGE));
+					Timeline t = new Timeline(new KeyFrame(Duration.millis(100), (e) -> {
+						Rectangle2D viewport = view.getViewport();
+						view.setViewport(
+								new Rectangle2D(
+										viewport.getMinX() + 47 > SIZE_IMAGE * 2 ? 0 : viewport.getMinX() + 47,
+										viewport.getMinY(),
+										SIZE_IMAGE + 2, SIZE_IMAGE + 2
+										)
+								);
+					}));
+					t.setCycleCount(Timeline.INDEFINITE);
+					t.play();
 					
 					minions.add(view);
 				} catch (FileNotFoundException e) {
@@ -304,17 +304,6 @@ public class TowerDefenseView extends Application implements Observer{
 			}
 		});
 		generatePath(thread);
-	}
-	
-	private class AnimationHandler implements EventHandler<ActionEvent> {
-
-		int tick = 0;
-		
-		@Override
-		public void handle(ActionEvent arg0) {
-			tick++;
-			drawImage(null, tick, tick, tick, tick, tick, tick, tick, tick);
-		}
 	}
 	
 	private void move(int index, Minion minion, List<ImageView> minions, List<Minion> minionsL) {
