@@ -40,6 +40,7 @@ public class ChatView{
 		BorderPane textPane = new BorderPane();
 		Text label = new Text();
 		label.setText("Received");
+
 		textPane.getChildren().add(label);
 		MESSAGE_RECEIVED.setScene(new Scene(textPane, 100,100));
 		MESSAGE_RECEIVED.initModality(Modality.WINDOW_MODAL);

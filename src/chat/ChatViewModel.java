@@ -1,5 +1,6 @@
 package chat;
 
+
 public class ChatViewModel {
 	private String selectedUser;
 	
