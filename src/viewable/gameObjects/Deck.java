@@ -58,4 +58,17 @@ public class Deck {
 		return deck.size();
 	}
 	
+	public List<Card> getDeckAsList() {
+		return deck;
+	}
+	
+	public String toString() {
+		String s = "";
+		for (Card c : deck) {
+			s += c.getName() + ", ";
+		}
+		s = s.substring(0, s.length() - 2);
+		return s;
+	}
+	
 }

@@ -11,7 +11,7 @@ public class DrawCard extends AbilityCard {
 	private static final int cardId 		= 7;
 	private static final String cardName 	= "Draw A Card";
 	private static final int cardsToDraw	= 1;
-	private static final int cardCost       = 1;
+	private static final int cardCost       = 10;
 	public DrawCard() {
 		super(cardName, cardId, cardCost);
 	}
