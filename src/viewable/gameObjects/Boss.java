@@ -1,8 +1,5 @@
 package viewable.gameObjects;
 
-import java.io.File;
-import java.io.IOException;
-
 public class Boss extends Minion {
 	
 	private static final int defaultHealth = 100;
