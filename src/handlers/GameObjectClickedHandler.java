@@ -29,7 +29,7 @@ public class GameObjectClickedHandler implements EventHandler<MouseEvent>{
 	
 	@Override
 	public void handle(MouseEvent e) {
-		if(player.getSelectedCard()!=null && player.getSelectedCard() instanceof TowerCard) {
+		if(player.getSelectedCard()!=null && player.getSelectedCard() instanceof TowerCard && controller.hasConnected()) {
 			TowerType vals = null;
 			for(TowerType t: TowerType.values()) {
 				if(t.getTower() == ((TowerCard) player.getSelectedCard()).getTower()) {

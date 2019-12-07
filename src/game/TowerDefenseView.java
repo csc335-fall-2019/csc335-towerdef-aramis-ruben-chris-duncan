@@ -3,12 +3,18 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import handlers.ExitHandler;
 import handlers.GameObjectClickedHandler;
@@ -26,10 +32,12 @@ import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -39,6 +47,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
@@ -61,10 +70,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import javafx.util.Duration;
 import viewable.Viewable;
 import viewable.gameObjects.WaveGenerator;
 import viewable.mapObjects.Path;
+import viewable.gameObjects.Map;
 import viewable.gameObjects.Market;
 import viewable.gameObjects.Minion;
 import viewable.gameObjects.Player;
@@ -89,70 +100,151 @@ public class TowerDefenseView extends Application implements Observer{
 	private List<ImageView> lsPath;
 	private List<Integer> direction;
 	private int currentYVal;
-	private int currentXVal;
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		controller = new TowerDefenseController(this);
 		stage = primaryStage;
+		System.out.println(stage);
+		controller = new TowerDefenseController(this);
+		Runtime.getRuntime().addShutdownHook(new Thread(()->{
+			controller.setRunning(false);
+			System.out.println("Exiting...");
+		}));
 		currentYVal = 0;
-		currentXVal = 0;
-		
-		Scene scene = new Scene(mainMenu());
-		primaryStage.setTitle("Power Tower");
-		primaryStage.setScene(scene);
-		primaryStage.show();
+		mainMenu();
 	}
 	
-	private VBox mainMenu() throws FileNotFoundException {
+	private void mainMenu() throws IOException {
 		VBox vbox = new VBox(25);
 		vbox.setPadding(new Insets(20));
-
-		Image logo = new Image(new FileInputStream("./resources/images/splashScreen.gif"));
+		FileInputStream in = new FileInputStream("./resources/images/splashScreen.gif");
+		Image logo = new Image(in);
 		ImageView logoView = new ImageView(logo);
-		
+		in.close();
 		HBox buttons = new HBox(15);
-
-		Button newGame = new Button("New Game");
+		
+		Button hostGame = new Button("Host a Game");
+		hostGame.setOnAction((e)->{
+			FileChooser fileChooser = new FileChooser();
+			
+			File initDir = new File("./saves");
+			initDir.mkdir();
+			
+			fileChooser.setInitialDirectory(initDir);
+			
+			fileChooser.setTitle("Open Resource File");
+			File path = fileChooser.showOpenDialog(stage);
+			if (path != null) {
+				try {
+					controller.getBoard().load(path.getCanonicalPath());
+					controller.startServer();
+					hostGame.setDisable(true);
+					newGame();
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+					fileChooser.showOpenDialog(stage);
+				}
+				
+			}
+		});
+		Button newGame = new Button("Connect");
 		Button mapEditor = new Button("Map Editor");
 		Button exit = new Button("Exit");
-		buttons.getChildren().add(newGame);
-		buttons.getChildren().add(mapEditor);
-		buttons.getChildren().add(exit);
+		buttons.getChildren().addAll(newGame, hostGame, mapEditor, exit);
+		
 
 		buttons.setAlignment(Pos.CENTER);
 		vbox.getChildren().add(logoView);
 		vbox.getChildren().add(buttons);
 		
 		newGame.setOnAction((e) -> {
-			try {
-				
-				FileChooser fileChooser = new FileChooser();
-				
-				File initDir = new File("./saves");
-				initDir.mkdir();
-				
-				fileChooser.setInitialDirectory(initDir);
-				
-				fileChooser.setTitle("Open Resource File");
-				File path = fileChooser.showOpenDialog(stage);
-				if (path != null) {
-					controller.getBoard().load(path.getCanonicalPath());
-					newGame();
-				}
-				
-				
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			connectOrHost();
 		});
 		
 		mapEditor.setOnAction(new MapEditorHandler());
 		exit.setOnAction(new ExitHandler());
-		return vbox;
+		Scene scene = new Scene(vbox);
+		stage.setTitle("Power Tower");
+		stage.setScene(scene);
+		stage.show();
+	}
+	
+	private void connectOrHost() {
+		GridPane pane = new GridPane();
+		BorderPane main = new BorderPane();
+		
+		Button timer = new Button("Scan for Games");
+		timer.setOnAction((e)->{
+			try {
+				controller.scanPorts();
+			} catch (IOException ex) {
+				// TODO Auto-generated catch block
+				ex.printStackTrace();
+			}
+		});
+		
+		ListView view = new ListView();
+		view.setItems(controller.getPossibleConnections());
+		view.setCellFactory(new Callback() {
+			@Override
+			public Object call(Object arg0) {
+				// TODO Create the server view.
+	            return new PossibleConnectionCell();
+			}
+		});
+		view.setOnMouseClicked((e)->{
+			if(!e.getButton().equals(MouseButton.PRIMARY)) {
+				e.consume();
+				return;
+			}else if(e.getClickCount()<2) {
+				e.consume();
+				return;
+			}
+			System.out.println("Connecting...");
+			InetSocketAddress address = (InetSocketAddress)view.getSelectionModel().getSelectedItem();
+			if(address==null) {
+				e.consume();
+				return;
+			}
+			controller.startClient(address.getHostString(), address.getPort());
+		});
+
+		TextField host = new TextField();
+		Label hostText = new Label("Host");
+		
+		TextField port = new TextField();
+		Label portText = new Label("Port");
+		
+		Button client = new Button("Connect to Host");
+		client.setOnAction((e)->{
+			if(host.getText().length()==0||port.getText().length()==0) {
+				Stage error = new Stage();
+				error.showAndWait();
+				e.consume();
+			}
+			try {
+				Integer.parseInt(port.getText());
+			}catch(Exception ex) {
+				Stage error = new Stage();
+				error.showAndWait();
+				e.consume();
+			}
+			controller.startClient(host.getText(), Integer.parseInt(port.getText()));
+		});
+
+		pane.add(host, 0, 1);
+		pane.add(hostText, 0, 0);
+		pane.add(port, 1, 1);
+		pane.add(portText, 1, 0);
+		pane.add(client, 0, 2);
+		pane.add(timer, 3, 2);
+		
+		main.setCenter(view);
+		main.setBottom(pane);
+		stage.setScene(new Scene(main, 1920, 1080));
+		stage.setFullScreen(true);
+		stage.show();
 	}
 	
 	public void newGame() throws IOException {
@@ -269,7 +361,7 @@ public class TowerDefenseView extends Application implements Observer{
 				}
 			}
 			for(Node n: grid.getChildren()) {
-				if(GridPane.getColumnIndex(n)==currentXVal&&GridPane.getRowIndex(n)==currentYVal) {
+				if(GridPane.getColumnIndex(n)==0&&GridPane.getRowIndex(n)==currentYVal) {
 					int finY = currentYVal;
 					Platform.runLater(()->{
 						for(int i =0;i<minions.size();i++) {
@@ -281,6 +373,7 @@ public class TowerDefenseView extends Application implements Observer{
 			for(int i =0;i<currentWave.size();i++) {
 				try {
 					move(i, currentWave.get(i), minions, currentWave);
+					
 				}catch(Exception ex) {
 					ex.printStackTrace();
 				}
@@ -698,14 +791,24 @@ public class TowerDefenseView extends Application implements Observer{
 
 	@Override
 	public void update(Observable o, Object e) {
-		// TODO Auto-generated method stub
-		int i = Integer.parseInt(((String)e).split(" ")[0]);
-		int j = Integer.parseInt(((String)e).split(" ")[1]);
-		try {
-			setBoard(i, j);
-		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		if(e instanceof Map) {
+				Platform.runLater(()->{
+					try {
+						newGame();
+					}catch(Exception ex) {
+						ex.printStackTrace();
+					}
+				});
+		}else if(e instanceof String) {
+			// TODO Auto-generated method stub
+			int i = Integer.parseInt(((String)e).split(" ")[0]);
+			int j = Integer.parseInt(((String)e).split(" ")[1]);
+			try {
+				setBoard(i, j);
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 	}
 	
@@ -732,6 +835,27 @@ public class TowerDefenseView extends Application implements Observer{
 
 		grid.getChildren().remove(toRemove);
 		grid.add(node, col, row);
+	}
+	private class PossibleConnectionCell extends ListCell{
+		private InetSocketAddress address;
+		public PossibleConnectionCell() {
+		}
+		
+		@Override
+		protected void updateItem(Object update, boolean empty) {
+			super.updateItem(update, empty);
+			address = (InetSocketAddress)update;
+			if(update!=null) {
+				HBox box = new HBox();
+				Label addressLabel = new Label(address.getHostString());
+				box.getChildren().add(addressLabel);
+				setGraphic(box);
+			}
+		}
+		
+		public InetSocketAddress getAddress() {
+			return address;
+		}
 	}
 }
 

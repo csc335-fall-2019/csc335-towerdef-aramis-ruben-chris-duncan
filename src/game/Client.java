@@ -21,6 +21,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 
 import javafx.application.Platform;
+import viewable.gameObjects.Map;
 
 public class Client implements Runnable{
 	
@@ -70,14 +71,18 @@ public class Client implements Runnable{
 		ObjectInputStream in = null;
 		try {
 			socket.connect(new InetSocketAddress(host,port));
+			System.out.println("Client connected...");
 			controller.setConnected(true);
 			controller.setRunning(true);
 			controller.setOut(new ObjectOutputStream(socket.getOutputStream()));
 			in = new ObjectInputStream(socket.getInputStream());
-		} catch (IOException e) {
+			Map map = (Map)in.readObject();
+			controller.setBoard(map);
+		} catch (IOException | ClassNotFoundException e) {
 			return;
 		}
 		while(controller.isRunning()) {
+			System.out.println("Client listening...");
 			try {
 				TowerDefenseTurnMessage message = (TowerDefenseTurnMessage)in.readObject();
 				controller.handleMessage(message);

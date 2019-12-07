@@ -33,6 +33,12 @@ public class TowerDefenseBoard extends Observable{
 		return board;
 	}
 	
+	public void setBoard(Map m) {
+		board = m;
+		setChanged();
+		notifyObservers(m);
+	}
+	
 	public Market getMarket() {
 		return market;
 	}
