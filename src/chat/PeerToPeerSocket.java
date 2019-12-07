@@ -23,7 +23,7 @@ public class PeerToPeerSocket implements Runnable{
 	private List<Query> currentConnections;
 	private String host;
 	private User user;
-	private Query from;
+	private Sender from;
 	
 	public PeerToPeerSocket() throws IOException {
 		this("localhost",6881);
