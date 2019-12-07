@@ -10,12 +10,12 @@ public class AckMessage implements Serializable{
 	 */
 	private static final long serialVersionUID = 3878864033800198219L;
 
-	private Sender to;
+	private Query to;
 	
-	private Sender from;
+	private Query from;
 	
-	public AckMessage(Sender to, Sender sender) {
+	public AckMessage(Query to, Query from) {
 		this.to = to;
-		this.from = sender;
+		this.from = from;
 	}
 }

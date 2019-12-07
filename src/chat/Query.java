@@ -32,10 +32,6 @@ public class Query implements Serializable{
 		desiredHost = h;
 	}
 	
-	public void setDesiredHostName(String h) {
-		desiredHostName = h;
-	}
-	
 	public String getDesiredHostName() {
 		return desiredHostName;
 	}

@@ -10,9 +10,6 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-import chat.ChatView;
-import chat.PeerToPeerSocket;
-import handlers.CardObjectClickedHandler;
 import handlers.ExitHandler;
 import handlers.GameObjectClickedHandler;
 import handlers.ImageResourceLoadingHandler;
@@ -60,9 +57,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.text.Text;
-import javafx.stage.Modality;
-import javafx.stage.Screen;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
@@ -119,12 +113,14 @@ public class TowerDefenseView extends Application implements Observer{
 		ImageView logoView = new ImageView(logo);
 		
 		HBox buttons = new HBox(15);
+
 		Button newGame = new Button("New Game");
 		Button mapEditor = new Button("Map Editor");
 		Button exit = new Button("Exit");
 		buttons.getChildren().add(newGame);
 		buttons.getChildren().add(mapEditor);
 		buttons.getChildren().add(exit);
+
 		buttons.setAlignment(Pos.CENTER);
 		vbox.getChildren().add(logoView);
 		vbox.getChildren().add(buttons);
@@ -603,7 +599,6 @@ public class TowerDefenseView extends Application implements Observer{
 		input.close();
 		return top;
 	}
-
 	
 	private VBox createMarket() throws IOException {
 		// Set Up Market

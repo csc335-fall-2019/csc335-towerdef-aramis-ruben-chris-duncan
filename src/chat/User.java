@@ -19,13 +19,10 @@ public class User implements Serializable{
 	private String user;
 	private String pass;
 	private File file;
-	private static byte[] salt;
-	private static MessageDigest md;
-	public User(String userName, String password) throws IOException, NoSuchAlgorithmException {
+	public User(String userName, String password) throws IOException {
 		user = userName;
-		md = MessageDigest.getInstance("SHA-512");
 		file = new File("hash.txt");
-		salt = new byte[16];
+		byte[] salt = new byte[16];
 		if(file.createNewFile()) {
 			salt = generateRandomSalt(salt);
 		}else {
@@ -41,7 +38,7 @@ public class User implements Serializable{
 			}
 			scan.close();
 		}
-		pass = generateSHA512Password(password);
+		pass = generateSHA512Password(password, salt);
 	}
 	
 	public String getPassword() {
@@ -49,11 +46,14 @@ public class User implements Serializable{
 	}
 	
 	public boolean checkPassword(String check) throws FileNotFoundException {
-		System.out.println(generateSHA512Password(check)+"\n"+pass);
-		System.out.println(generateSHA512Password(check).equals(pass));
-		if(generateSHA512Password(check).equals(pass)) {
+		Scanner scan = new Scanner(file);
+		String bytes = scan.nextLine();
+		byte[] salt = bytes.getBytes();
+		if(generateSHA512Password(check, salt).equals(pass)) {
+			scan.close();
 			return true;
 		}
+		scan.close();
 		return false;
 	}
 	
@@ -67,14 +67,23 @@ public class User implements Serializable{
 		return salt;
 	}
 	
-	private String generateSHA512Password(String pass) {
-		md.reset();
-        byte[] bytes = md.digest(pass.getBytes());
-        String sb = "";
-        for(int i=0; i< bytes.length ;i++)
+	private static String generateSHA512Password(String pass, byte[] salt) {
+		String generatedPassword = null;
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-512");
+            md.update(salt);
+            byte[] bytes = md.digest(pass.getBytes());
+            StringBuilder sb = new StringBuilder();
+            for(int i=0; i< bytes.length ;i++)
+            {
+                sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+            }
+            generatedPassword = sb.toString();
+        } 
+        catch (NoSuchAlgorithmException e) 
         {
-            sb+= Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1);
+            e.printStackTrace();
         }
-        return sb;
+        return generatedPassword;
 	}
 }

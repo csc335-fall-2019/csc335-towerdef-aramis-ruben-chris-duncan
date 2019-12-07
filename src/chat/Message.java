@@ -13,15 +13,15 @@ public class Message implements Serializable{
 	
 	private Query query;
 	
-	private Sender from;
+	private Query from;
 	
-	public Message(Sender from, Query query, String message) {
+	public Message(Query from, Query query, String message) {
 		this.query = query;
 		this.message = message;
 		this.from = from;
 	}
 	
-	public Sender getFrom() {
+	public Query getFrom() {
 		return from;
 	}
 	

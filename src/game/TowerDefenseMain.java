@@ -1,5 +1,4 @@
 package game;
-import chat.ChatView;
 import javafx.application.Application;
 
 public class TowerDefenseMain {

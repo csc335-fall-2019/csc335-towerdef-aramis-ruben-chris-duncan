@@ -1,5 +1,8 @@
 package viewable.gameObjects;
 
+import java.io.File;
+import java.io.IOException;
+
 public class Hound extends Minion {
 	
 	private static final int defaultHealth = 5;

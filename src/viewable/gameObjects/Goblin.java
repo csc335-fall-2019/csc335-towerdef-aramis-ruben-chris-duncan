@@ -1,5 +1,8 @@
 package viewable.gameObjects;
 
+import java.io.File;
+import java.io.IOException;
+
 public class Goblin extends Minion {
 
 	private static final int defaultHealth = 5;

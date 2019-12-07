@@ -1,5 +1,8 @@
 		package viewable.gameObjects;
 
+import java.io.File;
+import java.io.IOException;
+
 public class Charger extends Minion {
 	
 	private static final int defaultHealth = 15;
