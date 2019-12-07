@@ -198,7 +198,7 @@ public class TowerDefenseView extends Application implements Observer{
 		stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 
 		stage.sizeToScene();
-		//loadMusic();
+		loadMusic();
 		stage.show();
 	}
 	
