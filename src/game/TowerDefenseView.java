@@ -16,6 +16,7 @@ import handlers.ImageResourceLoadingHandler;
 import handlers.MapEditorHandler;
 import handlers.SoundHandler;
 import handlers.VideoHandler;
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
@@ -23,9 +24,12 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -75,7 +79,7 @@ public class TowerDefenseView extends Application implements Observer{
 	private static final int SIZE_IMAGE = 47;
 	private static final int CARD_WIDTH = 128;
 	private static final int CARD_HEIGHT = 196;
-	private static final int MINION_MAX_SPEED = 100;
+	private static final int MINION_MAX_SPEED = 200;
 	private static final int TOWER_MAX_ATTACK_SPEED = 3;
 	private Stage stage;
 	private TowerDefenseController controller;
@@ -260,9 +264,22 @@ public class TowerDefenseView extends Application implements Observer{
 			List<ImageView> minions = new ArrayList<ImageView>();
 			for(Minion m: currentWave) {
 				try {
+					
 					ImageView view = ImageResourceLoadingHandler.getResource(m);
-					view.setFitHeight(SIZE_IMAGE+2);
-					view.setFitWidth(SIZE_IMAGE+2);
+					view.setViewport(new Rectangle2D(0, 0, SIZE_IMAGE, SIZE_IMAGE));
+					Timeline t = new Timeline(new KeyFrame(Duration.millis(100), (e) -> {
+						Rectangle2D viewport = view.getViewport();
+						view.setViewport(
+								new Rectangle2D(
+										viewport.getMinX() + 47 > SIZE_IMAGE * 2 ? 0 : viewport.getMinX() + 47,
+										viewport.getMinY(),
+										SIZE_IMAGE + 2, SIZE_IMAGE + 2
+										)
+								);
+					}));
+					t.setCycleCount(Timeline.INDEFINITE);
+					t.play();
+					
 					minions.add(view);
 				} catch (FileNotFoundException e) {
 					// TODO Auto-generated catch block
