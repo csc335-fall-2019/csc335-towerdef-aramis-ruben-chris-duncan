@@ -94,6 +94,7 @@ public class TowerDefenseView extends Application implements Observer{
 	private List<Integer> direction;
 	private int currentYVal;
 	private int currentXVal;
+	private Market m;
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -202,7 +203,7 @@ public class TowerDefenseView extends Application implements Observer{
 		stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 
 		stage.sizeToScene();
-		//loadMusic();
+		loadMusic();
 		stage.show();
 	}
 	
@@ -543,7 +544,21 @@ public class TowerDefenseView extends Application implements Observer{
 		});
 		pane.setPrefWidth(1000);
 		pane.setBackground(Background.EMPTY);
-		
+		Button endTurn = new Button("End Turn");
+		endTurn.setOnAction((e)->{
+			try {
+				m.repopulateForSale();
+			} catch (FileNotFoundException e1) {
+				e1.printStackTrace();
+			}
+			player.discardHand();
+			try {
+				player.drawCards(5);
+			} catch (FileNotFoundException e1) {
+				e1.printStackTrace();
+			}
+		});
+		stat2.getChildren().add(endTurn);
 		bottom.getChildren().add(stat2);
 		bottom.getChildren().add(pane);
 		input.close();
@@ -614,12 +629,17 @@ public class TowerDefenseView extends Application implements Observer{
 		market.setBackground(background);
 		
 		ListView<ImageView> view = new ListView<ImageView>();
-		Market m = controller.getMarket();
+		m = controller.getMarket();
+		m.setView(this);
 		view.setItems(m.getForSale());
 		view.setPrefHeight(model.getHeight());
 		market.getChildren().add(view);
 		
 		view.setOnMouseClicked((e)->{
+			if(view.getSelectionModel().getSelectedItem()==null) {
+				e.consume();
+				return;
+			}
 			view.getSelectionModel().getSelectedItem().getOnMouseClicked().handle(e);
 		});
 		
@@ -775,6 +795,14 @@ public class TowerDefenseView extends Application implements Observer{
 
 		grid.getChildren().remove(toRemove);
 		grid.add(node, col, row);
+	}
+	
+	public Player getCurrentPlayer() {
+		return player;
+	}
+	
+	public Stage getPrimaryStage() {
+		return stage;
 	}
 }
 

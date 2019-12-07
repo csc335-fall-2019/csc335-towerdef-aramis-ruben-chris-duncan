@@ -14,8 +14,8 @@ public class DamageCard extends AbilityCard {
 	
 	private static final int cardId = 10;
 	private static final String cardName = "Bombing Pigeon";
-	private static final int cardCost = 1;
-	private static final int damageAmount = 1;
+	private static final int cardCost = 10;
+	private static final int damageAmount = 2;
 
 	public DamageCard() {
 		super(cardName, cardId, cardCost);

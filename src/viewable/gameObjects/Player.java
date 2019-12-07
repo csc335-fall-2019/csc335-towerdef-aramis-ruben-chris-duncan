@@ -45,7 +45,7 @@ public class Player{
 		hand = new SimpleListProperty<ImageView>(observableList);
 		draw = new Deck();
 		discard = new Deck();
-		gold = new SimpleIntegerProperty(5);
+		gold = new SimpleIntegerProperty(20);
 		for (int i = 0; i < 6; i++) {
 			draw.add(new ArcherTowerCard());
 		}
@@ -101,6 +101,9 @@ public class Player{
 	
 	public void drawCards(int x) throws FileNotFoundException {
 		for (int i = 0; i < x; i++) {
+			if (draw.isEmpty()) {
+				resetDraw();
+			}
 			Card c = draw.drawCard();
 			if(c==null) {
 				continue;
@@ -109,6 +112,14 @@ public class Player{
 			hand.add(view);
 			mapCards.put(c, view);
 		}
+	}
+	
+	public void discardHand() {
+		for (Card c : mapCards.keySet()) {
+			discard.add(c);
+			hand.remove(mapCards.get(c));
+		}
+		mapCards.clear();
 	}
 	
 	public void increaseGold(int amount) {
@@ -136,7 +147,7 @@ public class Player{
 	}
 	
 	public void damageOther(int amount) {
-		// TODO: damage other player
+		health.set(health.intValue() - amount);
 	}
 	
 	public int getGold() {
@@ -165,5 +176,14 @@ public class Player{
 	
 	public IntegerProperty getViewableGold() {
 		return gold;
+	}
+	
+	public Deck getDiscard() {
+		return discard;
+	}
+	
+	public void printCards(Deck deck) {
+		List<Card> cards = deck.getDeckAsList();
+		System.out.println(cards);
 	}
 }
