@@ -39,11 +39,7 @@ public class GameObjectClickedHandler implements EventHandler<MouseEvent>{
 			if(vals==null) {
 				return;
 			}
-			if(player.getGold()<=0) {
-				return;
-			}
 			controller.addTower(row, col, vals);
-			player.increaseGold(-1*player.getSelectedCard().getCost());
 			player.addToDiscard(player.getSelectedCard());
 			player.setSelectedCard(null);
 		}

@@ -10,7 +10,7 @@ public class SummonMinionCard extends AbilityCard {
 	private static final int cardId 			= 8;
 	private static final String cardName 		= "Summon Minions";
 	private static final int minionsToSummon	= 2;
-	private static final int cardCost       = 1;
+	private static final int cardCost       = 10;
 	
 	public SummonMinionCard() {
 		super(cardName, cardId, cardCost);

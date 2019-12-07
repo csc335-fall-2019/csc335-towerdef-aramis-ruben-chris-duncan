@@ -14,7 +14,7 @@ public class NecromancySummonCard extends AbilityCard {
 	
 	private static final int cardId = 12;
 	private static final String cardName = "Necromancy";
-	private static final int cardCost = 1;
+	private static final int cardCost = 10;
 	private static final int lifeCost = 2;
 	private static final int minionsToSummon = 5;
 

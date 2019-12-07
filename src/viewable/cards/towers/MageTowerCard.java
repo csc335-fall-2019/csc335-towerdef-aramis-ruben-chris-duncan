@@ -17,7 +17,7 @@ import viewable.gameObjects.Tower;
 public class MageTowerCard extends TowerCard {
 	private static final int cardId 		= 2;
 	private static final String cardName 	= "Mage Tower";
-	private static final int cardCost       = 1;
+	private static final int cardCost       = 10;
 	
 	public MageTowerCard() {
 		super(cardName, cardId, cardCost);
