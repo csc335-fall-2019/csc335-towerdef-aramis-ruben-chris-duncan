@@ -19,6 +19,11 @@ import java.util.Map;
 
 import javafx.application.Platform;
 
+/**
+ * The actual peer to peer socket.
+ * @author Aramis
+ *
+ */
 public class PeerToPeerSocket implements Runnable{
 	private volatile List<ServerSocket> servers;
 	private volatile List<Socket> activeConnections;

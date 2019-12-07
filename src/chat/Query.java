@@ -2,6 +2,11 @@ package chat;
 
 import java.io.Serializable;
 
+/**
+ * This class holds the query, ie where the message is supposed to go.
+ * @author Aramis
+ *
+ */
 public class Query implements Serializable{
 	/**
 	 * 

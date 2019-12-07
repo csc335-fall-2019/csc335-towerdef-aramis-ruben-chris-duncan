@@ -1,5 +1,10 @@
 package chat;
 
+/**
+ * Stores the current chat objects.
+ * @author Aramis
+ *
+ */
 public class ChatViewModel {
 	private String selectedUser;
 	

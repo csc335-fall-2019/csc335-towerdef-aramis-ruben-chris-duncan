@@ -2,6 +2,11 @@ package chat;
 
 import java.io.Serializable;
 
+/**
+ * This sends a message that the receiver has received the message.
+ * @author Aramis
+ *
+ */
 public class AckMessage implements Serializable{
 
 	/**

@@ -4,6 +4,11 @@ import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+/**
+ * This class holds basic information about the person sending the message.
+ * @author Aramis
+ *
+ */
 public class Sender implements Serializable{
 	/**
 	 * 

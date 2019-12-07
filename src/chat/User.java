@@ -10,6 +10,12 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Scanner;
 
+/**
+ * This class handles the local logging in process, stores the passwords in a text file and generates a random salt.
+ * Not super secure but still a fun process.
+ * @author Aramis
+ *
+ */
 public class User implements Serializable{
 	/**
 	 * 

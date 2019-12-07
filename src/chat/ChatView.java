@@ -28,6 +28,11 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+/**
+ * View for the chatlog
+ * @author Aramis
+ *
+ */
 public class ChatView{
 	private static Stage MESSAGE_RECEIVED; 
 	private Thread thread;

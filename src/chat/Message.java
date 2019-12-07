@@ -2,6 +2,11 @@ package chat;
 
 import java.io.Serializable;
 
+/**
+ * The message being sent, with sender and query.
+ * @author Aramis
+ *
+ */
 public class Message implements Serializable{
 	/**
 	 * 

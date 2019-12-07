@@ -8,6 +8,11 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+/**
+ * The currently logged in user, handles adding chats from different sources.
+ * @author Aramis
+ *
+ */
 public class LoggedInUser{
 	private ObservableList<Chat> openChats;
 	private User user;
