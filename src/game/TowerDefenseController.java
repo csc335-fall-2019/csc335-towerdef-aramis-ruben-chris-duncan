@@ -48,6 +48,10 @@ public class TowerDefenseController {
 		board.addTower(row, col, type);
 	}
 	
+	public void damageOther(int amount) {
+		// send message to other player to take damage.
+	}
+	
 	public Market getMarket() {
 		return board.getMarket();
 	}
