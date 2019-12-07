@@ -17,7 +17,7 @@ import viewable.gameObjects.Tower;
 public class FreezeTowerCard extends TowerCard {
 	private static final int cardId 		= 3;
 	private static final String cardName 	= "Freeze Tower";
-	private static final int cardCost       = 1;
+	private static final int cardCost       = 25;
 	
 	public FreezeTowerCard() {
 		super(cardName, cardId, cardCost);

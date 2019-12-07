@@ -12,8 +12,8 @@ public class HealCard extends AbilityCard {
 	
 	private static final int cardId = 9;
 	private static final String cardName = "Heal";
-	private static final int cardCost = 1;
-	private static final int healAmount = 1;
+	private static final int cardCost = 10;
+	private static final int healAmount = 5;
 
 	public HealCard() {
 		super(cardName, cardId, cardCost);

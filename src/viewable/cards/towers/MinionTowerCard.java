@@ -17,7 +17,7 @@ import viewable.gameObjects.Tower;
 public class MinionTowerCard extends TowerCard {
 	private static final int cardId 		= 5;
 	private static final String cardName 	= "Minion Tower";
-	private static final int cardCost       = 1;
+	private static final int cardCost       = 10;
 	
 	public MinionTowerCard() {
 		super(cardName, cardId, cardCost);
