@@ -16,6 +16,7 @@ import handlers.ImageResourceLoadingHandler;
 import handlers.MapEditorHandler;
 import handlers.SoundHandler;
 import handlers.VideoHandler;
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
@@ -23,9 +24,12 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -260,8 +264,21 @@ public class TowerDefenseView extends Application implements Observer{
 			for(Minion m: currentWave) {
 				try {
 					ImageView view = ImageResourceLoadingHandler.getResource(m);
-					view.setFitHeight(SIZE_IMAGE+2);
-					view.setFitWidth(SIZE_IMAGE+2);
+					
+					///
+					
+					SpriteAnimation anim = new SpriteAnimation(
+							view, m.getResource,
+							3, 1, totalNumberOfFrames,
+							SIZE_IMAGE, SIZE_IMAGE, 60);
+					anim.start();
+					
+					Timeline t = new Timeline(new KeyFrame(Duration.millis(100), new AnimationHandler()));
+					Rectangle2D viewportRect = new Rectangle2D(SIZE_IMAGE, SIZE_IMAGE, SIZE_IMAGE + 2, SIZE_IMAGE + 2);
+					view.setViewport(viewportRect);
+					
+					///
+					
 					minions.add(view);
 				} catch (FileNotFoundException e) {
 					// TODO Auto-generated catch block
@@ -287,6 +304,17 @@ public class TowerDefenseView extends Application implements Observer{
 			}
 		});
 		generatePath(thread);
+	}
+	
+	private class AnimationHandler implements EventHandler<ActionEvent> {
+
+		int tick = 0;
+		
+		@Override
+		public void handle(ActionEvent arg0) {
+			tick++;
+			drawImage(null, tick, tick, tick, tick, tick, tick, tick, tick);
+		}
 	}
 	
 	private void move(int index, Minion minion, List<ImageView> minions, List<Minion> minionsL) {
