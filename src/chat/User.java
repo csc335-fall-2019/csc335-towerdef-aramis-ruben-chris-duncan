@@ -19,10 +19,13 @@ public class User implements Serializable{
 	private String user;
 	private String pass;
 	private File file;
-	public User(String userName, String password) throws IOException {
+	private static byte[] salt;
+	private static MessageDigest md;
+	public User(String userName, String password) throws IOException, NoSuchAlgorithmException {
 		user = userName;
+		md = MessageDigest.getInstance("SHA-512");
 		file = new File("hash.txt");
-		byte[] salt = new byte[16];
+		salt = new byte[16];
 		if(file.createNewFile()) {
 			salt = generateRandomSalt(salt);
 		}else {
@@ -38,7 +41,7 @@ public class User implements Serializable{
 			}
 			scan.close();
 		}
-		pass = generateSHA512Password(password, salt);
+		pass = generateSHA512Password(password);
 	}
 	
 	public String getPassword() {
@@ -46,14 +49,11 @@ public class User implements Serializable{
 	}
 	
 	public boolean checkPassword(String check) throws FileNotFoundException {
-		Scanner scan = new Scanner(file);
-		String bytes = scan.nextLine();
-		byte[] salt = bytes.getBytes();
-		if(generateSHA512Password(check, salt).equals(pass)) {
-			scan.close();
+		System.out.println(generateSHA512Password(check)+"\n"+pass);
+		System.out.println(generateSHA512Password(check).equals(pass));
+		if(generateSHA512Password(check).equals(pass)) {
 			return true;
 		}
-		scan.close();
 		return false;
 	}
 	
@@ -67,23 +67,14 @@ public class User implements Serializable{
 		return salt;
 	}
 	
-	private static String generateSHA512Password(String pass, byte[] salt) {
-		String generatedPassword = null;
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-512");
-            md.update(salt);
-            byte[] bytes = md.digest(pass.getBytes());
-            StringBuilder sb = new StringBuilder();
-            for(int i=0; i< bytes.length ;i++)
-            {
-                sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
-            }
-            generatedPassword = sb.toString();
-        } 
-        catch (NoSuchAlgorithmException e) 
+	private String generateSHA512Password(String pass) {
+		md.reset();
+        byte[] bytes = md.digest(pass.getBytes());
+        String sb = "";
+        for(int i=0; i< bytes.length ;i++)
         {
-            e.printStackTrace();
+            sb+= Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1);
         }
-        return generatedPassword;
+        return sb;
 	}
 }
