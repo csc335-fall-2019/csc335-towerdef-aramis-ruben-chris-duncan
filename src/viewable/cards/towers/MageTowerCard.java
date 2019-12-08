@@ -23,7 +23,9 @@ public class MageTowerCard extends TowerCard {
 		super(cardName, cardId, cardCost);
 	}
 	
-	public void Upgrade(MageTower m) {
+	@Override
+	public void Upgrade(Tower m) {
+		m.setUpgraded(true);
 		m.setAttack(m.getAttack() + 1);
 		m.setRange(m.getRange() + 1);
 		m.setAttackSpeed(m.getAttackSpeed() + .1);

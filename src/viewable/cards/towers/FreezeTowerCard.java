@@ -23,7 +23,9 @@ public class FreezeTowerCard extends TowerCard {
 		super(cardName, cardId, cardCost);
 	}
 	
-	public void Upgrade(FreezeTower f) {
+	@Override
+	public void Upgrade(Tower f) {
+		f.setUpgraded(true);
 		f.setAttack(f.getAttack() + 0);
 		f.setRange(f.getRange() + 1);
 		f.setAttackSpeed(f.getAttackSpeed() + .1);

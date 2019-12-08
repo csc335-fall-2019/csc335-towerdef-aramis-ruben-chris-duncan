@@ -37,6 +37,7 @@ public class Player{
 	private Deck discard;
 	private IntegerProperty gold;
 	private Card selectedCard;
+	private int goldMultiplier;
 	
 	public Player() throws FileNotFoundException {
 		health = new SimpleIntegerProperty(20);
@@ -46,6 +47,7 @@ public class Player{
 		draw = new Deck();
 		discard = new Deck();
 		gold = new SimpleIntegerProperty(20);
+		goldMultiplier = 1;
 		for (int i = 0; i < 6; i++) {
 			draw.add(new ArcherTowerCard());
 		}
@@ -89,6 +91,7 @@ public class Player{
 		hand.removeAll(mapCards.get(card));
 		discard.add(card);
 		hand.remove(card);
+		mapCards.remove(card);
 	}
 	
 	public void resetDraw() {
@@ -123,7 +126,7 @@ public class Player{
 	}
 	
 	public void increaseGold(int amount) {
-		gold.setValue(amount+getGold());
+		gold.setValue((amount * goldMultiplier)+getGold());
 	}
 	
 	public void gainLife(int amount) {
@@ -142,8 +145,8 @@ public class Player{
 		// TODO
 	}
 	
-	public void buffReward(int amount) {
-		// TODO
+	public void buffReward() {
+		goldMultiplier = 2;
 	}
 	
 	public void damageOther(int amount) {
@@ -180,6 +183,10 @@ public class Player{
 	
 	public Deck getDiscard() {
 		return discard;
+	}
+	
+	public java.util.Map<Card, ImageView> getCardHand() {
+		return mapCards;
 	}
 	
 	public void printCards(Deck deck) {
