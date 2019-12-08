@@ -772,18 +772,13 @@ public class TowerDefenseView extends Application implements Observer{
 	
 	private void setBoard(int row, int col) throws FileNotFoundException {
 		Viewable[][][] board = controller.getBoard().getBoard();
-		int i =0;
-		for(int j =0;j<board[col][row].length;j++) {
-			if(board[col][row][j]!=null) {
-				i=j;
-			}
-		}
-		Viewable obj = board[col][row][i];
+		Viewable obj = board[col][row][0];
+		System.out.println(obj.getResource());
 		Node node = null;
 		Node toRemove = null;
 		for(Node n: grid.getChildren()) {
 			if(GridPane.getColumnIndex(n)==col&&GridPane.getRowIndex(n)==row) {
-				node = createGridResource(obj, row, col);
+				node = createGridResource(obj, col, row);
 				toRemove = n;
 			}
 		}

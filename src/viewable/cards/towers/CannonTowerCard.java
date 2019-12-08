@@ -24,7 +24,9 @@ public class CannonTowerCard extends TowerCard {
 		super(cardName, cardId, cardCost);
 	}
 	
-	public void Upgrade(CannonTower c) {
+	@Override
+	public void Upgrade(Tower c) {
+		c.setUpgraded(true);
 		c.setAttack(c.getAttack() + 1);
 		c.setRange(c.getRange() + 1);
 		c.setAttackSpeed(c.getAttackSpeed() + .1);
@@ -45,4 +47,5 @@ public class CannonTowerCard extends TowerCard {
 		// TODO Auto-generated method stub
 		return CannonTower.class;
 	}
+
 }

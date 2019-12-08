@@ -13,12 +13,14 @@ public abstract class Tower extends Viewable{
 	private double attackSpeed;
 	private String name;
 	private boolean onCooldown;
+	private boolean upgraded;
 	
 	public Tower(Integer attack, Integer range, double attackSpeed, String name) {
 		this.attack 		= attack;
 		this.range 			= range;
 		this.attackSpeed 	= attackSpeed;
 		this.name			= name;
+		upgraded = false;
 	}
 	/** 
 	 * @purpose Mutator for attack
@@ -80,5 +82,13 @@ public abstract class Tower extends Viewable{
 	
 	public boolean canAttack() {
 		return onCooldown == false;
+	}
+	
+	public void setUpgraded(boolean val) {
+		upgraded = val;
+	}
+	
+	public boolean getUpgraded() {
+		return upgraded;
 	}
 }

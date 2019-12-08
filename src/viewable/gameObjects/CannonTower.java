@@ -20,11 +20,20 @@ public class CannonTower extends Tower {
 	
 	@Override
 	public String getResource() {
-		try {
-			return (new File("./resources/images/CannonTower_Default.png")).getCanonicalPath();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			return "";
+		if (this.getUpgraded()) {
+			try {
+				return (new File("./resources/images/CannonTower_Upgrade.png")).getCanonicalPath();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				return "";
+			}
+		} else {
+			try {
+				return (new File("./resources/images/CannonTower_Default.png")).getCanonicalPath();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				return "";
+			}
 		}
 	}
 }
