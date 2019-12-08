@@ -2,6 +2,7 @@ package chat;
 
 import java.io.Serializable;
 
+
 public class Message implements Serializable{
 	/**
 	 * 
@@ -12,15 +13,15 @@ public class Message implements Serializable{
 	
 	private Query query;
 	
-	private Query from;
+	private Sender from;
 	
-	public Message(Query from, Query query, String message) {
+	public Message(Sender from, Query query, String message) {
 		this.query = query;
 		this.message = message;
 		this.from = from;
 	}
 	
-	public Query getFrom() {
+	public Sender getFrom() {
 		return from;
 	}
 	

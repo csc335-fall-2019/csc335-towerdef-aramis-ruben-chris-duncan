@@ -2,6 +2,7 @@ package chat;
 
 import java.io.Serializable;
 
+
 public class Query implements Serializable{
 	/**
 	 * 
@@ -29,6 +30,10 @@ public class Query implements Serializable{
 	
 	public void setDesiredHost(String h) {
 		desiredHost = h;
+	}
+
+	public void setDesiredHostName(String h) {
+		desiredHostName = h;
 	}
 	
 	public String getDesiredHostName() {
