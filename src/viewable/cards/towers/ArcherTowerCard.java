@@ -23,12 +23,6 @@ public class ArcherTowerCard extends TowerCard {
 		super(cardName, cardId, cardCost);
 	}
 	
-	public void Upgrade(ArcherTower t) {
-		t.setAttack(t.getAttack() + 1);
-		t.setRange(t.getRange() + 1);
-		t.setAttackSpeed(t.getAttackSpeed() + .1);
-	}
-	
 	@Override
 	public String getResource() {
 		try {
@@ -43,6 +37,14 @@ public class ArcherTowerCard extends TowerCard {
 	public Class<? extends Tower> getTower() {
 		// TODO Auto-generated method stub
 		return ArcherTower.class;
+	}
+
+	@Override
+	public void Upgrade(Tower t) {
+		t.setUpgraded(true);
+		t.setAttack(t.getAttack() + 1);
+		t.setRange(t.getRange() + 1);
+		t.setAttackSpeed(t.getAttackSpeed() + .1);
 	}
 	
 }
