@@ -282,7 +282,6 @@ public class TowerDefenseView extends Application implements Observer{
 					
 					minions.add(view);
 				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -298,7 +297,7 @@ public class TowerDefenseView extends Application implements Observer{
 			}
 			for(int i =0;i<currentWave.size();i++) {
 				try {
-					move(i, currentWave.get(i), minions, currentWave);
+					move(i, currentWave.get(i), minions, currentWave, (int)(Math.random()*85));
 				}catch(Exception ex) {
 					ex.printStackTrace();
 				}
@@ -307,7 +306,7 @@ public class TowerDefenseView extends Application implements Observer{
 		generatePath(thread);
 	}
 	
-	private void move(int index, Minion minion, List<ImageView> minions, List<Minion> minionsL) {
+	private void move(int index, Minion minion, List<ImageView> minions, List<Minion> minionsL, int offset) {
 		if(minion.isDead()) {
 			return;
 		}
@@ -323,11 +322,10 @@ public class TowerDefenseView extends Application implements Observer{
 		}
 		int xFin = x;
 		int yFin = y;
-		Timeline t = new Timeline(new KeyFrame(Duration.millis(MINION_MAX_SPEED/minion.getSpeed()), (e)-> {
+		Timeline t = new Timeline(new KeyFrame(Duration.millis(MINION_MAX_SPEED/minion.getSpeed()-offset), (e)-> {
 			try {
 				checkTowers(minion, xFin, yFin);
 			} catch (FileNotFoundException e2) {
-				// TODO Auto-generated catch block
 				e2.printStackTrace();
 			}
 			if(minion.isDead()) {
@@ -345,7 +343,7 @@ public class TowerDefenseView extends Application implements Observer{
 				minion.incrementStep();
 				animationGrid.getChildren().remove(minions.get(index));
 				animationGrid.add(minions.get(index), xFin, yFin);
-				move(index, minion, minions, minionsL);
+				move(index, minion, minions, minionsL, (int)(Math.random()*85));
 			}
 		}));
 		t.play();
