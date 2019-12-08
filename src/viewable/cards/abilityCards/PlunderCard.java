@@ -9,8 +9,8 @@ import viewable.gameObjects.Player;
 public class PlunderCard extends AbilityCard {
 	private static final int cardId 		= 6;
 	private static final String cardName 	= "Plunder";
-	private static final int goldToIncrease = 1;
-	private static final int cardCost       = 1;
+	private static final int goldToIncrease = 5;
+	private static final int cardCost       = 0;
 	
 	public PlunderCard() {
 		super(cardName, cardId, cardCost);

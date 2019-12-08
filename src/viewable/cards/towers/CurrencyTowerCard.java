@@ -17,13 +17,15 @@ import viewable.gameObjects.Tower;
 public class CurrencyTowerCard extends TowerCard {
 	private static final int cardId 		= 4;
 	private static final String cardName 	= "Currency Tower";
-	private static final int cardCost       = 1;
+	private static final int cardCost       = 10;
 	
 	public CurrencyTowerCard() {
 		super(cardName, cardId, cardCost);
 	}
 	
-	public void Upgrade(CurrencyTower m) {
+	@Override
+	public void Upgrade(Tower m) {
+		m.setUpgraded(true);
 		m.setAttack(m.getAttack() + 1);
 		m.setRange(m.getRange() + 0);
 		m.setAttackSpeed(m.getAttackSpeed() + .1);

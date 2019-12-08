@@ -59,6 +59,38 @@ public class TowerDefenseController {
 		board.addTower(row, col, type);
 	}
 	
+	public boolean isTower(int row, int col) {
+		Map map = board.getBoard();
+		Viewable[][][] grid = map.getBoard();
+		if (grid[col][row][0] instanceof Viewable) {
+			return true;
+		}
+		return false;
+	}
+	
+	public String getTowerName(int row, int col) {
+		Map map = board.getBoard();
+		Viewable[][][] grid = map.getBoard();
+		String s = "";
+		if (grid[col][row][0] instanceof Viewable) {
+			s = grid[col][row][0].toString();
+		}
+		String[] split = s.split("\\.");
+		String[] split2 = split[2].split("@");
+		s = split2[0];
+		return s;
+	}
+	
+	public Tower getTower(int row, int col) {
+		Tower t = null;
+		Map map = board.getBoard();
+		Viewable[][][] grid = map.getBoard();
+		if (grid[col][row][0] instanceof Viewable) {
+			t = (Tower) grid[col][row][0];
+		}
+		return t;
+	}
+	
 	public void damageOther(int amount) {
 		// send message to other player to take damage.
 	}

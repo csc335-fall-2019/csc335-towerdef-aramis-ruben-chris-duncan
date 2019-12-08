@@ -18,13 +18,15 @@ import viewable.gameObjects.Tower;
 public class CannonTowerCard extends TowerCard {
 	private static final int cardId 		= 1;
 	private static final String cardName 	= "Cannon Tower";
-	private static final int cardCost       = 1;
+	private static final int cardCost       = 10;
 	
 	public CannonTowerCard() {
 		super(cardName, cardId, cardCost);
 	}
 	
-	public void Upgrade(CannonTower c) {
+	@Override
+	public void Upgrade(Tower c) {
+		c.setUpgraded(true);
 		c.setAttack(c.getAttack() + 1);
 		c.setRange(c.getRange() + 1);
 		c.setAttackSpeed(c.getAttackSpeed() + .1);
@@ -45,4 +47,5 @@ public class CannonTowerCard extends TowerCard {
 		// TODO Auto-generated method stub
 		return CannonTower.class;
 	}
+
 }

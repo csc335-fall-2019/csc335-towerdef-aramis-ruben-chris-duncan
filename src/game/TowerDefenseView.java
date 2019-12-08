@@ -22,6 +22,7 @@ import handlers.ImageResourceLoadingHandler;
 import handlers.MapEditorHandler;
 import handlers.SoundHandler;
 import handlers.VideoHandler;
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
@@ -29,6 +30,8 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -86,7 +89,7 @@ public class TowerDefenseView extends Application implements Observer{
 	private static final int SIZE_IMAGE = 47;
 	private static final int CARD_WIDTH = 128;
 	private static final int CARD_HEIGHT = 196;
-	private static final int MINION_MAX_SPEED = 100;
+	private static final int MINION_MAX_SPEED = 200;
 	private static final int TOWER_MAX_ATTACK_SPEED = 3;
 	private Stage stage;
 	private TowerDefenseController controller;
@@ -100,6 +103,8 @@ public class TowerDefenseView extends Application implements Observer{
 	private List<ImageView> lsPath;
 	private List<Integer> direction;
 	private int currentYVal;
+	private int currentXVal;
+	private Market m;
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -290,7 +295,7 @@ public class TowerDefenseView extends Application implements Observer{
 		stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 
 		stage.sizeToScene();
-		//loadMusic();
+		loadMusic();
 		stage.show();
 	}
 	
@@ -351,12 +356,24 @@ public class TowerDefenseView extends Application implements Observer{
 			List<ImageView> minions = new ArrayList<ImageView>();
 			for(Minion m: currentWave) {
 				try {
+					
 					ImageView view = ImageResourceLoadingHandler.getResource(m);
-					view.setFitHeight(SIZE_IMAGE+2);
-					view.setFitWidth(SIZE_IMAGE+2);
+					view.setViewport(new Rectangle2D(0, 0, SIZE_IMAGE, SIZE_IMAGE));
+					Timeline t = new Timeline(new KeyFrame(Duration.millis(100), (e) -> {
+						Rectangle2D viewport = view.getViewport();
+						view.setViewport(
+								new Rectangle2D(
+										viewport.getMinX() + 47 > SIZE_IMAGE * 2 ? 0 : viewport.getMinX() + 47,
+										viewport.getMinY(),
+										SIZE_IMAGE + 2, SIZE_IMAGE + 2
+										)
+								);
+					}));
+					t.setCycleCount(Timeline.INDEFINITE);
+					t.play();
+					
 					minions.add(view);
 				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -372,8 +389,7 @@ public class TowerDefenseView extends Application implements Observer{
 			}
 			for(int i =0;i<currentWave.size();i++) {
 				try {
-					move(i, currentWave.get(i), minions, currentWave);
-					
+					move(i, currentWave.get(i), minions, currentWave, (int)(Math.random()*85));
 				}catch(Exception ex) {
 					ex.printStackTrace();
 				}
@@ -382,7 +398,7 @@ public class TowerDefenseView extends Application implements Observer{
 		generatePath(thread);
 	}
 	
-	private void move(int index, Minion minion, List<ImageView> minions, List<Minion> minionsL) {
+	private void move(int index, Minion minion, List<ImageView> minions, List<Minion> minionsL, int offset) {
 		if(minion.isDead()) {
 			return;
 		}
@@ -398,11 +414,10 @@ public class TowerDefenseView extends Application implements Observer{
 		}
 		int xFin = x;
 		int yFin = y;
-		Timeline t = new Timeline(new KeyFrame(Duration.millis(MINION_MAX_SPEED/minion.getSpeed()), (e)-> {
+		Timeline t = new Timeline(new KeyFrame(Duration.millis(MINION_MAX_SPEED/minion.getSpeed()-offset), (e)-> {
 			try {
 				checkTowers(minion, xFin, yFin);
 			} catch (FileNotFoundException e2) {
-				// TODO Auto-generated catch block
 				e2.printStackTrace();
 			}
 			if(minion.isDead()) {
@@ -420,7 +435,7 @@ public class TowerDefenseView extends Application implements Observer{
 				minion.incrementStep();
 				animationGrid.getChildren().remove(minions.get(index));
 				animationGrid.add(minions.get(index), xFin, yFin);
-				move(index, minion, minions, minionsL);
+				move(index, minion, minions, minionsL, (int)(Math.random()*85));
 			}
 		}));
 		t.play();
@@ -474,6 +489,32 @@ public class TowerDefenseView extends Application implements Observer{
 		return null;
 	}
 	
+	public void generatePath() {
+		Viewable[][][] map = controller.getBoard().getBoard();
+		int x = 0;
+		int y = 0;
+		for (int i = 0; i < map[0].length; i++) {
+			if (map[0][i][0] instanceof Path) {
+				lsPath.add((ImageView)findNode(0,i));
+				y = i;
+			}
+		}
+		while (true) {
+			int topy = y - 1;
+			int boty = y + 1;
+			int leftx = x - 1;
+			int rightx = x + 1;
+			if (leftx >= 0) {
+				if (map[leftx][y][0] instanceof Path&&!lsPath.contains(findNode(y, leftx))) {
+					lsPath.add((ImageView)findNode(leftx, y));
+					direction.add(1);
+					x = leftx;
+					continue;
+				}
+			}
+		}
+	}
+					
 	public void generatePath(Thread callback) {
 		Thread thread = new Thread(()-> {
 			System.out.println("Started.");
@@ -593,7 +634,21 @@ public class TowerDefenseView extends Application implements Observer{
 		});
 		pane.setPrefWidth(1000);
 		pane.setBackground(Background.EMPTY);
-		
+		Button endTurn = new Button("End Turn");
+		endTurn.setOnAction((e)->{
+			try {
+				m.repopulateForSale();
+			} catch (FileNotFoundException e1) {
+				e1.printStackTrace();
+			}
+			player.discardHand();
+			try {
+				player.drawCards(5);
+			} catch (FileNotFoundException e1) {
+				e1.printStackTrace();
+			}
+		});
+		stat2.getChildren().add(endTurn);
 		bottom.getChildren().add(stat2);
 		bottom.getChildren().add(pane);
 		input.close();
@@ -664,12 +719,17 @@ public class TowerDefenseView extends Application implements Observer{
 		market.setBackground(background);
 		
 		ListView<ImageView> view = new ListView<ImageView>();
-		Market m = controller.getMarket();
+		m = controller.getMarket();
+		m.setView(this);
 		view.setItems(m.getForSale());
 		view.setPrefHeight(model.getHeight());
 		market.getChildren().add(view);
 		
 		view.setOnMouseClicked((e)->{
+			if(view.getSelectionModel().getSelectedItem()==null) {
+				e.consume();
+				return;
+			}
 			view.getSelectionModel().getSelectedItem().getOnMouseClicked().handle(e);
 		});
 		
@@ -814,18 +874,13 @@ public class TowerDefenseView extends Application implements Observer{
 	
 	private void setBoard(int row, int col) throws FileNotFoundException {
 		Viewable[][][] board = controller.getBoard().getBoard();
-		int i =0;
-		for(int j =0;j<board[col][row].length;j++) {
-			if(board[col][row][j]!=null) {
-				i=j;
-			}
-		}
-		Viewable obj = board[col][row][i];
+		Viewable obj = board[col][row][0];
+		System.out.println(obj.getResource());
 		Node node = null;
 		Node toRemove = null;
 		for(Node n: grid.getChildren()) {
 			if(GridPane.getColumnIndex(n)==col&&GridPane.getRowIndex(n)==row) {
-				node = createGridResource(obj, row, col);
+				node = createGridResource(obj, col, row);
 				toRemove = n;
 			}
 		}
@@ -835,6 +890,13 @@ public class TowerDefenseView extends Application implements Observer{
 
 		grid.getChildren().remove(toRemove);
 		grid.add(node, col, row);
+	}
+	public Player getCurrentPlayer() {
+		return player;
+	}
+	
+	public Stage getPrimaryStage() {
+		return stage;
 	}
 	private class PossibleConnectionCell extends ListCell{
 		private InetSocketAddress address;

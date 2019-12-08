@@ -17,13 +17,15 @@ import viewable.gameObjects.Tower;
 public class MinionTowerCard extends TowerCard {
 	private static final int cardId 		= 5;
 	private static final String cardName 	= "Minion Tower";
-	private static final int cardCost       = 1;
+	private static final int cardCost       = 10;
 	
 	public MinionTowerCard() {
 		super(cardName, cardId, cardCost);
 	}
 	
-	public void Upgrade(MinionTower m) {
+	@Override
+	public void Upgrade(Tower m) {
+		m.setUpgraded(true);
 		m.setAttack(m.getAttack() + 1);
 		m.setRange(m.getRange() + 0);
 		m.setAttackSpeed(m.getAttackSpeed() + .1);
