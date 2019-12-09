@@ -1,5 +1,14 @@
 package handlers;
-
+/**
+ * GameObjectClickedHandler.java
+ * 
+ * Handles all GameObjects click events. 
+ * 
+ *  * Usage instructions:
+ * 
+ * Construct GameObjectClickedHandler:
+ * GameObjectClickedHandler g = new GameObjectClickedHandler(view, col, row, controller);
+ */
 import java.io.FileNotFoundException;
 
 import game.TowerDefenseController;
@@ -20,6 +29,17 @@ public class GameObjectClickedHandler implements EventHandler<MouseEvent>{
 	private TowerDefenseController controller;
 	private Viewable view;
 	
+	/**
+	 *  Purpose: Constructor for the class
+	 *  
+	 * @param view the main Viewable object
+	 * 
+	 * @param col an integer containing the column
+	 * 
+	 * @param row an integer containing the row
+	 * 
+	 * @param controller the main TowerDefenseController object
+	 */
 	public GameObjectClickedHandler(Viewable view, int col, int row, TowerDefenseController controller) {
 		this.view = view;
 		this.row = row;
@@ -27,6 +47,11 @@ public class GameObjectClickedHandler implements EventHandler<MouseEvent>{
 		this.controller = controller;
 	}
 	
+	/**
+	 *  Purpose: handler for MouseEvents regarding towers and upgrades
+	 *  
+	 *  @param e is the MouseEvent being handled
+	 */
 	@Override
 	public void handle(MouseEvent e) {
 		if(col>controller.getBoard().getBoard().length/2) {
