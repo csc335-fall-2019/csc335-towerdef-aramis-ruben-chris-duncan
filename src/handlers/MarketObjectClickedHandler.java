@@ -1,5 +1,4 @@
 package handlers;
-<<<<<<< HEAD
 /**
  * MarketObjectClickedHandler.java
  * 
@@ -10,10 +9,8 @@ package handlers;
  * Construct MarketObjectClickedHandler:
  * MarketObjectClickedHandler h = new MarketObjectClickedHandler(card, market, view);
  */
-=======
 
 import game.TowerDefenseController;
->>>>>>> branch 'develop' of https://github.com/csc335-fall-2019/csc335-towerdef-aramis-ruben-chris-duncan.git
 import game.TowerDefenseView;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -32,17 +29,13 @@ public class MarketObjectClickedHandler implements EventHandler<MouseEvent>{
 	private TowerDefenseController controller;
 	private TowerDefenseView view;
 	
-<<<<<<< HEAD
 	/**
 	 * Purpose: constructor for the class
 	 * @param card - a Card object
 	 * @param market - a Market object
 	 * @param view - a TowerDefenseView object
 	 */
-	public MarketObjectClickedHandler(Card card, Market market, TowerDefenseView view) {
-=======
 	public MarketObjectClickedHandler(Card card, TowerDefenseController controller, TowerDefenseView view) {
->>>>>>> branch 'develop' of https://github.com/csc335-fall-2019/csc335-towerdef-aramis-ruben-chris-duncan.git
 		this.card = card;
 		this.controller = controller;
 		this.view  = view;
