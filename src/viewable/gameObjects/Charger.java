@@ -1,4 +1,4 @@
-		package viewable.gameObjects;
+package viewable.gameObjects;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,6 +10,9 @@ public class Charger extends Minion {
 	private static final int defaultSpeed = 2;
 	private static final int defaultReward = 10;
 
+	/**
+	 * @purpose: constructor for charger minion
+	 */
 	public Charger() {
 		super(defaultHealth, defaultDamage, defaultSpeed, defaultReward);
 	}

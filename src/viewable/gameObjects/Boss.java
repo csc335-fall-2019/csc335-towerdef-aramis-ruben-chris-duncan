@@ -10,6 +10,9 @@ public class Boss extends Minion {
 	private static final int defaultSpeed = 1;
 	private static final int defaultReward = 100;
 
+	/**
+	 * constructor for the boss minion
+	 */
 	public Boss() {
 		super(defaultHealth, defaultDamage, defaultSpeed, defaultReward);
 	}
