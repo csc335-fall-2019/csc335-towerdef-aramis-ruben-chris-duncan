@@ -14,6 +14,9 @@ public class Charger extends Minion {
 		super(defaultHealth, defaultDamage, defaultSpeed, defaultReward);
 	}
 
+	/**
+	 * @purpose: loads the sprite for this minion
+	 */
 	@Override
 	public String getResource() {
 		try {
