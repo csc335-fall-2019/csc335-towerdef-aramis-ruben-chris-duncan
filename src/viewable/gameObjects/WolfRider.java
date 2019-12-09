@@ -1,3 +1,7 @@
+/**
+ * 
+ */
+
 package viewable.gameObjects;
 
 import java.io.File;
@@ -14,6 +18,9 @@ public class WolfRider extends Minion {
 		super(defaultHealth, defaultDamage, defaultSpeed, defaultReward);
 	}
 
+	/**
+	 * @purpose: loads the sprite for this minion
+	 */
 	@Override
 	public String getResource() {
 		try {

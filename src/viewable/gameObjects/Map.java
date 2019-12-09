@@ -17,6 +17,7 @@ import java.io.Serializable;
 import viewable.Viewable;
 
 public class Map implements Serializable{
+	
 	/**
 	 * 
 	 */

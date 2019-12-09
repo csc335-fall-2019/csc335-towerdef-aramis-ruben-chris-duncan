@@ -1,3 +1,7 @@
+/**
+ * @purpose: creates the waves that will be sent to attack the other player
+ */
+
 package viewable.gameObjects;
 
 import java.util.ArrayList;
@@ -13,6 +17,9 @@ public class WaveGenerator {
 	private List<Integer> points;
 	private int additionalMinions;
 
+	/**
+	 * @purpose: constructor for the wave generator
+	 */
 	public WaveGenerator() {
 		sendEm = new ArrayList<Minion>();
 		one = new ArrayList<String>();
@@ -41,6 +48,15 @@ public class WaveGenerator {
 		points.add(10);
 	}
 	
+	/**
+	 * @purpose: generates a random composition for each wave based upon the wave number
+	 * this method takes the round and multiplies it by a constant to get a point value
+	 * and then adds random minions until the value is less than or equal to zero
+	 * 
+	 * @param round: the current round number
+	 * 
+	 * @return: the wave composition to send
+	 */
 	public List<Minion> generateRandom(int round) {
 		sendEm = new ArrayList<Minion>();
 		int enemyPoints = (round * 10) + additionalMinions;

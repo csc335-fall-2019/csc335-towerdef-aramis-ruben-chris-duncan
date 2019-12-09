@@ -70,6 +70,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import network.AbilityCardUsedMessage;
 import network.DamageOtherMessage;
+
+import network.MarketCardRemovedMessage;
+
 import network.StatIncreaseMessage;
 import network.TowerDefenseMoveMessage;
 import network.TowerDefenseTurnMessage;
@@ -90,6 +93,7 @@ import viewable.mapObjects.Path;
 
 public class TowerDefenseController {
 	private TowerDefenseBoard board;
+	private TowerDefenseView view;
 	
 	private volatile boolean isRunning = true;
 	
@@ -111,16 +115,21 @@ public class TowerDefenseController {
 	
 	private volatile boolean minionsFinished;
 	
-	/**
-     * @purpose: Creates the controller for the game that handles all the game
-     * logic.
-     * 
-     * @param view - A TowerDefenseView object that is the game board view.
-     * 
-     * @throws IOException - throws a FileNotFoundException in further methods if
-     * game resources cannot be found.
-     */
 	public TowerDefenseController(TowerDefenseView view) throws IOException {
+
+	private volatile boolean isPaused;
+	
+  /**
+   * @purpose: Creates the controller for the game that handles all the game
+   * logic.
+   * 
+   * @param view - A TowerDefenseView object that is the game board view.
+   * 
+   * @throws IOException - throws a FileNotFoundException in further methods if
+   * game resources cannot be found.
+   */
+	public TowerDefenseController(TowerDefenseView view) throws IOException {
+		this.view = view;
 		board = new TowerDefenseBoard(view, this);
 		currentPlayer = new Player(this);
 		otherPlayer = new Player(this);
@@ -134,9 +143,12 @@ public class TowerDefenseController {
      * @purpose: Getter method for the board attribute.
      * 
      */
-	public Map getBoard() {
-		// TODO Auto-generated method stub
-		return board.getBoard();
+	public TowerDefenseBoard getBoard() {
+		return board;
+	}
+	
+	public Viewable[][][] getMapArray(){
+		return board.getBoard().getBoard();
 	}
 	
 	/**
@@ -167,8 +179,13 @@ public class TowerDefenseController {
 			// Tower Placement
 			if(move instanceof TowerPlacedMessage) {
 				TowerPlacedMessage m = (TowerPlacedMessage)move;
+
 				int col = getBoard().getBoard().length-1-m.getCol();
 				int row = getBoard().getBoard()[0].length-1-m.getRow();
+
+				int col = getMapArray().length-1-m.getCol();
+				int row = getMapArray()[0].length-1-m.getRow();
+
 				addTower(row, col, m.getTower());
 				// Using an ability card
 			}else if(move instanceof AbilityCardUsedMessage) {
@@ -178,6 +195,12 @@ public class TowerDefenseController {
 			}else if(move instanceof DamageOtherMessage) {
 				DamageOtherMessage d = (DamageOtherMessage)move;
 				currentPlayer.damageTaken(d.getAmount());
+
+			}else if(move instanceof StatIncreaseMessage) {
+				StatIncreaseMessage s = (StatIncreaseMessage)move;
+				otherPlayer.gainLife(s.getHealth());
+				otherPlayer.increaseGold(s.getGold());
+
 			}
 		});
 	}
@@ -189,21 +212,30 @@ public class TowerDefenseController {
 	public void endTurn() {
 		currentPlayer.setComplete(true);
 		Thread thread = new Thread(()-> {
+
 			board.triggerMinions();
 			// Waits for the minion wave to complete
 			while(!minionsFinished) {
 				System.out.println("waiting");
 			}
+
 			try {
 				out.writeObject(new TurnFinishedMessage());
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+
 			while(!otherPlayer.isFinished()) {
 				System.out.println(minionsFinished);
 			}
-			
+
+			while(!otherPlayer.isFinished()&&isRunning) {
+			}
+			board.triggerMinions();
+			while(!minionsFinished&&isRunning) {
+			}
+
 			minionsFinished = false;
 			try {
 				out.writeObject(currentTurn);
@@ -247,7 +279,16 @@ public class TowerDefenseController {
 		currentTurn.addMove(new TowerPlacedMessage(type, row, col));
 	}
 	
-	/**
+
+	public boolean removeFromForSale(Card card) {
+		boolean removed = board.getMarket().removeFromForSale(card);
+		if(removed) {
+			currentTurn.addMove(new MarketCardRemovedMessage(card));
+		}
+		return removed;
+	}
+	
+    /**
      * @purpose: Determines what to do when an ability card is double clicked
      * by a player.
      * 
@@ -283,6 +324,9 @@ public class TowerDefenseController {
 	public void useTowerCard(int row, int col) {
 		// if current grid space is just a Path object
 		if(getBoard().getBoard()[col][row][0] instanceof Path) {
+
+		if(getMapArray()[col][row][0] instanceof Path) {
+
 			return;
 		}
 		// if selected object is a TowerCard
@@ -314,6 +358,7 @@ public class TowerDefenseController {
      * 
      */ 
 	public boolean canUpgrade(int row, int col) {
+
 		if(getBoard().getBoard()[col][row][0]==null) {
 			return false;
 		}
@@ -325,6 +370,19 @@ public class TowerDefenseController {
 		}
 		TowerCard tCard = (TowerCard)currentPlayer.getSelectedCard();
 		return tCard.getTower().isAssignableFrom(getBoard().getBoard()[col][row][0].getClass());
+
+		if(getMapArray()[col][row][0]==null) {
+			return false;
+		}
+		if(!(getMapArray()[col][row][0] instanceof Tower)) {
+			return false;
+		}
+		if(currentPlayer.getSelectedCard()==null||!(currentPlayer.getSelectedCard() instanceof TowerCard)) {
+			return false;
+		}
+		TowerCard tCard = (TowerCard)currentPlayer.getSelectedCard();
+		return tCard.getTower().isAssignableFrom(getMapArray()[col][row][0].getClass());
+
 	}
 	
 	/**
@@ -561,12 +619,25 @@ public class TowerDefenseController {
 		return board.getMarket();
 	}
 	
-	/**
-     * @purpose: Setter method for the market object.
-     * 
-     */
 	public void setBoard(Map m) {
 		board.setBoard(m);
+
+	public TowerDefenseView getView() {
+		return view;
+	}
+	
+	public void setBoard(TowerDefenseBoard m) {
+		board = m;
+		m.getMarket().setController(this);
+		m.getMarket().setView(view);
+		try {
+			m.getMarket().repopulateImages();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		board.setBoard(board.getBoard());
+
 	}
 	
 	/**
@@ -577,6 +648,16 @@ public class TowerDefenseController {
 		minionsFinished = b;
 	}
 	
+
+	public boolean isPaused() {
+		return isPaused;
+	}
+	
+	public void setPaused(boolean b) {
+		isPaused = b;
+	}
+	
+
 	// Getter for isRunning.
 	public boolean isRunning() {
 		return isRunning;

@@ -6,12 +6,25 @@ import viewable.gameObjects.Tower;
 
 public abstract class TowerCard extends Card{
 
+	/**
+	 *  Purpose- Constructor for the class
+	 */
 	public TowerCard(String name, int id, int cost) {
 		super(name, id, cost);
 		// TODO Auto-generated constructor stub
 	}
 
+	/**
+	 *  Purpose - accessor for the Tower class
+	 *  
+	 *  @return an ArcherTower class
+	 */
 	public abstract Class<? extends Tower> getTower();
 	
+	/**
+	 *  Purpose - Upgrades the tower
+	 *  
+	 *  @param m - the Tower object to be upgraded
+	 */
 	public abstract void Upgrade(Tower t);
 }
