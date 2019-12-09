@@ -1,3 +1,7 @@
+/**
+ * @purpose: this class contains the market 
+ */
+
 package viewable.gameObjects;
 
 import java.io.FileNotFoundException;
@@ -44,6 +48,16 @@ public class Market {
 	private TowerDefenseView view;
 	private TowerDefenseController controller;
 	
+	/**
+	 * @purpose: constructor the market; initializes a deck for the market,
+	 * sets the view and the controller, fills the market with cards to be bought,
+	 * 
+	 * @param view: the view for the game
+	 * 
+	 * @param controller: the controller for the game
+	 * 
+	 * @throws FileNotFoundException: throws exception if the images can not be found
+	 */
 	public Market(TowerDefenseView view, TowerDefenseController controller) throws FileNotFoundException {
 		market = new Deck();
 		this.view = view;
@@ -56,6 +70,9 @@ public class Market {
 		populateForSale();
 	}
 
+	/**
+	 * @purpose: fills the market deck with cards to be bought
+	 */
 	private void fillMarket() {
 		for (int i = 0; i < 4; i++) {
 			market.add(new SummonMinionCard());
@@ -73,6 +90,11 @@ public class Market {
 		Collections.shuffle(forSale);
 	}
 	
+	/**
+	 * @purpose: populates the 6 cards that are available to be bought in the market
+	 * 
+	 * @throws FileNotFoundException: throws exception if card arts can not be found
+	 */
 	public void populateForSale() throws FileNotFoundException {
 		int x = 6 - forSale.size();
 		for (int i = 0; i < x; i++) {
