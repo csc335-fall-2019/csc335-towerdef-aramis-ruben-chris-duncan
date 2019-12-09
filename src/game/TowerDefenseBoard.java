@@ -10,9 +10,10 @@ import viewable.gameObjects.TowerType;
 public class TowerDefenseBoard extends Observable{	
 	private Map board;
 	private Market market;
-	public TowerDefenseBoard(TowerDefenseView view) throws FileNotFoundException {
+	
+	public TowerDefenseBoard(TowerDefenseView view, TowerDefenseController controller) throws FileNotFoundException {
 		board = new Map();
-		market = new Market();
+		market = new Market(view, controller);
 		addObserver(view);
 	}
 
@@ -27,6 +28,11 @@ public class TowerDefenseBoard extends Observable{
 		}
 		setChanged();
 		notifyObservers(row+" "+col);
+	}
+	
+	public void triggerMinions() {
+		setChanged();
+		notifyObservers(true);
 	}
 	
 	public Map getBoard() {

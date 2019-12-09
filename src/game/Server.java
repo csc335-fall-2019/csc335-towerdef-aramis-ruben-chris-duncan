@@ -22,6 +22,8 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import javafx.application.Platform;
+import network.TowerDefenseTurnMessage;
+import network.TurnFinishedMessage;
 
 public class Server implements Runnable{
 	
@@ -78,20 +80,18 @@ public class Server implements Runnable{
 			controller.setRunning(true);
 			controller.setOut(new ObjectOutputStream(socket.getOutputStream()));
 			in = new ObjectInputStream(socket.getInputStream());
-			controller.getOut().writeObject(controller.getBoard());
+			controller.getOut().writeObject(controller.getBoard().flip());
 			while(controller.isRunning()) {
 				try {
-					TowerDefenseTurnMessage move = (TowerDefenseTurnMessage)in.readObject();
-//						if(!controller.isLegalMove(move)) {
-//							System.out.println(move.getRow()+" "+move.getColumn());
-//							throw new IndexOutOfBoundsException("Illegal Move.");
-//						}
-					controller.handleMessage(move);
+					Object obj = in.readObject();
+					handleMessage(obj);
 				}catch (ClassNotFoundException e) {
+					e.printStackTrace();
 					controller.setRunning(false);
 				} catch(IndexOutOfBoundsException e) {
 					System.out.println("Illegal Move");
 				}catch (Exception e) {
+					e.printStackTrace();
 					controller.setRunning(false);
 				}
 			}
@@ -107,10 +107,19 @@ public class Server implements Runnable{
 				// TODO Auto-generated catch block
 				return;
 			}
+			controller.setConnected(false);
 			run();
 			
 		}catch(Exception ex) {
 			ex.printStackTrace();
+		}
+	}
+	
+	private void handleMessage(Object o) {
+		if(o instanceof TurnFinishedMessage) {
+			controller.setOtherPlayerFinished(true);
+		}else if(o instanceof TowerDefenseTurnMessage) {
+			controller.handleMessage((TowerDefenseTurnMessage)o);
 		}
 	}
 }
