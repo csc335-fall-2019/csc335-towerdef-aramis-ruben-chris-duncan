@@ -7,13 +7,14 @@
 
 package viewable.gameObjects;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import viewable.cards.Card;
 
-public class Deck {
+public class Deck implements Serializable{
 	private List<Card> deck;
 	
 	public Deck() {

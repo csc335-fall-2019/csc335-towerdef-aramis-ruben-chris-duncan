@@ -1,4 +1,5 @@
 package handlers;
+<<<<<<< HEAD
 /**
  * MarketObjectClickedHandler.java
  * 
@@ -9,6 +10,10 @@ package handlers;
  * Construct MarketObjectClickedHandler:
  * MarketObjectClickedHandler h = new MarketObjectClickedHandler(card, market, view);
  */
+=======
+
+import game.TowerDefenseController;
+>>>>>>> branch 'develop' of https://github.com/csc335-fall-2019/csc335-towerdef-aramis-ruben-chris-duncan.git
 import game.TowerDefenseView;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -24,9 +29,10 @@ import viewable.gameObjects.Market;
 
 public class MarketObjectClickedHandler implements EventHandler<MouseEvent>{
 	private Card card;
-	private Market market;
+	private TowerDefenseController controller;
 	private TowerDefenseView view;
 	
+<<<<<<< HEAD
 	/**
 	 * Purpose: constructor for the class
 	 * @param card - a Card object
@@ -34,8 +40,11 @@ public class MarketObjectClickedHandler implements EventHandler<MouseEvent>{
 	 * @param view - a TowerDefenseView object
 	 */
 	public MarketObjectClickedHandler(Card card, Market market, TowerDefenseView view) {
+=======
+	public MarketObjectClickedHandler(Card card, TowerDefenseController controller, TowerDefenseView view) {
+>>>>>>> branch 'develop' of https://github.com/csc335-fall-2019/csc335-towerdef-aramis-ruben-chris-duncan.git
 		this.card = card;
-		this.market = market;
+		this.controller = controller;
 		this.view  = view;
 	}
 
@@ -46,10 +55,14 @@ public class MarketObjectClickedHandler implements EventHandler<MouseEvent>{
 	 */
 	@Override
 	public void handle(MouseEvent arg0) {
+		TowerDefenseController controller = view.getController();
+		if(!controller.hasConnected()||controller.getPlayer().isFinished()||controller.isPaused()) {
+			return;
+		}
 		if(arg0.getClickCount()<2) {
 			return;
 		}
-		if(!market.removeFromForSale(card)) {
+		if(!controller.removeFromForSale(card)) {
 			Stage primary = view.getPrimaryStage();
 			Stage error = new Stage();
 			error.setMinHeight(200);
