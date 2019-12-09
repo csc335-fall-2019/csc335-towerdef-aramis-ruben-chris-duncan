@@ -1,5 +1,14 @@
 package handlers;
-
+/**
+ * MarketObjectClickedHandler.java
+ * 
+ * Handles all clicks on cards in the market area of the game
+ * 
+ *  * Usage instructions:
+ * 
+ * Construct MarketObjectClickedHandler:
+ * MarketObjectClickedHandler h = new MarketObjectClickedHandler(card, market, view);
+ */
 import game.TowerDefenseView;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -18,12 +27,23 @@ public class MarketObjectClickedHandler implements EventHandler<MouseEvent>{
 	private Market market;
 	private TowerDefenseView view;
 	
+	/**
+	 * Purpose: constructor for the class
+	 * @param card - a Card object
+	 * @param market - a Market object
+	 * @param view - a TowerDefenseView object
+	 */
 	public MarketObjectClickedHandler(Card card, Market market, TowerDefenseView view) {
 		this.card = card;
 		this.market = market;
 		this.view  = view;
 	}
 
+	/**
+	 * Purpose - handler for click events in the Market area
+	 * 
+	 * @param arg0 - the MouseEvent being handled
+	 */
 	@Override
 	public void handle(MouseEvent arg0) {
 		if(arg0.getClickCount()<2) {

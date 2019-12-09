@@ -1,4 +1,10 @@
 package handlers;
+/**
+ * SoundHandler.java
+ * 
+ * Changes the music for the game
+ * 
+ */
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
