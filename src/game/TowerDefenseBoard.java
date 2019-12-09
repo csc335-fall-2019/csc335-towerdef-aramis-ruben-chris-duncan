@@ -1,5 +1,6 @@
 package game;
 import java.io.FileNotFoundException;
+import java.io.Serializable;
 import java.util.Observable;
 
 import viewable.Viewable;
@@ -7,9 +8,12 @@ import viewable.gameObjects.Map;
 import viewable.gameObjects.Market;
 import viewable.gameObjects.TowerType;
 
-public class TowerDefenseBoard extends Observable{	
+public class TowerDefenseBoard extends Observable implements Serializable{	
 	private Map board;
 	private Market market;
+	
+	private TowerDefenseBoard() {
+	}
 	
 	public TowerDefenseBoard(TowerDefenseView view, TowerDefenseController controller) throws FileNotFoundException {
 		board = new Map();
@@ -30,9 +34,21 @@ public class TowerDefenseBoard extends Observable{
 		notifyObservers(row+" "+col);
 	}
 	
+	public TowerDefenseBoard flip() {
+		TowerDefenseBoard tdBoard = new TowerDefenseBoard();
+		tdBoard.setBoard(board.flip());
+		tdBoard.setMarket(market);
+		System.out.println(tdBoard);
+		return tdBoard;
+	}
+	
 	public void triggerMinions() {
 		setChanged();
 		notifyObservers(true);
+	}
+
+	public void setView(TowerDefenseView view) {
+		addObserver(view);
 	}
 	
 	public Map getBoard() {
@@ -41,11 +57,16 @@ public class TowerDefenseBoard extends Observable{
 	
 	public void setBoard(Map m) {
 		board = m;
+		System.out.println("Updating view.");
 		setChanged();
 		notifyObservers(m);
 	}
 	
 	public Market getMarket() {
 		return market;
+	}
+	
+	private void setMarket(Market m) {
+		market = m;
 	}
 }

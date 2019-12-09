@@ -1,4 +1,17 @@
 package handlers;
+/**
+ * MarketObjectClickedHandler.java
+ * 
+ * Handles all clicks on cards in the market area of the game
+ * 
+ *  * Usage instructions:
+ * 
+ * Construct MarketObjectClickedHandler:
+ * MarketObjectClickedHandler h = new MarketObjectClickedHandler(card, market, view);
+ */
+
+
+import game.TowerDefenseController;
 
 import game.TowerDefenseView;
 import javafx.event.EventHandler;
@@ -15,21 +28,52 @@ import viewable.gameObjects.Market;
 
 public class MarketObjectClickedHandler implements EventHandler<MouseEvent>{
 	private Card card;
+
 	private Market market;
 	private TowerDefenseView view;
 	
 	public MarketObjectClickedHandler(Card card, Market market, TowerDefenseView view) {
 		this.card = card;
 		this.market = market;
+
+	private TowerDefenseController controller;
+	private TowerDefenseView view;
+	
+	/**
+	 * Purpose: constructor for the class
+	 * @param card - a Card object
+	 * @param market - a Market object
+	 * @param view - a TowerDefenseView object
+	 */
+	public MarketObjectClickedHandler(Card card, TowerDefenseController controller, TowerDefenseView view) {
+		this.card = card;
+		this.controller = controller;
+
 		this.view  = view;
 	}
 
+	/**
+	 * Purpose - handler for click events in the Market area
+	 * 
+	 * @param arg0 - the MouseEvent being handled
+	 */
 	@Override
 	public void handle(MouseEvent arg0) {
+
 		if(arg0.getClickCount()<2) {
 			return;
 		}
 		if(!market.removeFromForSale(card)) {
+
+		TowerDefenseController controller = view.getController();
+		if(!controller.hasConnected()||controller.getPlayer().isFinished()||controller.isPaused()) {
+			return;
+		}
+		if(arg0.getClickCount()<2) {
+			return;
+		}
+		if(!controller.removeFromForSale(card)) {
+
 			Stage primary = view.getPrimaryStage();
 			Stage error = new Stage();
 			error.setMinHeight(200);

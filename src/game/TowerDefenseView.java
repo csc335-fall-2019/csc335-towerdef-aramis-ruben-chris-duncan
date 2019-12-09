@@ -10,6 +10,9 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+
+import java.util.HashMap;
+
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -89,8 +92,9 @@ public class TowerDefenseView extends Application implements Observer{
 	private static final int SIZE_IMAGE = 47;
 	private static final int CARD_WIDTH = 128;
 	private static final int CARD_HEIGHT = 196;
-	private static final int MINION_MAX_SPEED = 200;
-	private static final int TOWER_MAX_ATTACK_SPEED = 3;
+	private static final int MINION_MAX_SPEED = 500;
+	private static final int TOWER_MAX_ATTACK_SPEED = 5;
+	private volatile boolean fastForwardState;
 	private Stage stage;
 	private TowerDefenseController controller;
 	private ViewModel model;
@@ -101,13 +105,19 @@ public class TowerDefenseView extends Application implements Observer{
 	private WaveGenerator wave;
 	private List<ImageView> lsPath;
 	private List<Integer> direction;
+	private java.util.Map<Minion, Timeline> transitions;
 	private int currentYVal;
 	private Market m;
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		stage = primaryStage;
+
 		System.out.println(stage);
+
+		fastForwardState = false;
+		transitions = new HashMap<Minion,Timeline>();
+
 		controller = new TowerDefenseController(this);
 		Runtime.getRuntime().addShutdownHook(new Thread(()->{
 			controller.setRunning(false);
@@ -139,7 +149,11 @@ public class TowerDefenseView extends Application implements Observer{
 			File path = fileChooser.showOpenDialog(stage);
 			if (path != null) {
 				try {
+
 					controller.getBoard().load(path.getCanonicalPath());
+
+					controller.getBoard().getBoard().load(path.getCanonicalPath());
+
 					controller.startServer();
 					hostGame.setDisable(true);
 					newGame();
@@ -307,7 +321,7 @@ public class TowerDefenseView extends Application implements Observer{
 	
 	private GridPane createClearGrid() throws FileNotFoundException {
 		GridPane grid = new GridPane();
-		Viewable[][][] board = controller.getBoard().getBoard();
+		Viewable[][][] board = controller.getMapArray();
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board[i].length; j++) {
 				ImageView view = new ImageView();
@@ -325,7 +339,7 @@ public class TowerDefenseView extends Application implements Observer{
 	
 	public GridPane createGrid() throws FileNotFoundException {
 		GridPane grid = new GridPane();
-		Viewable[][][] board = controller.getBoard().getBoard();
+		Viewable[][][] board = controller.getMapArray();
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board[i].length; j++) {
 				HBox box = new HBox();
@@ -347,6 +361,7 @@ public class TowerDefenseView extends Application implements Observer{
 	}
 
 	public void update() {
+		transitions.clear();
 		Thread thread = new Thread(()-> {
 			List<Minion> currentWave = wave.generateRandom(round); 
 			round++;
@@ -400,6 +415,7 @@ public class TowerDefenseView extends Application implements Observer{
 			checkMinionsFinished(minionsL);
 			return;
 		}
+		
 		int x = 0;
 		int y = currentYVal;
 		for(int k =0;k<minion.getStep();k++) {
@@ -412,7 +428,8 @@ public class TowerDefenseView extends Application implements Observer{
 		}
 		int xFin = x;
 		int yFin = y;
-		Timeline t = new Timeline(new KeyFrame(Duration.millis(MINION_MAX_SPEED/minion.getSpeed()-offset), (e)-> {
+		Timeline t = new Timeline(new KeyFrame(Duration.millis((MINION_MAX_SPEED/minion.getSpeed()-offset)*(fastForwardState?.5:1)), (e)-> {
+			
 			try {
 				checkTowers(minion, xFin, yFin);
 			} catch (FileNotFoundException e2) {
@@ -439,10 +456,11 @@ public class TowerDefenseView extends Application implements Observer{
 					animationGrid.getChildren().remove(minions.get(index));
 					animationGrid.add(minions.get(index), xFin, yFin);
 				});
-				
+
 				move(index, minion, minions, minionsL, (int)(Math.random()*85));
 			}
 		}));
+		transitions.put(minion, t);
 		t.play();
 	}
 	
@@ -453,17 +471,24 @@ public class TowerDefenseView extends Application implements Observer{
 				flag = false;
 			}
 		}
+
 		System.out.println(flag);
+
 		if(flag) {
 			controller.setMinionsFinished(true);
 		}
 	}
 	
 	private void checkTowers(Minion minion, int x, int y) throws FileNotFoundException {
-		Viewable[][][] map = controller.getBoard().getBoard();
+		Viewable[][][] map = controller.getMapArray();
 		for(int i =0;i<map.length;i++) {
+
 			if(i>map.length/2) {
 				break;
+
+			if(i<=map.length/2) {
+				continue;
+
 			}
 			for(int j =0;j<map[i].length;j++) {
 				if(map[i][j][0]!=null&&map[i][j][0] instanceof Tower) {
@@ -483,7 +508,7 @@ public class TowerDefenseView extends Application implements Observer{
 							});
 							view.setX(i*SIZE_IMAGE+SIZE_IMAGE/2);
 							view.setY(j*SIZE_IMAGE+SIZE_IMAGE/2);
-							TranslateTransition tt = new TranslateTransition(Duration.millis((TOWER_MAX_ATTACK_SPEED/t.getAttackSpeed())*10), view);
+							TranslateTransition tt = new TranslateTransition(Duration.millis((TOWER_MAX_ATTACK_SPEED/t.getAttackSpeed())*(fastForwardState?5:10)), view);
 							tt.setByX((x-i)*SIZE_IMAGE);
 							tt.setByY((y-j)*SIZE_IMAGE);
 							t.startCooldown();
@@ -511,7 +536,7 @@ public class TowerDefenseView extends Application implements Observer{
 	}
 	
 	public void generatePath() {
-		Viewable[][][] map = controller.getBoard().getBoard();
+		Viewable[][][] map = controller.getMapArray();
 		int x = 0;
 		int y = 0;
 		for (int i = 0; i < map[0].length; i++) {
@@ -543,7 +568,7 @@ public class TowerDefenseView extends Application implements Observer{
 				callback.start();
 				return;
 			}
-			Viewable[][][] map = controller.getBoard().getBoard();
+			Viewable[][][] map = controller.getMapArray();
 			int x = 0;
 			int y = 0;
 			for (int i = 0; i < map[0].length; i++) {
@@ -787,17 +812,42 @@ public class TowerDefenseView extends Application implements Observer{
 		mapEditor.setText("Open Map Editor");
 		mapEditor.setOnAction(new MapEditorHandler());
 		
-		MenuItem testUpdate = new MenuItem();
-		testUpdate.setText("Test Update");
-		testUpdate.setOnAction((e)->{
-			update();
+		MenuItem pause = new MenuItem();
+		pause.setText("Pause");
+		pause.setOnAction((e)->{
+			controller.setPaused(!controller.isPaused());
+			for(Minion m: transitions.keySet()) {
+				Timeline t = transitions.get(m);
+				if(controller.isPaused()) {
+					t.pause();
+				}
+				else{
+					t.play();
+				}
+			}
+			if(controller.isPaused()){
+				pause.setText("Unpause");
+			}else {
+				pause.setText("Pause");
+			}
+		});
+		
+		MenuItem fastForward = new MenuItem();
+		fastForward.setText("Fast Forward");
+		fastForward.setOnAction((e)->{
+			fastForwardState = !fastForwardState;
+			if(fastForwardState) {
+				fastForward.setText("Regular Speed");
+			}else {
+				fastForward.setText("Fast Forward");
+			}
 		});
 		
 		MenuItem exit = new MenuItem();
 		exit.setText("Exit");
 		exit.setOnAction(new ExitHandler());
 		
-		file.getItems().addAll(newGame, mapEditor, testUpdate, exit);
+		file.getItems().addAll(newGame, mapEditor, pause,fastForward, exit);
 		file.setText("File");
 		return file;
 	}
@@ -869,6 +919,9 @@ public class TowerDefenseView extends Application implements Observer{
 		if(e instanceof Map) {
 				Platform.runLater(()->{
 					try {
+
+						System.out.println("New game");
+
 						newGame();
 					}catch(Exception ex) {
 						ex.printStackTrace();
@@ -890,7 +943,7 @@ public class TowerDefenseView extends Application implements Observer{
 	}
 	
 	private void setBoard(int row, int col) throws FileNotFoundException {
-		Viewable[][][] board = controller.getBoard().getBoard();
+		Viewable[][][] board = controller.getMapArray();
 		Viewable obj = board[col][row][0];
 		System.out.println(obj.getResource());
 		Node node = null;
@@ -912,6 +965,12 @@ public class TowerDefenseView extends Application implements Observer{
 	public Stage getPrimaryStage() {
 		return stage;
 	}
+
+	
+	public TowerDefenseController getController() {
+		return controller;
+	}
+	
 	private class PossibleConnectionCell extends ListCell{
 		private InetSocketAddress address;
 		public PossibleConnectionCell() {
