@@ -112,6 +112,14 @@ public class Market {
 		}
 	}
 	
+	/**
+	 * @purpose: removes a card from currently displayed market cards after it is 
+	 * purchased by a player
+	 * 
+	 * @param card: card object 
+	 * 
+	 * @return: a boolean if the card is removed or not
+	 */
 	public boolean removeFromForSale(Card card) {
 		Player player = controller.getPlayer();
 		int cost = card.getCost();
@@ -129,6 +137,12 @@ public class Market {
 		}
 	}
 	
+	/**
+	 * @purpose: repopulates the current market with the number of cards that had been
+	 * purchased by the player
+	 * 
+	 * @throws FileNotFoundException: throws exception if resource is not found
+	 */
 	public void repopulateForSale() throws FileNotFoundException {
 		int size = forSale.getSize();
 		for (int i = size; i < 6; i++) {
