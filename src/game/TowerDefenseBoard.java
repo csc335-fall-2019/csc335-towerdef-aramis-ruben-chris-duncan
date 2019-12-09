@@ -46,7 +46,7 @@ public class TowerDefenseBoard extends Observable implements Serializable{
 		setChanged();
 		notifyObservers(true);
 	}
-	
+
 	public void setView(TowerDefenseView view) {
 		addObserver(view);
 	}

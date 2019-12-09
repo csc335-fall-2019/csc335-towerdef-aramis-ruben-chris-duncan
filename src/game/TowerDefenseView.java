@@ -10,7 +10,9 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+
 import java.util.HashMap;
+
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -113,8 +115,12 @@ public class TowerDefenseView extends Application implements Observer{
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		stage = primaryStage;
+
+		System.out.println(stage);
+
 		fastForwardState = false;
 		transitions = new HashMap<Minion,Timeline>();
+
 		controller = new TowerDefenseController(this);
 		Runtime.getRuntime().addShutdownHook(new Thread(()->{
 			controller.setRunning(false);
@@ -151,7 +157,11 @@ public class TowerDefenseView extends Application implements Observer{
 			File path = fileChooser.showOpenDialog(stage);
 			if (path != null) {
 				try {
+
+					controller.getBoard().load(path.getCanonicalPath());
+
 					controller.getBoard().getBoard().load(path.getCanonicalPath());
+
 					controller.startServer();
 					hostGame.setDisable(true);
 					newGame();
@@ -454,6 +464,7 @@ public class TowerDefenseView extends Application implements Observer{
 					animationGrid.getChildren().remove(minions.get(index));
 					animationGrid.add(minions.get(index), xFin, yFin);
 				});
+
 				move(index, minion, minions, minionsL, (int)(Math.random()*85));
 			}
 		}));
@@ -468,6 +479,9 @@ public class TowerDefenseView extends Application implements Observer{
 				flag = false;
 			}
 		}
+
+		System.out.println(flag);
+
 		if(flag) {
 			controller.setMinionsFinished(true);
 		}
@@ -476,8 +490,13 @@ public class TowerDefenseView extends Application implements Observer{
 	private void checkTowers(Minion minion, int x, int y) throws FileNotFoundException {
 		Viewable[][][] map = controller.getMapArray();
 		for(int i =0;i<map.length;i++) {
+
+			if(i>map.length/2) {
+				break;
+
 			if(i<=map.length/2) {
 				continue;
+
 			}
 			for(int j =0;j<map[i].length;j++) {
 				if(map[i][j][0]!=null&&map[i][j][0] instanceof Tower) {
@@ -908,7 +927,9 @@ public class TowerDefenseView extends Application implements Observer{
 		if(e instanceof Map) {
 				Platform.runLater(()->{
 					try {
+
 						System.out.println("New game");
+
 						newGame();
 					}catch(Exception ex) {
 						ex.printStackTrace();
@@ -952,6 +973,7 @@ public class TowerDefenseView extends Application implements Observer{
 	public Stage getPrimaryStage() {
 		return stage;
 	}
+
 	
 	public TowerDefenseController getController() {
 		return controller;

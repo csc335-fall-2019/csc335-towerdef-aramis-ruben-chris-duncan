@@ -36,11 +36,11 @@ import viewable.cards.towers.MinionTowerCard;
 public class Market implements Serializable{
 	
 	private Deck market;
-	private List<Card> cards;
-	private transient ListProperty<ImageView> forSale;
-	private transient java.util.Map<Card, ImageView> marketCards;
-	private transient TowerDefenseView view;
-	private transient TowerDefenseController controller;
+
+	private ListProperty<ImageView> forSale;
+	private java.util.Map<Card, ImageView> marketCards;
+	private TowerDefenseView view;
+	private TowerDefenseController controller;
 	
 	/**
 	 * @purpose: constructor the market; initializes a deck for the market,
@@ -52,6 +52,14 @@ public class Market implements Serializable{
 	 * 
 	 * @throws FileNotFoundException: throws exception if the images can not be found
 	 */
+
+	private List<Card> cards;
+	private transient ListProperty<ImageView> forSale;
+	private transient java.util.Map<Card, ImageView> marketCards;
+	private transient TowerDefenseView view;
+	private transient TowerDefenseController controller;
+	
+
 	public Market(TowerDefenseView view, TowerDefenseController controller) throws FileNotFoundException {
 		market = new Deck();
 		this.view = view;
@@ -96,18 +104,27 @@ public class Market implements Serializable{
 			Card c = market.drawCard();
 			if(c==null) {
 				ImageView v = ImageResourceLoadingHandler.getResource(c);
+
+				v.setOnMouseClicked(new MarketObjectClickedHandler(c, this, view));
+
 				v.setOnMouseClicked(new MarketObjectClickedHandler(c, controller, view));
+
 				forSale.addAll(v);
 			}else {
 				ImageView v = ImageResourceLoadingHandler.getResource(c);
 				marketCards.put(c, v);
+
+				v.setOnMouseClicked(new MarketObjectClickedHandler(c, this, view));
+
 				cards.add(c);
 				v.setOnMouseClicked(new MarketObjectClickedHandler(c, controller, view));
+
 				forSale.addAll(v);
 			}
 		}
 	}
 	
+
 	/**
 	 * @purpose: removes a card from currently displayed market cards after it is 
 	 * purchased by a player
@@ -116,6 +133,7 @@ public class Market implements Serializable{
 	 * 
 	 * @return: a boolean if the card is removed or not
 	 */
+
 	public boolean removeFromForSale(Card card) {
 		Player player = controller.getPlayer();
 		int cost = card.getCost();
@@ -145,7 +163,11 @@ public class Market implements Serializable{
 		for (int i = size; i < 6; i++) {
 			Card c = market.drawCard();
 			ImageView v = ImageResourceLoadingHandler.getResource(c);
+
+			v.setOnMouseClicked(new MarketObjectClickedHandler(c, this, view));
+
 			v.setOnMouseClicked(new MarketObjectClickedHandler(c, controller, view));
+
 			marketCards.put(c, v);
 			forSale.add(i, v);
 		}
@@ -154,6 +176,7 @@ public class Market implements Serializable{
 	public ListProperty<ImageView> getForSale() {
 		return forSale;
 	}
+
 	
 	public void repopulateImages() throws FileNotFoundException {
 		marketCards = new HashMap<Card, ImageView>();
@@ -174,4 +197,5 @@ public class Market implements Serializable{
 	public void setView(TowerDefenseView view) {
 		this.view = view;
 	}
+
 }
