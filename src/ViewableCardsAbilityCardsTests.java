@@ -9,7 +9,7 @@ import game.TowerDefenseView;
 import viewable.cards.abilityCards.*;
 import viewable.gameObjects.Player;
 
-class ViewableCardsAbilityCards {
+class ViewableCardsAbilityCardsTests {
 
 	@Test
 	void DamageCardTest() throws IOException {

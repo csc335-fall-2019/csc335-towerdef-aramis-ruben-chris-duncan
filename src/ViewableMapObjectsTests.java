@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import viewable.mapObjects.*;
 
-class ViewableMapObjects {
+class ViewableMapObjectsTests {
 
 	@Test
 	void PathTest() {
