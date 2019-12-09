@@ -36,6 +36,41 @@ public class Map implements Serializable{
 		return board;
 	}
 	
+	public void setBoard(Viewable[][][] v) {
+		board = v;
+	}
+	
+	public Map flip(){
+		Viewable[][][] flipped = new Viewable[NUM_COLS][NUM_ROWS][STACK_SIZE];
+		int last = 0;
+		for(int i =0;i<board.length;i++) {
+			last = NUM_ROWS-1;
+			for(int j = 0;j<board[i].length;j++) {
+				flipped[i][j] = board[NUM_COLS-1-i][last];
+				last--;
+			}
+		}
+		System.out.println("Original: ");
+		System.out.print("[");
+		for(int i =0;i<board.length;i++) {
+			for(int j =0;j<board[i].length;j++) {
+				System.out.print(board[i][j][0]+" ,");
+			}
+			System.out.println("]");
+		}
+		System.out.println("Flipped: ");
+		System.out.print("[");
+		for(int i =0;i<board.length;i++) {
+			for(int j =0;j<board[i].length;j++) {
+				System.out.print(flipped[i][j][0]+" ,");
+			}
+			System.out.println("]");
+		}
+		Map map = new Map();
+		map.setBoard(flipped);
+		return map;
+	}
+	
 	public void save(String path) throws IOException {
 		File file = new File(path);
 		file.createNewFile();

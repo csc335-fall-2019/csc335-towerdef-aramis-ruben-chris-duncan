@@ -7,11 +7,13 @@
 package viewable.gameObjects;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Collections;
 import java.util.List;
 
+import game.TowerDefenseController;
 import handlers.CardObjectClickedHandler;
 import handlers.GameObjectClickedHandler;
 import javafx.beans.property.IntegerProperty;
@@ -28,7 +30,7 @@ import viewable.cards.Card;
 import viewable.cards.abilityCards.PlunderCard;
 import viewable.cards.towers.ArcherTowerCard;
 
-public class Player{
+public class Player implements Serializable{
 	
 	private IntegerProperty health;
 	private ListProperty<ImageView> hand;
@@ -38,8 +40,12 @@ public class Player{
 	private IntegerProperty gold;
 	private Card selectedCard;
 	private int goldMultiplier;
+	private transient TowerDefenseController controller;
+	private volatile boolean turnComplete;
 	
-	public Player() throws FileNotFoundException {
+	public Player(TowerDefenseController controller) throws FileNotFoundException {
+		this.controller = controller;
+		turnComplete = false;
 		health = new SimpleIntegerProperty(20);
 		mapCards = new HashMap<Card, ImageView>();
 		ObservableList<ImageView> observableList = FXCollections.observableArrayList(new ArrayList<ImageView>());
@@ -78,7 +84,7 @@ public class Player{
 		view.setFitHeight(196);
 		view.setFitWidth(128);
 		
-		view.setOnMouseClicked(new CardObjectClickedHandler(obj, this));
+		view.setOnMouseClicked(new CardObjectClickedHandler(obj, controller));
 		
 		return view;
 	}
@@ -123,6 +129,14 @@ public class Player{
 			hand.remove(mapCards.get(c));
 		}
 		mapCards.clear();
+	}
+	
+	public boolean isFinished() {
+		return turnComplete;
+	}
+	
+	public void setComplete(boolean b) {
+		turnComplete = b;
 	}
 	
 	public void increaseGold(int amount) {

@@ -14,25 +14,28 @@ import viewable.gameObjects.Player;
 public class CardObjectClickedHandler implements EventHandler<MouseEvent>{
 	private Card card;
 	private Player player;
+	private TowerDefenseController controller;
 	
-	public CardObjectClickedHandler(Card card, Player player) {
+	public CardObjectClickedHandler(Card card, TowerDefenseController controller) {
 		this.card = card;
-		this.player = player;
+		this.controller = controller;
 	}
 
 	@Override
 	public void handle(MouseEvent arg0) {
+		if(!controller.hasConnected()||controller.getPlayer().isFinished()) {
+			return;
+		}
 		if (!arg0.getButton().equals(MouseButton.PRIMARY)) {
 			arg0.consume();
 			return;
 		} 
 		if (arg0.getClickCount() == 1) {
-			player.setSelectedCard(card);
+			controller.setSelectedCard(card);
 		}
 		if (arg0.getClickCount() == 2) {
 			if (card instanceof AbilityCard) {
-				((AbilityCard) card).ability(player);
-				player.addToDiscard(card);
+				controller.useAbilityCard((AbilityCard)card);
 			}
 		}
 	}
