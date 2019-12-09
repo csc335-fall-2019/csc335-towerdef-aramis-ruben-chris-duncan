@@ -19,10 +19,18 @@ public class FreezeTowerCard extends TowerCard {
 	private static final String cardName 	= "Freeze Tower";
 	private static final int cardCost       = 25;
 	
+	/**
+	 *  Purpose- Constructor for the class
+	 */
 	public FreezeTowerCard() {
 		super(cardName, cardId, cardCost);
 	}
 	
+	/**
+	 *  Purpose - Upgrades the tower
+	 *  
+	 *  @param m - the Tower object to be upgraded
+	 */
 	@Override
 	public void Upgrade(Tower f) {
 		f.setUpgraded(true);
@@ -31,6 +39,11 @@ public class FreezeTowerCard extends TowerCard {
 		f.setAttackSpeed(f.getAttackSpeed() + .1);
 	}
 	
+	/**
+	 *  Purpose - gets the resource for the object
+	 *  
+	 *  @return - returns an image path
+	 */
 	@Override
 	public String getResource() {
 		try {
@@ -41,6 +54,11 @@ public class FreezeTowerCard extends TowerCard {
 		}
 	}
 
+	/**
+	 *  Purpose - accessor for the Tower class
+	 *  
+	 *  @return an ArcherTower class
+	 */
 	@Override
 	public Class<? extends Tower> getTower() {
 		// TODO Auto-generated method stub

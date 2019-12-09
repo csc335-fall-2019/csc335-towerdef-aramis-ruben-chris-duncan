@@ -20,10 +20,18 @@ public class CannonTowerCard extends TowerCard {
 	private static final String cardName 	= "Cannon Tower";
 	private static final int cardCost       = 10;
 	
+	/**
+	 *  Purpose- Constructor for the class
+	 */
 	public CannonTowerCard() {
 		super(cardName, cardId, cardCost);
 	}
 	
+	/**
+	 *  Purpose - Upgrades the tower
+	 *  
+	 *  @param c - the Tower object to be upgraded
+	 */
 	@Override
 	public void Upgrade(Tower c) {
 		c.setUpgraded(true);
@@ -32,6 +40,11 @@ public class CannonTowerCard extends TowerCard {
 		c.setAttackSpeed(c.getAttackSpeed() + .1);
 	}
 	
+	/**
+	 *  Purpose - gets the resource for the object
+	 *  
+	 *  @return - returns an image path
+	 */
 	@Override
 	public String getResource() {
 		try {
@@ -42,6 +55,11 @@ public class CannonTowerCard extends TowerCard {
 		}
 	}
 
+	/**
+	 *  Purpose - accessor for the Tower class
+	 *  
+	 *  @return an ArcherTower class
+	 */
 	@Override
 	public Class<? extends Tower> getTower() {
 		// TODO Auto-generated method stub
