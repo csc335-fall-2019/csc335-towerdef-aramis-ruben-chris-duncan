@@ -10,6 +10,9 @@ public class Goblin extends Minion {
 	private static final int defaultSpeed = 1;
 	private static final int defaultReward = 2;
 
+	/**
+	 * constructor for the goblin minion
+	 */
 	public Goblin() {
 		super(defaultHealth, defaultDamage, defaultSpeed, defaultReward);
 	}

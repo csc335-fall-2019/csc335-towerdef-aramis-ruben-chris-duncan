@@ -10,6 +10,9 @@ public class Ogre extends Minion {
 	private static final int defaultSpeed = 1;
 	private static final int defaultReward = 10;
 
+	/**
+	 * constructor for the ogre minion
+	 */
 	public Ogre() {
 		super(defaultHealth, defaultDamage, defaultSpeed, defaultReward);
 	}

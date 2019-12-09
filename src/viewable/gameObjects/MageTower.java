@@ -14,10 +14,17 @@ public class MageTower extends Tower {
 	private static final double defaultAttackSpeed	= 0.75;
 	private static final String name				= "Mage Tower";
 	
+	/**
+	 * constructor for the mage tower
+	 */
 	public MageTower() {
 		super(defaultAttack, defaultRange, defaultAttackSpeed, name);
 	}
 	
+	/**
+	 * @purpose: loads the image for the archer tower if placed on an unused grid
+	 * and updates the tower with upgraded art if the tower is upgraded
+	 */
 	@Override
 	public String getResource() {
 		if (this.getUpgraded()) {
