@@ -39,7 +39,7 @@ public class Client implements Runnable{
 	private Runnable tieModal;
 	
 	/**
-     * Purpose: Initializes a Client object.
+     * @purpose: Initializes a Client object.
      * 
      * @param host - the name of the host to connect to.
      * 
@@ -61,7 +61,7 @@ public class Client implements Runnable{
 	}
 	
 	/**
-     * Purpose: Opens the socket to connect with the server and maintains that
+     * @purpose: Opens the socket to connect with the server and maintains that
      * connection until the program is closed.
      * 
      * @param None.
@@ -106,6 +106,12 @@ public class Client implements Runnable{
 		}
 	}
 	
+	/**
+     * @purpose: Determines if players have finished their turns and tells
+     * the controller to send a message for the moves that were taken.
+     * 
+     * @param o - an message Object that represents a full players turn.
+     */
 	private void handleMessage(Object o) {
 		if(o instanceof TurnFinishedMessage) {
 			controller.setOtherPlayerFinished(true);
