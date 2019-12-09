@@ -11,6 +11,7 @@ public class WaveGenerator {
 	private List<String> two;
 	private List<String> three;
 	private List<Integer> points;
+	private int additionalMinions;
 
 	public WaveGenerator() {
 		sendEm = new ArrayList<Minion>();
@@ -18,6 +19,7 @@ public class WaveGenerator {
 		two = new ArrayList<String>();
 		three = new ArrayList<String>();
 		points = new ArrayList<Integer>();
+		additionalMinions = 0;
 		one.add("Hound");
 		one.add("Goblin");
 		two.add("Hound");
@@ -41,13 +43,13 @@ public class WaveGenerator {
 	
 	public List<Minion> generateRandom(int round) {
 		sendEm = new ArrayList<Minion>();
-		int enemyPoints = round * 12;
+		int enemyPoints = (round * 10) + additionalMinions;
 		List<String> useableMinions = null;
 		Minion minion = null;
 		int points = 0;
-		if (round < 4) {
+		if (round < 6) {
 			useableMinions = new ArrayList<String>(one);
-		} else if (round < 9) {
+		} else if (round < 11) {
 			useableMinions = new ArrayList<String>(two);
 		} else {
 			useableMinions = new ArrayList<String>(three);
@@ -55,7 +57,7 @@ public class WaveGenerator {
 		if (round % 5 == 0) {
 			for (int i = 0; i < (round / 5); i++) {
 				sendEm.add(new Boss());
-				enemyPoints -= 10;
+				enemyPoints -= 50;
 			}
 		}
 		while (enemyPoints > 0) {

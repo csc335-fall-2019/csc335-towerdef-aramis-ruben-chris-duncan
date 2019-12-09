@@ -1,4 +1,48 @@
 package game;
+
+/**
+ * TowerDefenseView.java
+ * 
+ * Creates the window the game is being played in.
+ * Determines the actions to be taken when the player interacts with
+ * any interactable object in the view.
+ * 
+ * Usage instructions:
+ * 
+ * Construct TowerDefenseView
+ * TowerDefenseView view = new TowerDefenseView(primaryStage)
+ * 
+ * Other useful methods:
+ * view.start(primaryStage)
+ * view.mainMenu()
+ * view.connectOrHost()
+ * view.newGame()
+ * view.createClickThrough()
+ * view.createClearGrid()
+ * view.createGrid()
+ * view.createGridResource(obj, row, col)
+ * view.update()
+ * view.move(index, minion, minions, minionsL, offset)
+ * view.checkMinionsFinished(minions)
+ * view.checkTowers(minion, x, y)
+ * view.findNode(col, row)
+ * view.generatePath()
+ * view.generatePath(callback)
+ * view.createBottom()
+ * view.createTop()
+ * view.createMarket()
+ * view.createMenuBar()
+ * view.createFileMenu()
+ * view.createOptionMenu()
+ * view.loadMusic()
+ * view.findRandomMusic()
+ * view.update(o, e)
+ * view.setBoard(row, col)
+ * view.getPrimaryStage()
+ * view.
+ * 
+ */
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

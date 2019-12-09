@@ -115,6 +115,12 @@ public class Server implements Runnable{
 		}
 	}
 	
+	/**
+     * @purpose: Determines if players have finished their turns and tells
+     * the controller to send a message for the moves that were taken.
+     * 
+     * @param o - an message Object that represents a full players turn.
+     */
 	private void handleMessage(Object o) {
 		if(o instanceof TurnFinishedMessage) {
 			controller.setOtherPlayerFinished(true);
