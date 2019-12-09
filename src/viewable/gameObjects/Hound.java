@@ -10,6 +10,9 @@ public class Hound extends Minion {
 	private static final int defaultSpeed = 2;
 	private static final int defaultReward = 2;
 
+	/**
+	 * constructor for the hound minion
+	 */
 	public Hound() {
 		super(defaultHealth, defaultDamage, defaultSpeed, defaultReward);
 	}

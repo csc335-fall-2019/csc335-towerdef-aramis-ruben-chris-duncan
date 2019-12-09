@@ -14,10 +14,16 @@ public class MinionTower extends Tower {
 	private static final double defaultAttackSpeed	= 1;
 	private static final String name				= "Minion Tower";
 	
+	/**
+	 * constructor for the minion tower
+	 */
 	public MinionTower() {
 		super(defaultAttack, defaultRange, defaultAttackSpeed, name);
 	}
 	
+	/**
+	 * @purpose: loads the image for the archer tower if placed on an unused grid
+	 */
 	@Override
 	public String getResource() {
 		try {

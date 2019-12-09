@@ -43,6 +43,13 @@ public class Player implements Serializable{
 	private transient TowerDefenseController controller;
 	private volatile boolean turnComplete;
 	
+	/**
+	 * constructor for the player
+	 * 
+	 * @param controller: the game controller
+	 * 
+	 * @throws FileNotFoundException: throws exception if card resources can not be found
+	 */
 	public Player(TowerDefenseController controller) throws FileNotFoundException {
 		this.controller = controller;
 		turnComplete = false;
@@ -73,6 +80,15 @@ public class Player implements Serializable{
 		Collections.shuffle(hand);
 	}
 	
+	/**
+	 * @purpose: loads the resource image for the cards a player owns
+	 * 
+	 * @param obj: card object
+	 * 
+	 * @return: the art of the card
+	 * 
+	 * @throws FileNotFoundException: throws exception if art can not be found
+	 */
 	private ImageView getResource(Card obj) throws FileNotFoundException {
 		ImageView view;
 		if(obj == null) {
@@ -89,10 +105,20 @@ public class Player implements Serializable{
 		return view;
 	}
 	
+	/**
+	 * @purpose: getter for the players hand
+	 * 
+	 * @return: the players hand
+	 */
 	public ObservableList<ImageView> getHand(){
 		return hand;
 	}
 	
+	/**
+	 * @purpose: add a card to the discard once it is played
+	 * 
+	 * @param card: the card
+	 */
 	public void addToDiscard(Card card) {
 		hand.removeAll(mapCards.get(card));
 		discard.add(card);
@@ -100,6 +126,9 @@ public class Player implements Serializable{
 		mapCards.remove(card);
 	}
 	
+	/**
+	 * @purpose: reshuffles cards into draw pile
+	 */
 	public void resetDraw() {
 		for (Card card : discard.getDeck()) {
 			draw.add(card);
@@ -108,6 +137,13 @@ public class Player implements Serializable{
 		discard.empty();
 	}
 	
+	/**
+	 * @purpose: draws the cards, resets the draw pile if it is empty
+	 * 
+	 * @param x: number of cards
+	 * 
+	 * @throws FileNotFoundException: throws exception if resource can not be acquired
+	 */
 	public void drawCards(int x) throws FileNotFoundException {
 		for (int i = 0; i < x; i++) {
 			if (draw.isEmpty()) {
@@ -123,6 +159,9 @@ public class Player implements Serializable{
 		}
 	}
 	
+	/**
+	 * @purpose: discards a card
+	 */
 	public void discardHand() {
 		for (Card c : mapCards.keySet()) {
 			discard.add(c);
@@ -131,26 +170,56 @@ public class Player implements Serializable{
 		mapCards.clear();
 	}
 	
+	/**
+	 * @purpose: check if the turn is completed
+	 * 
+	 * @return: true if turn is complete
+	 */
 	public boolean isFinished() {
 		return turnComplete;
 	}
 	
+	/**
+	 * @purpose: sets whether the turn has been completed or not
+	 * 
+	 * @param b: boolean of whether turn is done or not yet
+	 */
 	public void setComplete(boolean b) {
 		turnComplete = b;
 	}
 	
+	/**
+	 * @purpose: increases the players gold when they kill a minion
+	 * 
+	 * @param amount: amount to increase gold by
+	 */
 	public void increaseGold(int amount) {
 		gold.setValue((amount * goldMultiplier)+getGold());
 	}
 	
+	/**
+	 * @purpose: gains life for the purpose of the gain life ability card
+	 * 
+	 * @param amount: amount to increase life by
+	 */
 	public void gainLife(int amount) {
 		health.setValue(amount+getHealth());
 	}
 	
+	/**
+	 * @purpose: pays life for card that requires a life cost
+	 * 
+	 * @param amount: amount life to pay
+	 */
 	public void payLife(int amount) {
 		health.setValue(getHealth()-amount);
 	}
 	
+	/**
+	 * @purpose: adds extra minions to the enemies wave
+	 * 
+	 * @param amount: number of minions to add
+	 */
 	public void summonMinion(int amount) {
 		// TODO
 	}
@@ -159,50 +228,108 @@ public class Player implements Serializable{
 		// TODO
 	}
 	
+	/**
+	 * @purpose: increases the amount of gold to be received from killing minions
+	 */
 	public void buffReward() {
 		goldMultiplier = 2;
 	}
 	
+	/**
+	 * @purpose: damages the other player
+	 * 
+	 * @param amount: amount to damage the other player
+	 */
 	public void damageOther(int amount) {
 		health.set(health.intValue() - amount);
 	}
 	
+	/**
+	 * @purpose: getter for the amount of gold currently owned
+	 * 
+	 * @return: the amount of gold owned
+	 */
 	public int getGold() {
 		return gold.intValue();
 	}
  	
+	/**
+	 * @purpose: takes damage
+	 *  
+	 * @param amount: amount of damage taken
+	 */
 	public void damageTaken(int amount) {
 		health.setValue(getHealth()-amount);
 	}
 	
+	/**
+	 * @purpose: getter for current player health
+	 * 
+	 * @return: amount of health
+	 */
 	public int getHealth() {
 		return health.intValue();
 	}
 
+	/**
+	 * @purpose: selects the card that has been chosen
+	 * 
+	 * @param s: the card
+	 */
 	public void setSelectedCard(Card s) {
 		selectedCard = s;
 	}
 	
+	/**
+	 * @purpose: getter for the selected card
+	 * 
+	 * @return: the selected card
+	 */
 	public Card getSelectedCard() {
 		return selectedCard;
 	}
 	
+	/**
+	 * @purpose: gets health of player
+	 * 
+	 * @return: players health
+	 */
 	public IntegerProperty getViewableHealth() {
 		return health;
 	}
 	
+	/**
+	 * @purpose: gets player gold
+	 * 
+	 * @return: player gold
+	 */
 	public IntegerProperty getViewableGold() {
 		return gold;
 	}
 	
+	/**
+	 * @purpose: gets the players discard pile
+	 * 
+	 * @return: the discard pile
+	 */
 	public Deck getDiscard() {
 		return discard;
 	}
 	
+	/**
+	 * @purpose: getter for the players cards in hands
+	 * 
+	 * @return: the cards in hands
+	 */
 	public java.util.Map<Card, ImageView> getCardHand() {
 		return mapCards;
 	}
 	
+	/**
+	 * @purpose: prints out the cards the player has
+	 * 
+	 * @param deck: the deck of the cards
+	 */
 	public void printCards(Deck deck) {
 		List<Card> cards = deck.getDeckAsList();
 		System.out.println(cards);

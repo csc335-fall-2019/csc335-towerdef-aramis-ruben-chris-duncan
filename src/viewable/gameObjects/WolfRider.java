@@ -14,6 +14,9 @@ public class WolfRider extends Minion {
 	private static final int defaultSpeed = 2;
 	private static final int defaultReward = 5;
 
+	/**
+	 * constructor for the wolf rider minion
+	 */
 	public WolfRider() {
 		super(defaultHealth, defaultDamage, defaultSpeed, defaultReward);
 	}
