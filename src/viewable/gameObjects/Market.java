@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import game.TowerDefenseController;
 import game.TowerDefenseView;
 import handlers.ImageResourceLoadingHandler;
 import handlers.MarketObjectClickedHandler;
@@ -41,9 +42,12 @@ public class Market {
 	private ListProperty<ImageView> forSale;
 	private java.util.Map<Card, ImageView> marketCards;
 	private TowerDefenseView view;
+	private TowerDefenseController controller;
 	
-	public Market() throws FileNotFoundException {
+	public Market(TowerDefenseView view, TowerDefenseController controller) throws FileNotFoundException {
 		market = new Deck();
+		this.view = view;
+		this.controller = controller;
 		ObservableList<ImageView> observableList = FXCollections.observableArrayList(new ArrayList<ImageView>());
 		forSale = new SimpleListProperty<ImageView>(observableList);
 		marketCards = new HashMap<Card, ImageView>();
@@ -75,51 +79,31 @@ public class Market {
 			Card c = market.drawCard();
 			if(c==null) {
 				ImageView v = ImageResourceLoadingHandler.getResource(c);
-				v.setOnMouseClicked(new MarketObjectClickedHandler(c, this));
+				v.setOnMouseClicked(new MarketObjectClickedHandler(c, this, view));
 				forSale.addAll(v);
 			}else {
 				ImageView v = ImageResourceLoadingHandler.getResource(c);
 				marketCards.put(c, v);
-				v.setOnMouseClicked(new MarketObjectClickedHandler(c, this));
+				v.setOnMouseClicked(new MarketObjectClickedHandler(c, this, view));
 				forSale.addAll(v);
 			}
 		}
 	}
 	
-	public void removeFromForSale(Card card) {
-		Player player = this.view.getCurrentPlayer();
+	public boolean removeFromForSale(Card card) {
+		Player player = controller.getPlayer();
 		int cost = card.getCost();
 		if (player.getGold() >= cost) {
 			player.increaseGold(-cost);
 			if(card==null) {
-				return;
+				return true;
 			}
 			ImageView view = marketCards.get(card);
 			forSale.remove(view);
 			player.addToDiscard(card);
+			return true;
 		} else {
-			Stage primary = view.getPrimaryStage();
-			Stage error = new Stage();
-			error.setMinHeight(200);
-			error.setMinWidth(470);
-			VBox area = new VBox();
-			Label l = new Label("Not enough gold to buy this card");
-			l.setFont(new Font("Arial", 24));
-			l.setTranslateX(50);
-			l.setTranslateY(30);
-			Button ok = new Button("OK");
-			ok.setTranslateX(200);
-			ok.setTranslateY(55);
-			ok.setOnAction((e)->{
-				error.close();
-			});
-			area.getChildren().add(l);
-			area.getChildren().add(ok);
-			Scene scene = new Scene(area);
-			error.setScene(scene);
-			error.initOwner(primary);
-			error.initModality(Modality.APPLICATION_MODAL);
-			error.showAndWait();
+			return false;
 		}
 	}
 	
@@ -128,7 +112,7 @@ public class Market {
 		for (int i = size; i < 6; i++) {
 			Card c = market.drawCard();
 			ImageView v = ImageResourceLoadingHandler.getResource(c);
-			v.setOnMouseClicked(new MarketObjectClickedHandler(c, this));
+			v.setOnMouseClicked(new MarketObjectClickedHandler(c, this, view));
 			marketCards.put(c, v);
 			forSale.add(i, v);
 		}
@@ -136,9 +120,5 @@ public class Market {
 	
 	public ListProperty<ImageView> getForSale() {
 		return forSale;
-	}
-	
-	public void setView(TowerDefenseView view) {
-		this.view = view;
 	}
 }

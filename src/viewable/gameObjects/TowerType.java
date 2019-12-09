@@ -1,6 +1,6 @@
 package viewable.gameObjects;
 
-public enum TowerType {
+public enum TowerType{
 	ArcherTower(ArcherTower.class), 
 	CannonTower(CannonTower.class), 
 	FreezeTower(FreezeTower.class),

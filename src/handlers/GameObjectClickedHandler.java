@@ -1,5 +1,14 @@
 package handlers;
-
+/**
+ * GameObjectClickedHandler.java
+ * 
+ * Handles all GameObjects click events. 
+ * 
+ *  * Usage instructions:
+ * 
+ * Construct GameObjectClickedHandler:
+ * GameObjectClickedHandler g = new GameObjectClickedHandler(view, col, row, controller);
+ */
 import java.io.FileNotFoundException;
 
 import game.TowerDefenseController;
@@ -17,52 +26,47 @@ public class GameObjectClickedHandler implements EventHandler<MouseEvent>{
 	
 	private int row;
 	private int col;
-	private Player player;
 	private TowerDefenseController controller;
 	private Viewable view;
 	
-	public GameObjectClickedHandler(Viewable view, int col, int row, Player player, TowerDefenseController controller) {
+	/**
+	 *  Purpose: Constructor for the class
+	 *  
+	 * @param view the main Viewable object
+	 * 
+	 * @param col an integer containing the column
+	 * 
+	 * @param row an integer containing the row
+	 * 
+	 * @param controller the main TowerDefenseController object
+	 */
+	public GameObjectClickedHandler(Viewable view, int col, int row, TowerDefenseController controller) {
 		this.view = view;
 		this.row = row;
 		this.col = col;
-		this.player = player;
 		this.controller = controller;
 	}
 	
+	/**
+	 *  Purpose: handler for MouseEvents regarding towers and upgrades
+	 *  
+	 *  @param e is the MouseEvent being handled
+	 */
 	@Override
 	public void handle(MouseEvent e) {
-		if(player.getSelectedCard()!=null && player.getSelectedCard() instanceof TowerCard) {
-			if (controller.isTower(row, col)) {
-				String tower = controller.getTowerName(row, col);
-				String cardType = ((TowerCard) player.getSelectedCard()).getTower().toString();
-				String[] split = cardType.split("\\.");
-				if (tower.equals(split[2])) {
-					TowerCard c = (TowerCard) player.getSelectedCard();
-					c.Upgrade((Tower)view);
-					System.out.println(view.getResource());
-					try {
-						((ImageView) e.getTarget()).setImage(ImageResourceLoadingHandler.getResource(view).getImage());
-					} catch (FileNotFoundException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					player.addToDiscard(player.getSelectedCard());
-					player.setSelectedCard(null);
-				}
-			} else {
-				TowerType vals = null;
-				for(TowerType t: TowerType.values()) {
-					if(t.getTower() == ((TowerCard) player.getSelectedCard()).getTower()) {
-						vals = t;
-					}
-				}
-				if(vals==null) {
-					return;
-				}
-				controller.addTower(row, col, vals);
-				player.addToDiscard(player.getSelectedCard());
-				player.setSelectedCard(null);
+		if(col>controller.getBoard().getBoard().length/2) {
+			return;
+		}
+		if(controller.canUpgrade(row, col)) {
+			controller.upgradeTower((Tower)view, row, col);
+			try {
+				((ImageView) e.getTarget()).setImage(ImageResourceLoadingHandler.getResource(view).getImage());
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
+		}else {
+			controller.useTowerCard(row, col);
 		}
 	}
 }
