@@ -107,6 +107,9 @@ public class TowerDefenseView extends Application implements Observer{
 	private int currentYVal;
 	private Market m;
 	
+	/**
+	 * @purpose: 
+	 */
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		stage = primaryStage;
@@ -121,6 +124,11 @@ public class TowerDefenseView extends Application implements Observer{
 		mainMenu();
 	}
 	
+	/**
+	 * @purpose: creates the opening main menu for the game
+	 * 
+	 * @throws IOException
+	 */
 	private void mainMenu() throws IOException {
 		VBox vbox = new VBox(25);
 		vbox.setPadding(new Insets(20));

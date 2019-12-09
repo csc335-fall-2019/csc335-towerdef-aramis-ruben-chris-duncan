@@ -14,10 +14,16 @@ public class CurrencyTower extends Tower {
 	private static final double defaultAttackSpeed	= 1;
 	private static final String name				= "Currency Tower";
 	
+	/**
+	 * constructor for currency tower
+	 */
 	public CurrencyTower() {
 		super(defaultAttack, defaultRange, defaultAttackSpeed, name);
 	}
 	
+	/**
+	 * @purpose: loads the image for the archer tower if placed on an unused grid
+	 */
 	@Override
 	public String getResource() {
 		try {

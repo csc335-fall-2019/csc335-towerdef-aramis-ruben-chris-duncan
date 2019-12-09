@@ -17,15 +17,27 @@ import viewable.cards.Card;
 public class Deck implements Serializable{
 	private List<Card> deck;
 	
+	/**
+	 * zero argument constructor for deck
+	 */
 	public Deck() {
 		deck = new ArrayList<Card>();
 	}
 	
+	/**
+	 * constructor for deck with param size
+	 * 
+	 * @param size: the size of the deck
+	 */
 	public Deck(int size) {
 		deck = new ArrayList<Card>();
 		
 	}
 	
+	/**
+	 * @purpose; draws a card and removes it from the deck
+	 * @return
+	 */
 	public Card drawCard() {
 		if(deck.size()==0) {
 			return null;

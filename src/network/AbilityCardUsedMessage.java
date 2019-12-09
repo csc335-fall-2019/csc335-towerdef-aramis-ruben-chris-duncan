@@ -1,3 +1,7 @@
+/**
+ * @purpose: sends an ability card usage across the network
+ */
+
 package network;
 
 import viewable.cards.Card;
