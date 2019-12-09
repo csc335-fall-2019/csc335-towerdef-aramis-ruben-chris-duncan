@@ -18,6 +18,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import network.AbilityCardUsedMessage;
 import network.DamageOtherMessage;
+import network.MarketCardRemovedMessage;
 import network.StatIncreaseMessage;
 import network.TowerDefenseMoveMessage;
 import network.TowerDefenseTurnMessage;
@@ -38,6 +39,7 @@ import viewable.mapObjects.Path;
 
 public class TowerDefenseController {
 	private TowerDefenseBoard board;
+	private TowerDefenseView view;
 	
 	private volatile boolean isRunning = true;
 	
@@ -59,7 +61,10 @@ public class TowerDefenseController {
 	
 	private volatile boolean minionsFinished;
 	
+	private volatile boolean isPaused;
+	
 	public TowerDefenseController(TowerDefenseView view) throws IOException {
+		this.view = view;
 		board = new TowerDefenseBoard(view, this);
 		currentPlayer = new Player(this);
 		otherPlayer = new Player(this);
@@ -69,9 +74,13 @@ public class TowerDefenseController {
 		possibleConnections = FXCollections.observableArrayList(new ArrayList<SocketAddress>());
 	}
 
-	public Map getBoard() {
+	public TowerDefenseBoard getBoard() {
 		// TODO Auto-generated method stub
-		return board.getBoard();
+		return board;
+	}
+	
+	public Viewable[][][] getMapArray(){
+		return board.getBoard().getBoard();
 	}
 	
 	public void handleMessage(TowerDefenseTurnMessage message) {
@@ -86,8 +95,8 @@ public class TowerDefenseController {
 		Platform.runLater(()->{
 			if(move instanceof TowerPlacedMessage) {
 				TowerPlacedMessage m = (TowerPlacedMessage)move;
-				int col = getBoard().getBoard().length-1-m.getCol();
-				int row = getBoard().getBoard()[0].length-1-m.getRow();
+				int col = getMapArray().length-1-m.getCol();
+				int row = getMapArray()[0].length-1-m.getRow();
 				addTower(row, col, m.getTower());
 			}else if(move instanceof AbilityCardUsedMessage) {
 				AbilityCardUsedMessage a = (AbilityCardUsedMessage)move;
@@ -95,6 +104,10 @@ public class TowerDefenseController {
 			}else if(move instanceof DamageOtherMessage) {
 				DamageOtherMessage d = (DamageOtherMessage)move;
 				currentPlayer.damageTaken(d.getAmount());
+			}else if(move instanceof StatIncreaseMessage) {
+				StatIncreaseMessage s = (StatIncreaseMessage)move;
+				otherPlayer.gainLife(s.getHealth());
+				otherPlayer.increaseGold(s.getGold());
 			}
 		});
 	}
@@ -102,20 +115,17 @@ public class TowerDefenseController {
 	public void endTurn() {
 		currentPlayer.setComplete(true);
 		Thread thread = new Thread(()-> {
-			board.triggerMinions();
-			while(!minionsFinished) {
-				System.out.println("waiting");
-			}
 			try {
 				out.writeObject(new TurnFinishedMessage());
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			while(!otherPlayer.isFinished()) {
-				System.out.println(minionsFinished);
+			while(!otherPlayer.isFinished()&&isRunning) {
 			}
-			
+			board.triggerMinions();
+			while(!minionsFinished&&isRunning) {
+			}
 			minionsFinished = false;
 			try {
 				out.writeObject(currentTurn);
@@ -145,6 +155,14 @@ public class TowerDefenseController {
 		currentTurn.addMove(new TowerPlacedMessage(type, row, col));
 	}
 	
+	public boolean removeFromForSale(Card card) {
+		boolean removed = board.getMarket().removeFromForSale(card);
+		if(removed) {
+			currentTurn.addMove(new MarketCardRemovedMessage(card));
+		}
+		return removed;
+	}
+	
 	public void	useAbilityCard(AbilityCard card) {
 		card.ability(currentPlayer);
 		currentTurn.addMove(new AbilityCardUsedMessage(card));
@@ -157,7 +175,7 @@ public class TowerDefenseController {
 	}
 	
 	public void useTowerCard(int row, int col) {
-		if(getBoard().getBoard()[col][row][0] instanceof Path) {
+		if(getMapArray()[col][row][0] instanceof Path) {
 			return;
 		}
 		if(currentPlayer.getSelectedCard()==null||!(currentPlayer.getSelectedCard() instanceof TowerCard)) {
@@ -178,17 +196,17 @@ public class TowerDefenseController {
 	}
 	
 	public boolean canUpgrade(int row, int col) {
-		if(getBoard().getBoard()[col][row][0]==null) {
+		if(getMapArray()[col][row][0]==null) {
 			return false;
 		}
-		if(!(getBoard().getBoard()[col][row][0] instanceof Tower)) {
+		if(!(getMapArray()[col][row][0] instanceof Tower)) {
 			return false;
 		}
 		if(currentPlayer.getSelectedCard()==null||!(currentPlayer.getSelectedCard() instanceof TowerCard)) {
 			return false;
 		}
 		TowerCard tCard = (TowerCard)currentPlayer.getSelectedCard();
-		return tCard.getTower().isAssignableFrom(getBoard().getBoard()[col][row][0].getClass());
+		return tCard.getTower().isAssignableFrom(getMapArray()[col][row][0].getClass());
 	}
 	
 	public void upgradeTower(Tower t, int row, int col) {
@@ -333,12 +351,33 @@ public class TowerDefenseController {
 		return board.getMarket();
 	}
 	
-	public void setBoard(Map m) {
-		board.setBoard(m);
+	public TowerDefenseView getView() {
+		return view;
+	}
+	
+	public void setBoard(TowerDefenseBoard m) {
+		board = m;
+		m.getMarket().setController(this);
+		m.getMarket().setView(view);
+		try {
+			m.getMarket().repopulateImages();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		board.setBoard(board.getBoard());
 	}
 	
 	public void setMinionsFinished(boolean b) {
 		minionsFinished = b;
+	}
+	
+	public boolean isPaused() {
+		return isPaused;
+	}
+	
+	public void setPaused(boolean b) {
+		isPaused = b;
 	}
 	
 	// Getter for isRunning.

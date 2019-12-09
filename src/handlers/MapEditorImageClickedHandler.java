@@ -84,7 +84,7 @@ public class MapEditorImageClickedHandler implements EventHandler<MouseEvent>{
 	 */
 	private ImageView getResource(Viewable obj, int use) throws FileNotFoundException {
 		ImageView view;
-		if(obj == null) {
+		if(obj == null) { // ensures object is not null
 			view = new ImageView(new Image(new FileInputStream(Viewable.getDefaultResource())));
 			view.setUserData(obj);
 		}else {
