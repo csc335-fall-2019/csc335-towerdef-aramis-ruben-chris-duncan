@@ -35,8 +35,9 @@ public class Deck implements Serializable{
 	}
 	
 	/**
-	 * @purpose; draws a card and removes it from the deck
-	 * @return
+	 * @purpose: draws a card and removes it from the deck
+	 * 
+	 * @return: the card that was drawn
 	 */
 	public Card drawCard() {
 		if(deck.size()==0) {
@@ -47,34 +48,68 @@ public class Deck implements Serializable{
 		return card;
 	}
 	
+	/**
+	 * @purpose: shuffles the collection of cards in the deck
+	 */
 	public void shuffle() {
 		Collections.shuffle(deck);
 	}
 	
+	/**
+	 * @purpose: adds a card to the deck when it is purchased from the market
+	 * 
+	 * @param card: card to be added to the deck
+	 */
 	public void add(Card card) {
 		deck.add(card);
 	}
   
+	/**
+	 * @purpose: checks if the deck is empty
+	 * 
+	 * @return: true if the deck is empty and false otherwise
+	 */
 	public Boolean isEmpty() {
 		return deck.isEmpty();
 	}
 	
+	/**
+	 * @purpose: getter for the deck object
+	 * 
+	 * @return: the deck
+	 */
 	public List<Card> getDeck() {
 		return deck;
 	}
 	
+	/**
+	 * @purpose: empties the deck
+	 */
 	public void empty() {
 		deck.removeAll(deck);
 	}
 	
+	/**
+	 * @purpose: getter for the size of the deck
+	 * 
+	 * @return: the number of cards in the deck
+	 */
 	public int getSize() {
 		return deck.size();
 	}
 	
+	/**
+	 * @purpose: gets the deck as a list
+	 * 
+	 * @return: deck as a list
+	 */
 	public List<Card> getDeckAsList() {
 		return deck;
 	}
 	
+	/**
+	 * @purpose: prints the names of the cards as strings
+	 */
 	public String toString() {
 		String s = "";
 		for (Card c : deck) {
