@@ -8,7 +8,7 @@ import org.junit.rules.ExpectedException;
 import viewable.cards.towers.*;
 import viewable.gameObjects.*;
 
-class ViewableCardsTowers {
+class ViewableCardsTowersTests {
 		
 	@Test
 	void ArcherTowerCardTest() {
