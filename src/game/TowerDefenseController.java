@@ -88,7 +88,7 @@ public class TowerDefenseController {
 		for(int i =0;i<moves.size();i++) {
 			TowerDefenseMoveMessage move = moves.get(i);
 			handleMove(move);
-		}
+		} 
 	}
 	
 	private void handleMove(TowerDefenseMoveMessage move) {
