@@ -65,4 +65,4 @@ public class CardObjectClickedHandler implements EventHandler<MouseEvent>{
 			}
 		}
 	}
-}
+}}

@@ -202,8 +202,6 @@ public class TowerDefenseView extends Application implements Observer{
 			if (path != null) {
 				try {
 
-					controller.getBoard().load(path.getCanonicalPath());
-
 					controller.getBoard().getBoard().load(path.getCanonicalPath());
 
 					controller.startServer();
@@ -534,9 +532,6 @@ public class TowerDefenseView extends Application implements Observer{
 	private void checkTowers(Minion minion, int x, int y) throws FileNotFoundException {
 		Viewable[][][] map = controller.getMapArray();
 		for(int i =0;i<map.length;i++) {
-
-			if(i>map.length/2) {
-				break;
 
 			if(i<=map.length/2) {
 				continue;

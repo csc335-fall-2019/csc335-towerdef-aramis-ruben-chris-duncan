@@ -78,7 +78,6 @@ public class Client implements Runnable{
 			controller.setRunning(true);
 			controller.setOut(new ObjectOutputStream(socket.getOutputStream()));
 			in = new ObjectInputStream(socket.getInputStream());
-			Map map = (Map)in.readObject();
 			TowerDefenseBoard map = (TowerDefenseBoard)in.readObject();
 			System.out.println(map);
 			map.setView(controller.getView());

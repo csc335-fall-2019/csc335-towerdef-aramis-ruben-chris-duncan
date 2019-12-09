@@ -33,6 +33,10 @@ public class TowerDefenseBoard extends Observable implements Serializable{
 	private Map board;
 	private Market market;
 	
+	private TowerDefenseBoard() {
+		
+	}
+	
 	/**
      * @purpose: Creates a new board that is observable by the view.
      * 

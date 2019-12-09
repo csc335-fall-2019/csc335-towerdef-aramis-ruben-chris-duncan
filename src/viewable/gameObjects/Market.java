@@ -36,12 +36,13 @@ import viewable.cards.towers.MinionTowerCard;
 public class Market implements Serializable{
 	
 	private Deck market;
-
-	private ListProperty<ImageView> forSale;
-	private java.util.Map<Card, ImageView> marketCards;
-	private TowerDefenseView view;
-	private TowerDefenseController controller;
+	private List<Card> cards;
+	private transient ListProperty<ImageView> forSale;
+	private transient java.util.Map<Card, ImageView> marketCards;
+	private transient TowerDefenseView view;
+	private transient TowerDefenseController controller;
 	
+
 	/**
 	 * @purpose: constructor the market; initializes a deck for the market,
 	 * sets the view and the controller, fills the market with cards to be bought,
@@ -52,14 +53,6 @@ public class Market implements Serializable{
 	 * 
 	 * @throws FileNotFoundException: throws exception if the images can not be found
 	 */
-
-	private List<Card> cards;
-	private transient ListProperty<ImageView> forSale;
-	private transient java.util.Map<Card, ImageView> marketCards;
-	private transient TowerDefenseView view;
-	private transient TowerDefenseController controller;
-	
-
 	public Market(TowerDefenseView view, TowerDefenseController controller) throws FileNotFoundException {
 		market = new Deck();
 		this.view = view;

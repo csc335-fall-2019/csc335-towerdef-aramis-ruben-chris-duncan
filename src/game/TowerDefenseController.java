@@ -114,8 +114,6 @@ public class TowerDefenseController {
 	private Player otherPlayer;
 	
 	private volatile boolean minionsFinished;
-	
-	public TowerDefenseController(TowerDefenseView view) throws IOException {
 
 	private volatile boolean isPaused;
 	
@@ -179,9 +177,6 @@ public class TowerDefenseController {
 			// Tower Placement
 			if(move instanceof TowerPlacedMessage) {
 				TowerPlacedMessage m = (TowerPlacedMessage)move;
-
-				int col = getBoard().getBoard().length-1-m.getCol();
-				int row = getBoard().getBoard()[0].length-1-m.getRow();
 
 				int col = getMapArray().length-1-m.getCol();
 				int row = getMapArray()[0].length-1-m.getRow();
@@ -323,8 +318,6 @@ public class TowerDefenseController {
      */
 	public void useTowerCard(int row, int col) {
 		// if current grid space is just a Path object
-		if(getBoard().getBoard()[col][row][0] instanceof Path) {
-
 		if(getMapArray()[col][row][0] instanceof Path) {
 
 			return;
@@ -358,18 +351,6 @@ public class TowerDefenseController {
      * 
      */ 
 	public boolean canUpgrade(int row, int col) {
-
-		if(getBoard().getBoard()[col][row][0]==null) {
-			return false;
-		}
-		if(!(getBoard().getBoard()[col][row][0] instanceof Tower)) {
-			return false;
-		}
-		if(currentPlayer.getSelectedCard()==null||!(currentPlayer.getSelectedCard() instanceof TowerCard)) {
-			return false;
-		}
-		TowerCard tCard = (TowerCard)currentPlayer.getSelectedCard();
-		return tCard.getTower().isAssignableFrom(getBoard().getBoard()[col][row][0].getClass());
 
 		if(getMapArray()[col][row][0]==null) {
 			return false;
@@ -618,9 +599,6 @@ public class TowerDefenseController {
 	public Market getMarket() {
 		return board.getMarket();
 	}
-	
-	public void setBoard(Map m) {
-		board.setBoard(m);
 
 	public TowerDefenseView getView() {
 		return view;
