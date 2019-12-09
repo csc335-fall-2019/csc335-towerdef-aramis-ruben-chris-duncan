@@ -1,5 +1,6 @@
 package handlers;
 
+import game.TowerDefenseController;
 import game.TowerDefenseView;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -15,21 +16,25 @@ import viewable.gameObjects.Market;
 
 public class MarketObjectClickedHandler implements EventHandler<MouseEvent>{
 	private Card card;
-	private Market market;
+	private TowerDefenseController controller;
 	private TowerDefenseView view;
 	
-	public MarketObjectClickedHandler(Card card, Market market, TowerDefenseView view) {
+	public MarketObjectClickedHandler(Card card, TowerDefenseController controller, TowerDefenseView view) {
 		this.card = card;
-		this.market = market;
+		this.controller = controller;
 		this.view  = view;
 	}
 
 	@Override
 	public void handle(MouseEvent arg0) {
+		TowerDefenseController controller = view.getController();
+		if(!controller.hasConnected()||controller.getPlayer().isFinished()||controller.isPaused()) {
+			return;
+		}
 		if(arg0.getClickCount()<2) {
 			return;
 		}
-		if(!market.removeFromForSale(card)) {
+		if(!controller.removeFromForSale(card)) {
 			Stage primary = view.getPrimaryStage();
 			Stage error = new Stage();
 			error.setMinHeight(200);

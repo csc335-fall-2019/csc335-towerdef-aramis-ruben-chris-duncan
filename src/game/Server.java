@@ -98,6 +98,7 @@ public class Server implements Runnable{
 			socket.close();
 			server.close();
 		} catch (IOException e) {
+			e.printStackTrace();
 			try {
 				server.close();
 				ServerSocket s = new ServerSocket();
