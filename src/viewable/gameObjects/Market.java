@@ -110,6 +110,8 @@ public class Market implements Serializable{
 				
 				cards.add(c);
 				v.setOnMouseClicked(new MarketObjectClickedHandler(c, controller, view));
+				v.setPreserveRatio(true);
+				v.setFitWidth(225);
 
 				forSale.addAll(v);
 			}
@@ -200,6 +202,8 @@ public class Market implements Serializable{
 		for(Card c: cards) {
 			ImageView v = ImageResourceLoadingHandler.getResource(c);
 			v.setOnMouseClicked(new MarketObjectClickedHandler(c, controller, view));
+			v.setPreserveRatio(true);
+			v.setFitWidth(225);
 			marketCards.put(c, v);
 			forSale.add(v);
 			System.out.println(c);

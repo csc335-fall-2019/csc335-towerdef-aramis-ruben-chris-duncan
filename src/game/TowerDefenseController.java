@@ -72,7 +72,7 @@ import network.AbilityCardUsedMessage;
 import network.DamageOtherMessage;
 
 import network.MarketCardRemovedMessage;
-
+import network.OtherStatIncreaseMessage;
 import network.StatIncreaseMessage;
 import network.TowerDefenseMoveMessage;
 import network.TowerDefenseTurnMessage;
@@ -198,6 +198,10 @@ public class TowerDefenseController {
 			}else if(move instanceof MarketCardRemovedMessage) {
 				MarketCardRemovedMessage m = (MarketCardRemovedMessage)move;
 				board.getMarket().removeFromForSale(m.getIndex());
+			}else if(move instanceof OtherStatIncreaseMessage) {
+				OtherStatIncreaseMessage o = (OtherStatIncreaseMessage)move;
+				otherPlayer.gainLife(o.getHealth());
+				otherPlayer.increaseGold(o.getGold());
 			}
 		});
 	}
@@ -381,6 +385,18 @@ public class TowerDefenseController {
 		currentTurn.addMove(new DamageOtherMessage(amount));
 	}
 	
+	public void damageOther(Minion minion) {
+		if(!isServer) {
+			return;
+		}
+		if(minion.getPlayer().equals(otherPlayer)) {
+			currentPlayer.damageTaken(minion.getDamage());
+			currentTurn.addMove(new StatIncreaseMessage(minion.getDamage()*-1, 0));
+		}else {
+			damageOther(minion.getDamage());
+		}
+	}
+	
 	/**
      * @purpose: Determines if a minion is going to be killed.
      * 
@@ -388,8 +404,16 @@ public class TowerDefenseController {
      * 
      */
 	public void killMinion(Minion minion) {
-		currentPlayer.increaseGold(minion.getReward());
-		currentTurn.addMove(new StatIncreaseMessage(0, minion.getReward()));
+		if(!isServer) {
+			return;
+		}
+		if(minion.getPlayer().equals(currentPlayer)) {
+			currentTurn.addMove(new StatIncreaseMessage(0, minion.getReward()));
+			otherPlayer.increaseGold(minion.getReward());
+		}else {
+			currentTurn.addMove(new OtherStatIncreaseMessage(0, minion.getReward()));
+			currentPlayer.increaseGold(minion.getReward());
+		}
 	}
 	
 	/**

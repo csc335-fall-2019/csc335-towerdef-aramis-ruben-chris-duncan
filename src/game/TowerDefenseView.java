@@ -353,9 +353,9 @@ public class TowerDefenseView extends Application implements Observer{
 
 		stage.setScene(new Scene(root, model.getWidth(), model.getHeight()));
 		stage.getScene().getStylesheets().add(getClass().getResource("mainView.css").toExternalForm());
-		stage.setResizable(false);
-		stage.setFullScreen(true);
-		stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+//		stage.setResizable(false);
+//		stage.setFullScreen(true);
+//		stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 
 		stage.sizeToScene();
 		loadMusic();
@@ -392,6 +392,7 @@ public class TowerDefenseView extends Application implements Observer{
 	public GridPane createGrid() throws FileNotFoundException {
 		GridPane grid = new GridPane();
 		Viewable[][][] board = controller.getMapArray();
+		
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board[i].length; j++) {
 				HBox box = new HBox();
@@ -565,7 +566,7 @@ public class TowerDefenseView extends Application implements Observer{
 				return;
 			}
 			if(minion.getStep()>=direction.size()-1) {
-				controller.damageOther(minion.getDamage());
+				controller.damageOther(minion);
 				minion.takeDamage(minion.getHealth());
 				checkMinionsFinished(minionsL);
 				Platform.runLater(()->{
@@ -864,7 +865,7 @@ public class TowerDefenseView extends Application implements Observer{
 			view.getSelectionModel().getSelectedItem().getOnMouseClicked().handle(e);
 		});
 		
-		int prefWidth = 350;
+		int prefWidth = 250;
 		model.addSubWidth(prefWidth);
 		market.setPrefWidth(prefWidth);
 		input.close();
