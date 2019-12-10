@@ -1,9 +1,12 @@
 package tests;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
 
+import game.TowerDefenseController;
+import game.TowerDefenseView;
 import viewable.Viewable;
 import viewable.cards.*;
 import viewable.cards.towers.ArcherTowerCard;
@@ -18,8 +21,10 @@ class ViewableGameObjectsTests {
 	}
 	
 	@Test
-	void BossTest() {
-		Minion m = new Boss();
+	void BossTest() throws IOException {
+		TowerDefenseController cont = new TowerDefenseController(new TowerDefenseView());
+		Player p = new Player(cont);
+		Minion m = new Boss(p);
 		m.getResource();
 	}
 	
@@ -30,8 +35,10 @@ class ViewableGameObjectsTests {
 	}
 	
 	@Test
-	void ChargerTest() {
-		Minion m = new Charger();
+	void ChargerTest() throws IOException {
+		TowerDefenseController cont = new TowerDefenseController(new TowerDefenseView());
+		Player p = new Player(cont);
+		Minion m = new Charger(p);
 		m.getResource();
 	}
 	
@@ -65,20 +72,26 @@ class ViewableGameObjectsTests {
 	}
 	
 	@Test
-	void GoblinTest() {
-		Minion m = new Goblin();
+	void GoblinTest() throws IOException {
+		TowerDefenseController cont = new TowerDefenseController(new TowerDefenseView());
+		Player p = new Player(cont);
+		Minion m = new Goblin(p);
 		m.getResource();
 	}
 	
 	@Test
-	void GoblinKnightTest() {
-		Minion m = new GoblinKnight();
+	void GoblinKnightTest() throws IOException {
+		TowerDefenseController cont = new TowerDefenseController(new TowerDefenseView());
+		Player p = new Player(cont);
+		Minion m = new GoblinKnight(p);
 		m.getResource();
 	}
 	
 	@Test
-	void HoundTest() {
-		Minion m = new Hound();
+	void HoundTest() throws IOException {
+		TowerDefenseController cont = new TowerDefenseController(new TowerDefenseView());
+		Player p = new Player(cont);
+		Minion m = new Hound(p);
 		m.getResource();
 	}
 	
