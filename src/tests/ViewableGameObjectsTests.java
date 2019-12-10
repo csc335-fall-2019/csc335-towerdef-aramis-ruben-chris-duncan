@@ -1,5 +1,10 @@
+package tests;
+
+import java.io.IOException;
+
 import org.junit.jupiter.api.Test;
 
+import viewable.Viewable;
 import viewable.cards.*;
 import viewable.cards.towers.ArcherTowerCard;
 import viewable.gameObjects.*;
@@ -13,63 +18,27 @@ class ViewableGameObjectsTests {
 	}
 	
 	@Test
-	void CannonTowerTest() {
-		Tower t = new CannonTower();
-		t.getResource();
-	}
-	
-	@Test
-	void CannonTower() {
-		Tower t = new CannonTower();
-		t.getResource();
-	}
-	
-	@Test
-	void CurrencyTowerTest() {
-		Tower t = new CurrencyTower();
-		t.getResource();
-	}
-	
-	@Test
-	void FreezeTowerTest() {
-		Tower t = new FreezeTower();
-		t.getResource();
-	}
-	
-	@Test
-	void MageTowerTest() {
-		Tower t = new MageTower();
-		t.getResource();
-	}
-	
-	@Test
-	void GoblinKnightTest() {
-		Minion m = new GoblinKnight();
-		m.getResource();
-	}
-	
-	@Test
-	void HoundTest() {
-		Minion m = new Hound();
-		m.getResource();
-	}
-	
-	@Test
-	void GoblinTest() {
-		Minion m = new Goblin();
-		m.getResource();
-	}
-	
-	@Test
 	void BossTest() {
 		Minion m = new Boss();
 		m.getResource();
 	}
 	
 	@Test
+	void CannonTowerTest() {
+		Tower t = new CannonTower();
+		t.getResource();
+	}
+	
+	@Test
 	void ChargerTest() {
 		Minion m = new Charger();
 		m.getResource();
+	}
+	
+	@Test
+	void CurrencyTowerTest() {
+		Tower t = new CurrencyTower();
+		t.getResource();
 	}
 	
 	@Test
@@ -88,5 +57,60 @@ class ViewableGameObjectsTests {
 		d.getSize();
 		d.getDeckAsList();
 	}
+	
+	@Test
+	void FreezeTowerTest() {
+		Tower t = new FreezeTower();
+		t.getResource();
+	}
+	
+	@Test
+	void GoblinTest() {
+		Minion m = new Goblin();
+		m.getResource();
+	}
+	
+	@Test
+	void GoblinKnightTest() {
+		Minion m = new GoblinKnight();
+		m.getResource();
+	}
+	
+	@Test
+	void HoundTest() {
+		Minion m = new Hound();
+		m.getResource();
+	}
+	
+	@Test
+	void MageTowerTest() {
+		Tower t = new MageTower();
+		t.getResource();
+	}
+	
+	@Test
+	void MapTest() {
+		Map m = new Map();
+		m.setBoard(m.getBoard());
+		m.flip();
+		try {
+			m.save("test.txt");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			m.load("test.txt");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
+
+	
+
 
 }
