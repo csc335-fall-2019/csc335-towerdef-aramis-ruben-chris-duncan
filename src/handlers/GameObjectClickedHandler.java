@@ -54,7 +54,6 @@ public class GameObjectClickedHandler implements EventHandler<MouseEvent>{
 	 */
 	@Override
 	public void handle(MouseEvent e) {
-
 		if(!controller.hasConnected()||controller.getPlayer().isFinished()||controller.isPaused()) {
 			return;
 		}

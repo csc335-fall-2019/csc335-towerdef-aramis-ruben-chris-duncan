@@ -34,7 +34,6 @@ public class TowerDefenseBoard extends Observable implements Serializable{
 	private Market market;
 	
 	private TowerDefenseBoard() {
-		
 	}
 	
 	/**

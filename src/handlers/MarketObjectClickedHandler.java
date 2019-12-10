@@ -33,11 +33,6 @@ public class MarketObjectClickedHandler implements EventHandler<MouseEvent>{
 	private TowerDefenseView view;
 	private TowerDefenseController controller;
 	
-	public MarketObjectClickedHandler(Card card, Market market, TowerDefenseView view) {
-		this.card = card;
-		this.market = market;
-	}
-	
 	/**
 	 * Purpose: constructor for the class
 	 * @param card - a Card object
@@ -58,11 +53,6 @@ public class MarketObjectClickedHandler implements EventHandler<MouseEvent>{
 	 */
 	@Override
 	public void handle(MouseEvent arg0) {
-
-		if(arg0.getClickCount()<2) {
-			return;
-		}
-
 		TowerDefenseController controller = view.getController();
 		if(!controller.hasConnected()||controller.getPlayer().isFinished()||controller.isPaused()) {
 			return;

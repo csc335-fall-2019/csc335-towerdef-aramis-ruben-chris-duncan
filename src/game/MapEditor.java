@@ -180,7 +180,7 @@ public class MapEditor {
 			}
 		});
 		
-		
+		// Creating dropdown menu selection for loading maps
 		MenuItem load = new MenuItem();
 		load.setText("Load");
 		// Event handler for when the load menu option is selected

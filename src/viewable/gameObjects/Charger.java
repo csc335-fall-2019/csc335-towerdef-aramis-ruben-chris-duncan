@@ -13,8 +13,8 @@ public class Charger extends Minion {
 	/**
 	 * @purpose: constructor for charger minion
 	 */
-	public Charger() {
-		super(defaultHealth, defaultDamage, defaultSpeed, defaultReward);
+	public Charger(Player player) {
+		super(defaultHealth, defaultDamage, defaultSpeed, defaultReward, player);
 	}
 
 	/**

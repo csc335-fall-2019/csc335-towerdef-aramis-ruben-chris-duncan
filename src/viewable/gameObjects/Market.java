@@ -9,6 +9,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import game.TowerDefenseController;
@@ -36,11 +38,14 @@ import viewable.cards.towers.MinionTowerCard;
 public class Market implements Serializable{
 	
 	private Deck market;
+
 	private List<Card> cards;
 	private transient ListProperty<ImageView> forSale;
 	private transient java.util.Map<Card, ImageView> marketCards;
 	private transient TowerDefenseView view;
 	private transient TowerDefenseController controller;
+	private transient int removedIndex;
+
 	
 
 	/**
@@ -59,7 +64,7 @@ public class Market implements Serializable{
 		this.controller = controller;
 		ObservableList<ImageView> observableList = FXCollections.observableArrayList(new ArrayList<ImageView>());
 		forSale = new SimpleListProperty<ImageView>(observableList);
-		marketCards = new HashMap<Card, ImageView>();
+		marketCards = new LinkedHashMap<Card, ImageView>();
 		cards = new ArrayList<Card>();
 		fillMarket();
 		market.shuffle();
@@ -98,19 +103,17 @@ public class Market implements Serializable{
 			if(c==null) {
 				ImageView v = ImageResourceLoadingHandler.getResource(c);
 
-				v.setOnMouseClicked(new MarketObjectClickedHandler(c, this, view));
-
 				v.setOnMouseClicked(new MarketObjectClickedHandler(c, controller, view));
 
 				forSale.addAll(v);
 			}else {
 				ImageView v = ImageResourceLoadingHandler.getResource(c);
 				marketCards.put(c, v);
-
-				v.setOnMouseClicked(new MarketObjectClickedHandler(c, this, view));
-
+				
 				cards.add(c);
 				v.setOnMouseClicked(new MarketObjectClickedHandler(c, controller, view));
+				v.setPreserveRatio(true);
+				v.setFitWidth(225);
 
 				forSale.addAll(v);
 			}
@@ -130,6 +133,14 @@ public class Market implements Serializable{
 	public boolean removeFromForSale(Card card) {
 		Player player = controller.getPlayer();
 		int cost = card.getCost();
+		Iterator<Card> i = marketCards.keySet().iterator();
+		int k = 0;
+		while(i.hasNext()) {
+			if(i.next().equals(card)) {
+				removedIndex = k;
+			}
+			k++;
+		}
 		if (player.getGold() >= cost) {
 			player.increaseGold(-cost);
 			if(card==null) {
@@ -142,6 +153,23 @@ public class Market implements Serializable{
 		} else {
 			return false;
 		}
+	}
+	
+	public void removeFromForSale(int index) {
+		Iterator<Card> i = marketCards.keySet().iterator();
+		int k = 0;
+		while(i.hasNext()) {
+			Card c = i.next();
+			if(k == index) {
+				ImageView view = marketCards.get(c);
+				forSale.remove(view);
+			}
+			k++;
+		}
+	}
+	
+	public int getRemovedIndex() {
+		return removedIndex;
 	}
 	
 	/**
@@ -157,8 +185,6 @@ public class Market implements Serializable{
 			Card c = market.drawCard();
 			ImageView v = ImageResourceLoadingHandler.getResource(c);
 
-			v.setOnMouseClicked(new MarketObjectClickedHandler(c, this, view));
-
 			v.setOnMouseClicked(new MarketObjectClickedHandler(c, controller, view));
 
 			marketCards.put(c, v);
@@ -172,14 +198,17 @@ public class Market implements Serializable{
 
 	
 	public void repopulateImages() throws FileNotFoundException {
-		marketCards = new HashMap<Card, ImageView>();
+		marketCards = new LinkedHashMap<Card, ImageView>();
 		ObservableList<ImageView> observableList = FXCollections.observableArrayList(new ArrayList<ImageView>());
 		forSale = new SimpleListProperty<ImageView>(observableList);
 		for(Card c: cards) {
 			ImageView v = ImageResourceLoadingHandler.getResource(c);
 			v.setOnMouseClicked(new MarketObjectClickedHandler(c, controller, view));
+			v.setPreserveRatio(true);
+			v.setFitWidth(225);
 			marketCards.put(c, v);
 			forSale.add(v);
+			System.out.println(c);
 		}
 	}
 	

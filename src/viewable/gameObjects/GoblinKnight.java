@@ -13,8 +13,8 @@ public class GoblinKnight extends Minion {
 	/**
 	 * constructor for the goblin knight minion
 	 */
-	public GoblinKnight() {
-		super(defaultHealth, defaultDamage, defaultSpeed, defaultReward);
+	public GoblinKnight(Player player) {
+		super(defaultHealth, defaultDamage, defaultSpeed, defaultReward, player);
 	}
 
 	/**

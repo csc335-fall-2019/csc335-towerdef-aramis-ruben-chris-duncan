@@ -72,7 +72,7 @@ import network.AbilityCardUsedMessage;
 import network.DamageOtherMessage;
 
 import network.MarketCardRemovedMessage;
-
+import network.OtherStatIncreaseMessage;
 import network.StatIncreaseMessage;
 import network.TowerDefenseMoveMessage;
 import network.TowerDefenseTurnMessage;
@@ -117,6 +117,8 @@ public class TowerDefenseController {
 
 	private volatile boolean isPaused;
 	
+	private volatile boolean isServer;
+	
   /**
    * @purpose: Creates the controller for the game that handles all the game
    * logic.
@@ -132,8 +134,6 @@ public class TowerDefenseController {
 		currentPlayer = new Player(this);
 		otherPlayer = new Player(this);
 		minionsFinished = false;
-		currentTurn = new TowerDefenseTurnMessage();
-		setServer(getNextAvailableHostPort());
 		possibleConnections = FXCollections.observableArrayList(new ArrayList<SocketAddress>());
 	}
 
@@ -172,7 +172,7 @@ public class TowerDefenseController {
      * tower placement, an upgrade, an ability card, or a damage card.
      * 
      */
-	private void handleMove(TowerDefenseMoveMessage move) {
+	public void handleMove(TowerDefenseMoveMessage move) {
 		Platform.runLater(()->{
 			// Tower Placement
 			if(move instanceof TowerPlacedMessage) {
@@ -181,7 +181,7 @@ public class TowerDefenseController {
 				int col = getMapArray().length-1-m.getCol();
 				int row = getMapArray()[0].length-1-m.getRow();
 
-				addTower(row, col, m.getTower());
+				board.addTower(row, col, m.getTower());
 				// Using an ability card
 			}else if(move instanceof AbilityCardUsedMessage) {
 				AbilityCardUsedMessage a = (AbilityCardUsedMessage)move;
@@ -195,7 +195,13 @@ public class TowerDefenseController {
 				StatIncreaseMessage s = (StatIncreaseMessage)move;
 				otherPlayer.gainLife(s.getHealth());
 				otherPlayer.increaseGold(s.getGold());
-
+			}else if(move instanceof MarketCardRemovedMessage) {
+				MarketCardRemovedMessage m = (MarketCardRemovedMessage)move;
+				board.getMarket().removeFromForSale(m.getIndex());
+			}else if(move instanceof OtherStatIncreaseMessage) {
+				OtherStatIncreaseMessage o = (OtherStatIncreaseMessage)move;
+				otherPlayer.gainLife(o.getHealth());
+				otherPlayer.increaseGold(o.getGold());
 			}
 		});
 	}
@@ -207,22 +213,11 @@ public class TowerDefenseController {
 	public void endTurn() {
 		currentPlayer.setComplete(true);
 		Thread thread = new Thread(()-> {
-
-			board.triggerMinions();
-			// Waits for the minion wave to complete
-			while(!minionsFinished) {
-				System.out.println("waiting");
-			}
-
 			try {
 				out.writeObject(new TurnFinishedMessage());
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
-
-			while(!otherPlayer.isFinished()) {
-				System.out.println(minionsFinished);
 			}
 
 			while(!otherPlayer.isFinished()&&isRunning) {
@@ -232,14 +227,9 @@ public class TowerDefenseController {
 			}
 
 			minionsFinished = false;
-			try {
-				out.writeObject(currentTurn);
-			} catch (IOException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
-			}
+
 			// Handles what to do after player turns
-			currentTurn = new TowerDefenseTurnMessage();
+			currentTurn = new TowerDefenseTurnMessage(out);
 			Platform.runLater(()->{
 				try {
 					board.getMarket().repopulateForSale();
@@ -277,8 +267,9 @@ public class TowerDefenseController {
 
 	public boolean removeFromForSale(Card card) {
 		boolean removed = board.getMarket().removeFromForSale(card);
+		System.out.println(removed+" "+card);
 		if(removed) {
-			currentTurn.addMove(new MarketCardRemovedMessage(card));
+			currentTurn.addMove(new MarketCardRemovedMessage(board.getMarket().getRemovedIndex()));
 		}
 		return removed;
 	}
@@ -351,7 +342,6 @@ public class TowerDefenseController {
      * 
      */ 
 	public boolean canUpgrade(int row, int col) {
-
 		if(getMapArray()[col][row][0]==null) {
 			return false;
 		}
@@ -395,6 +385,18 @@ public class TowerDefenseController {
 		currentTurn.addMove(new DamageOtherMessage(amount));
 	}
 	
+	public void damageOther(Minion minion) {
+		if(!isServer) {
+			return;
+		}
+		if(minion.getPlayer().equals(otherPlayer)) {
+			currentPlayer.damageTaken(minion.getDamage());
+			currentTurn.addMove(new StatIncreaseMessage(minion.getDamage()*-1, 0));
+		}else {
+			damageOther(minion.getDamage());
+		}
+	}
+	
 	/**
      * @purpose: Determines if a minion is going to be killed.
      * 
@@ -402,8 +404,16 @@ public class TowerDefenseController {
      * 
      */
 	public void killMinion(Minion minion) {
-		currentPlayer.increaseGold(minion.getReward());
-		currentTurn.addMove(new StatIncreaseMessage(0, minion.getReward()));
+		if(!isServer) {
+			return;
+		}
+		if(minion.getPlayer().equals(currentPlayer)) {
+			currentTurn.addMove(new StatIncreaseMessage(0, minion.getReward()));
+			otherPlayer.increaseGold(minion.getReward());
+		}else {
+			currentTurn.addMove(new OtherStatIncreaseMessage(0, minion.getReward()));
+			currentPlayer.increaseGold(minion.getReward());
+		}
 	}
 	
 	/**
@@ -509,7 +519,6 @@ public class TowerDefenseController {
 	private void checkHost(String host) {
 		try {
 			if(!InetAddress.getByName(host).isReachable(100)) {
-				System.out.println("Host: "+host+" unreachable...");
 				return;
 			}
 		} catch (UnknownHostException e) {
@@ -522,12 +531,10 @@ public class TowerDefenseController {
 			return;
 		}
 		for(int port = 55000;port<=55005&&isRunning;port++) {
-			System.out.println("Checking "+host+":"+port);
 			SocketAddress address = new InetSocketAddress(host, port);
 			try {
 				Socket s = new Socket(host, port);
 				s.close();
-				System.out.println(host+":"+port);
 				Platform.runLater(()->{
 					possibleConnections.add(address);
 				});
@@ -548,6 +555,7 @@ public class TowerDefenseController {
 	public void startClient(String host, int port) {
 		Thread thread = new Thread(new Client(host, port, this, null, null));
 		thread.start();
+		isServer = false;
 	}
 	
 	/**
@@ -555,9 +563,15 @@ public class TowerDefenseController {
      * 
      */
 	public void startServer() {
+		try {
+			setServer(getNextAvailableHostPort());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		Thread thread = new Thread(new Server(this, null, null));
-		System.out.println("Hosted on: "+server.getInetAddress().getHostAddress()+":"+server.getLocalPort());
 		thread.start();
+		isServer = true;
 	}
 	
 	/**
@@ -600,6 +614,10 @@ public class TowerDefenseController {
 		return board.getMarket();
 	}
 
+	public void setBoard(Map m) {
+		board.setBoard(m);
+	}
+	
 	public TowerDefenseView getView() {
 		return view;
 	}
@@ -645,7 +663,9 @@ public class TowerDefenseController {
 	public void setRunning(boolean b) {
 		isRunning = b;
 		try {
-			server.close();
+			if(out!=null&&!b) {
+				out.close();
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -690,5 +710,6 @@ public class TowerDefenseController {
 	// Setter for output stream.
 	public void setOut(ObjectOutputStream o) {
 		out = o;
+		currentTurn = new TowerDefenseTurnMessage(o);
 	}
 }
