@@ -132,6 +132,8 @@ import viewable.gameObjects.Player;
 import viewable.gameObjects.Tower;
 
 public class TowerDefenseView extends Application implements Observer{
+	
+	// Field variables for TowerDefenseView Objects
 	public static Stage MESSAGE_RECEIVED;
 	private static final int SIZE_IMAGE = 47;
 	private static final int CARD_WIDTH = 128;
@@ -155,7 +157,13 @@ public class TowerDefenseView extends Application implements Observer{
 	private Market m;
 	
 	/**
-	 * @purpose: 
+	 * @purpose: Launches the GUI for the tower defense game.
+	 * 
+	 * @param primaryStage - the main stage created by JavaFX and used to display
+	 * all game variables
+	 * 
+	 * @throws Exception - throws an exception if the view isn't properly passed
+	 * in to create a new controller.
 	 */
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -167,6 +175,7 @@ public class TowerDefenseView extends Application implements Observer{
 		transitions = new HashMap<Minion,Timeline>();
 
 		controller = new TowerDefenseController(this);
+		// Closing threads when exit is selected
 		Runtime.getRuntime().addShutdownHook(new Thread(()->{
 			controller.setRunning(false);
 			System.out.println("Exiting...");
@@ -178,9 +187,11 @@ public class TowerDefenseView extends Application implements Observer{
 	/**
 	 * @purpose: creates the opening main menu for the game
 	 * 
-	 * @throws IOException
+	 * @throws IOException - an exception is thrown if any resources for the
+	 * main menu aren't able to be found.
 	 */
 	private void mainMenu() throws IOException {
+		// Setting up main menu window
 		VBox vbox = new VBox(25);
 		vbox.setPadding(new Insets(20));
 		FileInputStream in = new FileInputStream("./resources/images/splashScreen.gif");
@@ -237,6 +248,13 @@ public class TowerDefenseView extends Application implements Observer{
 		stage.show();
 	}
 	
+	/**
+     * @purpose: Creates the window to be displayed when the user clicks
+     * connect. Allows the user to scan for games or manually input hostname
+     * and port number of host.
+     * 
+     */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void connectOrHost() {
 		GridPane pane = new GridPane();
 		BorderPane main = new BorderPane();
@@ -261,6 +279,7 @@ public class TowerDefenseView extends Application implements Observer{
 			}
 		});
 		view.setOnMouseClicked((e)->{
+			// Do nothing for right clicks
 			if(!e.getButton().equals(MouseButton.PRIMARY)) {
 				e.consume();
 				return;
@@ -277,6 +296,7 @@ public class TowerDefenseView extends Application implements Observer{
 			controller.startClient(address.getHostString(), address.getPort());
 		});
 
+		// Display objects
 		TextField host = new TextField();
 		Label hostText = new Label("Host");
 		
@@ -315,6 +335,12 @@ public class TowerDefenseView extends Application implements Observer{
 		stage.show();
 	}
 	
+	/**
+     * @purpose: Resets all values to begin a new game.
+     * 
+     * @throws IOException - throws an error if newGame was called before the 
+     * very first game was completely instantiated.
+     */
 	public void newGame() throws IOException {
 		// Initial Set Up
 		round = 1;
@@ -362,6 +388,13 @@ public class TowerDefenseView extends Application implements Observer{
 		stage.show();
 	}
 	
+	/**
+     * @purpose: Creates a pane for ammunition to be displayed and still
+     * allowing the user to click on the board through this pane.
+     * 
+     * @return box - is a Pane that holds tower fire animations
+     * 
+     */
 	private Pane createClickThrough() {
 		Pane box = new Pane();
 		box.setPrefHeight(model.getEffectiveBoardHeight());
@@ -371,9 +404,20 @@ public class TowerDefenseView extends Application implements Observer{
 		return box;
 	}
 	
+	/**
+     * @purpose: Creates the bottom layer of the board that displays either the
+     * empty grass squares where the user can place towers or the dirt path
+     * squares where the enemy waves walk on.
+     * 
+     * @return grid - the grid that holds all the objects to be places on the playable area
+     * 
+     * @throws FileNotFoundException - throws an exception if the image resources
+     * cannot be found.
+     */
 	private GridPane createClearGrid() throws FileNotFoundException {
 		GridPane grid = new GridPane();
 		Viewable[][][] board = controller.getMapArray();
+		// Initializing board to grass squares
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board[i].length; j++) {
 				ImageView view = new ImageView();
@@ -389,10 +433,19 @@ public class TowerDefenseView extends Application implements Observer{
 		return grid;
 	}
 	
+	/**
+     * @purpose: Applies a grid of squares to the playing field so the players can
+     * see where towers can be placed.
+     * 
+     * @return grid - the GridPane that separates the grid into squares to the players
+     * can know where they can place towers
+     * 
+     * @throws FileNotFoundException - throws an error if any grid resources cannot
+     * be found.
+     */
 	public GridPane createGrid() throws FileNotFoundException {
 		GridPane grid = new GridPane();
 		Viewable[][][] board = controller.getMapArray();
-		
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board[i].length; j++) {
 				HBox box = new HBox();
@@ -405,6 +458,22 @@ public class TowerDefenseView extends Application implements Observer{
 		return grid;	
 	}
 	
+	/**
+     * @purpose: Iterates through the entire board and applies an image for 
+     * each square that is associated to the object at that location.
+     * 
+     * @param obj - the Viewable object that is currently at that grid location
+     * 
+     * @param row - the row number of the object
+     * 
+     * @param col - the column number of the object
+     * 
+     * @return x - the image of the object currently being looked at
+     * 
+     * @throws FileNotFoundException - throws an error if the objects image resource
+     * cannot be located.
+     * 
+     */
 	private ImageView createGridResource(Viewable obj, int row, int col) throws FileNotFoundException {
 		ImageView x = ImageResourceLoadingHandler.getResource(obj);
 		x.setFitHeight(SIZE_IMAGE);
@@ -413,15 +482,21 @@ public class TowerDefenseView extends Application implements Observer{
 		return x;
 	}
 
+	/**
+     * @purpose: Handles the game animation for minions and how they traverse the path.
+     * 
+     */
 	public void update() {
 		transitions.clear();
 		Thread thread = new Thread(()-> {
+			// Generating new wave
 			List<Minion> currentWave = wave.generateRandom(); 
 			round++;
 			List<ImageView> minions = new ArrayList<ImageView>();
+			// Placing and animating the minions within the wave
 			for(Minion m: currentWave) {
 				try {
-					
+					// Getting image for the object
 					ImageView view = ImageResourceLoadingHandler.getResource(m);
 					view.setViewport(new Rectangle2D(0, 0, SIZE_IMAGE, SIZE_IMAGE));
 					Timeline t = new Timeline(new KeyFrame(Duration.millis(100), (e) -> {
@@ -435,13 +510,14 @@ public class TowerDefenseView extends Application implements Observer{
 								);
 					}));
 					t.setCycleCount(Timeline.INDEFINITE);
+					// Playing animation
 					t.play();
-					
 					minions.add(view);
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				}
 			}
+			// Adding minions to the grid
 			for(Node n: grid.getChildrenUnmodifiable()) {
 				if(GridPane.getColumnIndex(n)==0&&GridPane.getRowIndex(n)==currentYVal) {
 					int finY = currentYVal;
@@ -452,6 +528,8 @@ public class TowerDefenseView extends Application implements Observer{
 					});
 				}
 			}
+			// Putting the wave and mininos together and randmomly generating an offset so minions come at 
+			// different times.
 			for(int i =0;i<currentWave.size();i++) {
 				try {
 					move(i, 0, currentYVal, currentWave.get(i), minions, currentWave, direction, (int)(Math.random()*85));
@@ -460,7 +538,9 @@ public class TowerDefenseView extends Application implements Observer{
 				}
 			}
 		});
+		// Getting path for first player
 		generatePath(thread);
+		// Sending wave to other player
 		Thread thread2 = new Thread(()-> {
 			List<Minion> currentWave = otherWave.generateRandom();
 			round++;
@@ -514,9 +594,20 @@ public class TowerDefenseView extends Application implements Observer{
 				}
 			}
 		});
+		// Generating path for other player and sending it to them
 		generatePath(thread2);
 	}
 	
+	/**
+     * @purpose: Reverses the path the minions take which is used for the other
+     * player.
+     * 
+     * @param vals - a list of values that represent the direciton the minions
+     * are supposed to take.
+     * 
+     * @return ints - a list of numbers that dictate the path minions will take.
+     * 
+     */
 	private List<Integer> reverse(List<Integer> vals){
 		List<Integer> ints = new ArrayList<Integer>();
 		for(int i =0;i<vals.size();i++) {
@@ -532,6 +623,26 @@ public class TowerDefenseView extends Application implements Observer{
 		return ints;
 	}
 	
+	/**
+     * @purpose: Moves the minions to their new position on the grid.
+     * 
+     * @param index - the minion's position within the wave list.
+     * 
+     * @param initialX - the current minion's starting X position on the map
+     * 
+     * @param initialY - the current minion's starting Y position on the map
+     * 
+     * @param minion - the Minion that is being moved
+     * 
+     * @param minions - the list of minions generated for the current round
+     * 
+     * @param minionsL - the list of minions for the other player
+     * 
+     * @param direction - determines which direction the minions will go for each player
+     * 
+     * @param offest - the delay each minion receives so the minions appear at different times
+     * 
+     */
 	private void move(int index, int initialX, int initialY, Minion minion, List<ImageView> minions, List<Minion> minionsL, List<Integer> direction, int offset) {
 		if(minion.isDead()) {
 			checkMinionsFinished(minionsL);
@@ -557,6 +668,7 @@ public class TowerDefenseView extends Application implements Observer{
 			} catch (FileNotFoundException e2) {
 				e2.printStackTrace();
 			}
+			// Check if minion is still alive
 			if(minion.isDead()) {
 				Platform.runLater(()->{
 					animationGrid.getChildren().remove(minions.get(index));
@@ -565,6 +677,7 @@ public class TowerDefenseView extends Application implements Observer{
 				checkMinionsFinished(minionsL);
 				return;
 			}
+			// Determine its next direction
 			if(minion.getStep()>=direction.size()-1) {
 				controller.damageOther(minion);
 				minion.takeDamage(minion.getHealth());
@@ -572,6 +685,7 @@ public class TowerDefenseView extends Application implements Observer{
 				Platform.runLater(()->{
 					animationGrid.getChildren().remove(minions.get(index));
 				});
+			// increase its movement
 			}else {
 				minion.incrementStep();
 				Platform.runLater(()->{
@@ -586,6 +700,12 @@ public class TowerDefenseView extends Application implements Observer{
 		t.play();
 	}
 	
+	/**
+     * @purpose: Determine if the minion has finished moving for the cycle
+     * 
+     * @param minions - a list of minions for the current wave
+     * 
+     */
 	private void checkMinionsFinished(List<Minion> minions) {
 		boolean flag = true;
 		for(int i =0;i<minions.size();i++) {
@@ -593,14 +713,25 @@ public class TowerDefenseView extends Application implements Observer{
 				flag = false;
 			}
 		}
-
 		System.out.println(flag);
-
 		if(flag) {
 			controller.setMinionsFinished(true);
 		}
 	}
 	
+	/**
+     * @purpose: Checks to see if the minion is within range of a tower and
+     * has the tower fire if it does. Deals damage to the minion when it hits it.
+     * 
+     * @param minion - the minion being checked
+     * 
+     * @param x - the minion's x position on the grid
+     * 
+     * @param y - the minion's y postion on the grid
+     * 
+     * @throws FileNotFoundException - throws an exception if the ammunition image can't be found
+     * 
+     */
 	private void checkTowers(Minion minion, int x, int y) throws FileNotFoundException {
 		Viewable[][][] map = controller.getMapArray();
 		for(int i =0;i<map.length;i++) {
@@ -617,7 +748,7 @@ public class TowerDefenseView extends Application implements Observer{
 								
 							}
 							ImageView view = new ImageView();
-							view.setImage(new Image(new FileInputStream("./resources/images/tst.jpeg")));
+							view.setImage(new Image(new FileInputStream("./resources/images/MortarShell.png")));
 							view.setFitHeight(10);
 							view.setFitWidth(10);
 							Platform.runLater(()->{
@@ -643,6 +774,16 @@ public class TowerDefenseView extends Application implements Observer{
 		}
 	}
 	
+	/**
+     * @purpose: Determines which node is at a specific position.
+     * 
+     * @param col - the col position on the grid
+     * 
+     * @param row - the row position on the grid
+     * 
+     * @return - the node at the given position
+     * 
+     */
 	private Node findNode(int col, int row) {
 		for(Node n: grid.getChildren()) {
 			if(GridPane.getColumnIndex(n)==col&&GridPane.getRowIndex(n)==row) {
@@ -652,6 +793,12 @@ public class TowerDefenseView extends Application implements Observer{
 		return null;
 	}
 					
+	/**
+     * @purpose: Determines the path for the minions to take as they traverse the map
+     * 
+     * @param callback - the thread of the current player.
+     * 
+     */
 	public void generatePath(Thread callback) {
 		Thread thread = new Thread(()-> {
 			System.out.println("Started.");
@@ -674,6 +821,7 @@ public class TowerDefenseView extends Application implements Observer{
 				int boty = y + 1;
 				int leftx = x - 1;
 				int rightx = x + 1;
+				// Determining if there is a Path object to the left of the current path
 				if (leftx >= 0) {
 					if (map[leftx][y][0] instanceof Path&&!lsPath.contains(findNode(leftx, y))) {
 						lsPath.add((ImageView)findNode(leftx, y));
@@ -682,6 +830,7 @@ public class TowerDefenseView extends Application implements Observer{
 						continue;
 					}
 				}
+				// Determinig if there is a Path object to the north of the current path
 				if (topy >= 0) {
 					if (map[x][topy][0] instanceof Path&&!lsPath.contains(findNode(x, topy))) {
 						lsPath.add((ImageView)findNode(x, topy));
@@ -690,6 +839,7 @@ public class TowerDefenseView extends Application implements Observer{
 						continue;
 					}
 				}
+				// Determinig if there is a Path object to the right of the current path
 				if (rightx < map.length) {
 					if (map[rightx][y][0] instanceof Path&&!lsPath.contains(findNode(rightx, y))) {
 						lsPath.add((ImageView)findNode(rightx, y));
@@ -698,6 +848,7 @@ public class TowerDefenseView extends Application implements Observer{
 						continue;
 					}
 				}
+				// Determining if there is a Path object to the south of the current path
 				if (boty < map[0].length) {
 					if (map[x][boty][0] instanceof Path && !lsPath.contains(findNode(x, boty))) {
 						lsPath.add((ImageView)findNode(x, boty));
@@ -706,6 +857,7 @@ public class TowerDefenseView extends Application implements Observer{
 						continue;
 					}
 				}
+				// Stop looking for paths once you reach the last column on the right side of the board
 				if (x == map.length-1) {
 					break;
 				}
@@ -717,6 +869,15 @@ public class TowerDefenseView extends Application implements Observer{
 		thread.start();
 	}
 	
+	/**
+     * @purpose: Creates the area for the bottom players cards and stats.
+     * 
+     * @return bottom - an HBox holding all the objects necessary for a player's area
+     * 
+     * @throws IOException - throws an exception if the images for the player's
+     * cards cannot be found
+     * 
+     */
 	private HBox createBottom() throws IOException {
 		Player player = controller.getPlayer();
 		HBox bottom = new HBox();
@@ -742,6 +903,7 @@ public class TowerDefenseView extends Application implements Observer{
 		Text gold = new Text();
 		gold.setFill(Color.WHITE);
 		gold.setText(player.getGold()+"");
+		// Adding listener to health to determine damage take or healing
 		player.getViewableHealth().addListener(new ChangeListener<Number>() {
 
 			@Override
@@ -751,7 +913,7 @@ public class TowerDefenseView extends Application implements Observer{
 			}
 			
 		});
-		
+		// Adding listener to gold to determine any changes in gold amount
 		player.getViewableGold().addListener(new ChangeListener<Number>() {
 
 			@Override
@@ -786,6 +948,15 @@ public class TowerDefenseView extends Application implements Observer{
 		return bottom;
 	}
 	
+	/**
+     * @purpose: Creates the area for the top player's cards and stats.
+     * 
+     * @return top - an HBox holding all the objects necessary for a player's area
+     * 
+     * @throws IOException - throws an exception if the images for the player's
+     * cards cannot be found
+     * 
+     */
 	private HBox createTop() throws IOException {
 		// Set Up Other Player Area
 		Player player = controller.getOtherPlayer();
@@ -811,6 +982,7 @@ public class TowerDefenseView extends Application implements Observer{
 		Text gold = new Text();
 		gold.setFill(Color.WHITE);
 		gold.setText(player.getGold()+"");
+		// Adding listener to see if the player's health has changed
 		player.getViewableHealth().addListener(new ChangeListener<Number>() {
 
 			@Override
@@ -820,7 +992,7 @@ public class TowerDefenseView extends Application implements Observer{
 			}
 			
 		});
-		
+		// Adding a listener to player's gold to see if it ever changes
 		player.getViewableGold().addListener(new ChangeListener<Number>() {
 
 			@Override
@@ -839,11 +1011,20 @@ public class TowerDefenseView extends Application implements Observer{
 		return top;
 	}
 	
+	/**
+     * @purpose: Creates the area for the market cards that can be bought.
+     * 
+     * @return market - an HBox holding all the cards that are available for purchase
+     * 
+     * @throws IOException - throws an exception if the images for the market's
+     * cards cannot be found
+     * 
+     */
 	private VBox createMarket() throws IOException {
 		// Set Up Market
 		VBox market = new VBox();
 		market.setStyle("-fx-border-color: black;");
-		
+		// Getting images for each card
 		FileInputStream input = new FileInputStream("./resources/images/market.png");
 		Image image = new Image(input);
 		BackgroundImage marketBg = new BackgroundImage(image, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
@@ -855,7 +1036,7 @@ public class TowerDefenseView extends Application implements Observer{
 		view.setItems(m.getForSale());
 		view.setPrefHeight(model.getHeight());
 		market.getChildren().add(view);
-		
+		// What to do when a card in the market is clicked
 		view.setOnMouseClicked((e)->{
 			System.out.println(view.getSelectionModel().getSelectedItem());
 			if(view.getSelectionModel().getSelectedItem()==null) {
@@ -872,6 +1053,11 @@ public class TowerDefenseView extends Application implements Observer{
 		return market;
 	}
 	
+	/**
+     * @purpose: Creates the menu bar that is displayed at the top right of the GUI.
+     * 
+     * @return bar - the MenuBar to be displayed
+     */
 	private MenuBar createMenuBar() {
 		// Create the menu bar.
 		MenuBar bar = new MenuBar();
@@ -886,6 +1072,11 @@ public class TowerDefenseView extends Application implements Observer{
 		return bar;
 	}
 	
+	/**
+     * @purpose: Creates the dropdown menu when file is selected from the main menu bar.
+     * 
+     * @return file - the dropdown menu to be displayed
+     */
 	private Menu createFileMenu() {
 		// Create the file menu option, will hold save and exit commands.
 		Menu file = new Menu();
@@ -899,11 +1090,11 @@ public class TowerDefenseView extends Application implements Observer{
 				e1.printStackTrace();
 			}
 		});
-		
+		// Map editor option
 		MenuItem mapEditor = new MenuItem();
 		mapEditor.setText("Open Map Editor");
 		mapEditor.setOnAction(new MapEditorHandler());
-		
+		// Pause menu option
 		MenuItem pause = new MenuItem();
 		pause.setText("Pause");
 		pause.setOnAction((e)->{
@@ -923,7 +1114,7 @@ public class TowerDefenseView extends Application implements Observer{
 				pause.setText("Pause");
 			}
 		});
-		
+		// fast forward menu option
 		MenuItem fastForward = new MenuItem();
 		fastForward.setText("Fast Forward");
 		fastForward.setOnAction((e)->{
@@ -934,7 +1125,7 @@ public class TowerDefenseView extends Application implements Observer{
 				fastForward.setText("Fast Forward");
 			}
 		});
-		
+		// exit menu option
 		MenuItem exit = new MenuItem();
 		exit.setText("Exit");
 		exit.setOnAction(new ExitHandler());
@@ -944,14 +1135,20 @@ public class TowerDefenseView extends Application implements Observer{
 		return file;
 	}
 	
+	/**
+     * @purpose: Creates the dropdown menu when option is selected in the 
+     * main menu bar.
+     * 
+     * @return options - the dropdown menu for options
+     */
 	private Menu createOptionMenu() {
 		// Create the option menu option, holds sound settings and game visual settings.
 		Menu options = new Menu();
-		
+		// sound menu option
 		MenuItem sound = new MenuItem();
 		sound.setText("Sound");
 		sound.setOnAction(new SoundHandler());
-		
+		// video menu option
 		MenuItem video = new MenuItem();
 		video.setText("Video");
 		video.setOnAction(new VideoHandler());
@@ -962,6 +1159,10 @@ public class TowerDefenseView extends Application implements Observer{
 		return options;
 	}
 
+	/**
+     * @purpose: Randomly selects music from a source folder to play during the game.
+     * 
+     */
 	private void loadMusic() {
 		try {
 			String randomMusic = findRandomMusic();
@@ -996,6 +1197,12 @@ public class TowerDefenseView extends Application implements Observer{
 		}
 	}
 	
+	/**
+     * @purpose: Randomly picks a music file from the music folder
+     * 
+     * @return - a string that is the file path to the selected music file
+     * 
+     */
 	private String findRandomMusic() throws IOException, URISyntaxException {
 		File file = new File("./resources/music");
 		List<File> files = new ArrayList<File>();
@@ -1006,6 +1213,14 @@ public class TowerDefenseView extends Application implements Observer{
 		return files.get(0).toURI().toString();
 	}
 
+	/**
+     * @purpose: The observer method that takes notice of any changes that occur to the 
+     * board state.
+     * 
+     * @param o - the object that is being observed
+     * 
+     * @param e - the object that was changed by the observed object
+     */
 	@Override
 	public void update(Observable o, Object e) {
 		if(e instanceof Map) {
@@ -1034,6 +1249,17 @@ public class TowerDefenseView extends Application implements Observer{
 		}
 	}
 	
+	/**
+     * @purpose: sets all objects within the board.
+     * 
+     * @param row - the row in the grid where the object is to be set
+     * 
+     * @param col - the column in the grid where the object is to be set
+     * 
+     * @throws IOException - throws an exception if the images for the object
+     * cannot be found
+     * 
+     */
 	private void setBoard(int row, int col) throws FileNotFoundException {
 		Viewable[][][] board = controller.getMapArray();
 		Viewable obj = board[col][row][0];
@@ -1054,20 +1280,32 @@ public class TowerDefenseView extends Application implements Observer{
 		grid.add(node, col, row);
 	}
 	
+	// Getter method for the primary stage
 	public Stage getPrimaryStage() {
 		return stage;
 	}
 
-	
+	// Getter method for the controller being used by the view
 	public TowerDefenseController getController() {
 		return controller;
 	}
 	
+	/**
+     * @purpose: Tests whether a connection can be made with the given parameters.
+     * 
+     */
 	private class PossibleConnectionCell extends ListCell{
 		private InetSocketAddress address;
 		public PossibleConnectionCell() {
 		}
 		
+		/**
+	     * @purpose: Updates the client with all the board attributes used by the other player.
+	     * 
+	     * @param update - the object to be updated across the network
+	     * 
+	     * @param empty - tells if the current space is empty
+	     */
 		@Override
 		protected void updateItem(Object update, boolean empty) {
 			super.updateItem(update, empty);
@@ -1080,6 +1318,7 @@ public class TowerDefenseView extends Application implements Observer{
 			}
 		}
 		
+		// Getter method for the socket address being used
 		public InetSocketAddress getAddress() {
 			return address;
 		}
