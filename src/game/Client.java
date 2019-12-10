@@ -21,6 +21,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 
 import javafx.application.Platform;
+import network.TowerDefenseMoveMessage;
 import network.TowerDefenseTurnMessage;
 import network.TurnFinishedMessage;
 import viewable.gameObjects.Map;
@@ -78,7 +79,6 @@ public class Client implements Runnable{
 			controller.setRunning(true);
 			controller.setOut(new ObjectOutputStream(socket.getOutputStream()));
 			in = new ObjectInputStream(socket.getInputStream());
-			Map map = (Map)in.readObject();
 			TowerDefenseBoard map = (TowerDefenseBoard)in.readObject();
 			System.out.println(map);
 			map.setView(controller.getView());
@@ -118,6 +118,8 @@ public class Client implements Runnable{
 		}else if(o instanceof TowerDefenseTurnMessage) {
 			TowerDefenseTurnMessage message = (TowerDefenseTurnMessage)o;
 			controller.handleMessage(message);
+		}else if(o instanceof TowerDefenseMoveMessage) {
+			controller.handleMove((TowerDefenseMoveMessage)o);
 		}
 	}
 }

@@ -22,6 +22,7 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import javafx.application.Platform;
+import network.TowerDefenseMoveMessage;
 import network.TowerDefenseTurnMessage;
 import network.TurnFinishedMessage;
 
@@ -127,6 +128,8 @@ public class Server implements Runnable{
 			controller.setOtherPlayerFinished(true);
 		}else if(o instanceof TowerDefenseTurnMessage) {
 			controller.handleMessage((TowerDefenseTurnMessage)o);
+		}else if(o instanceof TowerDefenseMoveMessage) {
+			controller.handleMove((TowerDefenseMoveMessage)o);
 		}
 	}
 }

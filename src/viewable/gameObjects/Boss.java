@@ -13,8 +13,8 @@ public class Boss extends Minion {
 	/**
 	 * constructor for the boss minion
 	 */
-	public Boss() {
-		super(defaultHealth, defaultDamage, defaultSpeed, defaultReward);
+	public Boss(Player player) {
+		super(defaultHealth, defaultDamage, defaultSpeed, defaultReward, player);
 	}
 
 	/**

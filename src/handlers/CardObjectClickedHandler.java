@@ -45,9 +45,6 @@ public class CardObjectClickedHandler implements EventHandler<MouseEvent>{
 	 */
 	@Override
 	public void handle(MouseEvent arg0) {
-
-		if(!controller.hasConnected()||controller.getPlayer().isFinished()) {
-
 		if(!controller.hasConnected()||controller.getPlayer().isFinished()||controller.isPaused()) {
 
 			return;

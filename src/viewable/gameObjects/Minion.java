@@ -15,6 +15,7 @@ public abstract class Minion extends Viewable {
 	private Integer reward;
 	private Integer currentHealth;
 	private Integer currentStep;
+	private Player player;
 	
 	
 	/**
@@ -29,13 +30,18 @@ public abstract class Minion extends Viewable {
 	 * @param reward: gold reward for killing the minion
 	 * 
 	 */
-	public Minion(Integer health, Integer damage, Integer speed, Integer reward) {
+	public Minion(Integer health, Integer damage, Integer speed, Integer reward, Player player) {
 		this.health = health;
 		currentHealth = health;
 		currentStep = 0;
 		this.damage = damage;
 		this.speed = speed;
 		this.reward = reward;
+		this.player = player;
+	}
+	
+	public Player getPlayer() {
+		return player;
 	}
 	
 	/**

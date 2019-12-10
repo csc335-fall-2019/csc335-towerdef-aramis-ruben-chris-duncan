@@ -17,8 +17,8 @@ public class WolfRider extends Minion {
 	/**
 	 * constructor for the wolf rider minion
 	 */
-	public WolfRider() {
-		super(defaultHealth, defaultDamage, defaultSpeed, defaultReward);
+	public WolfRider(Player player) {
+		super(defaultHealth, defaultDamage, defaultSpeed, defaultReward, player);
 	}
 
 	/**

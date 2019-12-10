@@ -3,12 +3,12 @@ package network;
 import viewable.cards.Card;
 
 public class MarketCardRemovedMessage extends TowerDefenseMoveMessage{
-	private Card card;
-	public MarketCardRemovedMessage(Card card) {
-		this.card = card;
+	private int index;
+	public MarketCardRemovedMessage(int index) {
+		this.index = index;
 	}
 	
-	public Card getCard() {
-		return card;
+	public int getIndex() {
+		return index;
 	}
 }
