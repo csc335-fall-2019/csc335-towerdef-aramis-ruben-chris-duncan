@@ -144,6 +144,7 @@ public class TowerDefenseController {
 	/**
      * @purpose: Getter method for the board attribute.
      * 
+     * @return board - returns the current board the controller is using
      */
 	public TowerDefenseBoard getBoard() {
 		return board;
@@ -276,6 +277,13 @@ public class TowerDefenseController {
 	}
 	
 
+	/**
+     * @purpose: Removes a bought card from the buyable cards in the market.
+     * 
+     * @return removed - a boolean value stating whether card was successfully removed
+     * or not. 
+     * 
+     */
 	public boolean removeFromForSale(Card card) {
 		boolean removed = board.getMarket().removeFromForSale(card);
 		System.out.println(removed+" "+card);
@@ -350,6 +358,9 @@ public class TowerDefenseController {
      * @param row - the row of the grid the tower is being added to
      * 
      * @param col - the col of the grid the tower is being added to
+     * 
+     * @return - returns whether the card being played has an upgradable feature
+     * or not
      * 
      */ 
 	public boolean canUpgrade(int row, int col) {
@@ -468,6 +479,8 @@ public class TowerDefenseController {
 	
 	/**
      * @purpose: Searches through all ports to find an available one.
+     * 
+     * @return s - the socket number being used by the host
      * 
      * @throws IOException - exception to be thrown if the user didn't input a proper
      * port number
@@ -642,15 +655,27 @@ public class TowerDefenseController {
 	public Market getMarket() {
 		return board.getMarket();
 	}
-	
+
+	/**
+     * @purpose: setter method for board.
+     * 
+     */
 	public void setBoard(Map m) {
 		board.setBoard(m);
 	}
 	
+	/**
+     * @purpose: Getter method for the view the board is associated with.
+     * 
+     */
 	public TowerDefenseView getView() {
 		return view;
 	}
 	
+	/**
+     * @purpose: Setter method for the board using the TowerDefenseBoard object.
+     * 
+     */
 	public void setBoard(TowerDefenseBoard m) {
 		board = m;
 		m.getMarket().setController(this);
@@ -678,11 +703,18 @@ public class TowerDefenseController {
 		minionsFinished = false;
 	}
 	
-
+	/**
+     * @purpose: Setter for whether the game is paused or not.
+     * 
+     */
 	public boolean isPaused() {
 		return isPaused;
 	}
 	
+	/**
+     * @purpose: Setter method for whether the game is paused or not.
+     * 
+     */
 	public void setPaused(boolean b) {
 		isPaused = b;
 	}

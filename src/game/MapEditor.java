@@ -59,6 +59,8 @@ public class MapEditor {
 	/**
      * @purpose: Builds the initial window that the map editor opens up in.
      * 
+     * @return stage - returns the stage that was created for the GUI
+     * 
      * @throws - FileNotFoundException
      */
 	public Stage create() throws FileNotFoundException {
@@ -101,6 +103,8 @@ public class MapEditor {
 	/**
      * @purpose: Creates a menu of towers.
      * 
+     * @return pane - The pane that holds all the viewables that can be seen on the grid
+     * 
      * @throws - FileNotFoundException - thrown if the image that is to be set
      * is not found.
      */
@@ -125,6 +129,8 @@ public class MapEditor {
 	/**
      * @purpose: Create the top menu bar.
      * 
+     * @return bar - the menu bar that displays at the top right of the GUI
+     * 
      * @param stage - is the window the map editor is inside.
      */
 	private MenuBar createMenuBar(Stage stage) {
@@ -142,6 +148,8 @@ public class MapEditor {
 	
 	/**
      * @purpose: Creates the menus that are in the menu bar.
+     * 
+     * @return file - the dropdown menu list that appears when menu is clicked
      * 
      * @param stage - is the window the map editor is inside.
      */
@@ -180,7 +188,7 @@ public class MapEditor {
 			}
 		});
 		
-		
+		// Creating dropdown menu selection for loading maps
 		MenuItem load = new MenuItem();
 		load.setText("Load");
 		// Event handler for when the load menu option is selected
@@ -221,6 +229,8 @@ public class MapEditor {
 	/**
      * @purpose: Creates the drop down menu for options.
      * 
+     * @return options - the dropdown menu list when options is clicked in the main menu bar
+     * 
      */
 	private Menu createOptionMenu() {
 		// Create the option menu option, holds sound settings and game visual settings.
@@ -242,6 +252,8 @@ public class MapEditor {
 	
 	/**
      * @purpose: Creates the grid that acts as the play area for the game.
+     * 
+     * @return grid - the grid with all the images for each object the gridpane holds
      * 
      * @throws - FileNotFoundException - thrown if the image that is to be set
      * is not found.
@@ -272,6 +284,8 @@ public class MapEditor {
      * 
      * @param use - determines which dimensions to use. Used to change the size
      * of the squares in the grid.
+     * 
+     * @return view - the image for a specific object on the grid
      * 
      * @throws - FileNotFoundException - thrown if the image that is to be set
      * is not found.

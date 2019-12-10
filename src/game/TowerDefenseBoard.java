@@ -98,6 +98,14 @@ public class TowerDefenseBoard extends Observable implements Serializable{
   		notifyObservers(false);
   	}
   
+  /**
+   * @purpose: Flips the board through the middle horizontally so the other
+   * player sees the board in the proper orientation.
+   * 
+   * @return tdBoard - is a TowerDefenseBoard with all the attributes flipped across
+   * the horizontal axis.
+   * 
+   */
 	public TowerDefenseBoard flip() {
 		TowerDefenseBoard tdBoard = new TowerDefenseBoard();
 		tdBoard.setBoard(board.flip());
@@ -106,7 +114,10 @@ public class TowerDefenseBoard extends Observable implements Serializable{
 		return tdBoard;
 	}
 	
-
+	/**
+     * @purpose: sets the view as an observer to the board.
+     * 
+     */
 	public void setView(TowerDefenseView view) {
 		addObserver(view);
 	}
@@ -114,6 +125,7 @@ public class TowerDefenseBoard extends Observable implements Serializable{
 	/**
      * @purpose: Getter method for the board.
      * 
+     * @return board - returns the board created for the game
      */
 	public Map getBoard() {
 		return board;
@@ -133,11 +145,16 @@ public class TowerDefenseBoard extends Observable implements Serializable{
 	/**
      * @purpose: Getter method for the market.
      * 
+     * @returns market - returns the market for the current game and turn
      */
 	public Market getMarket() {
 		return market;
 	}
 	
+	/**
+     * @purpose: Setter method for the market.
+     * 
+     */
 	private void setMarket(Market m) {
 		market = m;
 	}

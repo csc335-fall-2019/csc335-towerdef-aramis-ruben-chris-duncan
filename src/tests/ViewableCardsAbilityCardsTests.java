@@ -1,5 +1,4 @@
-import static org.junit.jupiter.api.Assertions.*;
-
+package tests;
 import java.io.IOException;
 
 import org.junit.jupiter.api.Test;

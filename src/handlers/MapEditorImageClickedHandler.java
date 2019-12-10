@@ -101,3 +101,4 @@ public class MapEditorImageClickedHandler implements EventHandler<MouseEvent>{
 		return view;
 	}
 }
+	

@@ -45,7 +45,9 @@ public class Market implements Serializable{
 	private transient TowerDefenseView view;
 	private transient TowerDefenseController controller;
 	private transient int removedIndex;
+
 	
+
 	/**
 	 * @purpose: constructor the market; initializes a deck for the market,
 	 * sets the view and the controller, fills the market with cards to be bought,
