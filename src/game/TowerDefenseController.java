@@ -83,6 +83,7 @@ import viewable.Viewable;
 import viewable.cards.Card;
 import viewable.cards.abilityCards.AbilityCard;
 import viewable.cards.towers.TowerCard;
+import viewable.cards.towers.TowerCardType;
 import viewable.gameObjects.Map;
 import viewable.gameObjects.Market;
 import viewable.gameObjects.Minion;
@@ -119,6 +120,8 @@ public class TowerDefenseController {
 	
 	private volatile boolean isServer;
 	
+	private volatile boolean xOr;
+	
   /**
    * @purpose: Creates the controller for the game that handles all the game
    * logic.
@@ -134,6 +137,7 @@ public class TowerDefenseController {
 		currentPlayer = new Player(this);
 		otherPlayer = new Player(this);
 		minionsFinished = false;
+		xOr = false;
 		possibleConnections = FXCollections.observableArrayList(new ArrayList<SocketAddress>());
 	}
 
@@ -189,8 +193,7 @@ public class TowerDefenseController {
 				// Dealing damage
 			}else if(move instanceof DamageOtherMessage) {
 				DamageOtherMessage d = (DamageOtherMessage)move;
-				currentPlayer.damageTaken(d.getAmount());
-
+				currentPlayer.gainLife(d.getAmount()*-1);
 			}else if(move instanceof StatIncreaseMessage) {
 				StatIncreaseMessage s = (StatIncreaseMessage)move;
 				otherPlayer.gainLife(s.getHealth());
@@ -200,8 +203,15 @@ public class TowerDefenseController {
 				board.getMarket().removeFromForSale(m.getIndex());
 			}else if(move instanceof OtherStatIncreaseMessage) {
 				OtherStatIncreaseMessage o = (OtherStatIncreaseMessage)move;
-				otherPlayer.gainLife(o.getHealth());
-				otherPlayer.increaseGold(o.getGold());
+				currentPlayer.gainLife(o.getHealth());
+				currentPlayer.increaseGold(o.getGold());
+			}else if(move instanceof TowerUpgradedMessage) {
+				TowerUpgradedMessage t = (TowerUpgradedMessage)move;
+				int col = getMapArray().length-1-t.getCol();
+				int row = getMapArray()[0].length-1-t.getRow();
+				System.out.println(row+" "+col);
+				System.out.println(getMapArray()[col][row][0]);
+				upgradeTower((Tower)getMapArray()[col][row][0], row, col);
 			}
 		});
 	}
@@ -227,6 +237,7 @@ public class TowerDefenseController {
 			}
 
 			minionsFinished = false;
+			xOr = false;
 
 			// Handles what to do after player turns
 			currentTurn = new TowerDefenseTurnMessage(out);
@@ -368,10 +379,26 @@ public class TowerDefenseController {
      * 
      */
 	public void upgradeTower(Tower t, int row, int col) {
-		((TowerCard)currentPlayer.getSelectedCard()).Upgrade(t);
-		currentPlayer.addToDiscard(currentPlayer.getSelectedCard());
-		currentPlayer.setSelectedCard(null);
-		currentTurn.addMove(new TowerUpgradedMessage(row, col));
+		if(currentPlayer.getSelectedCard()==null) {
+			for(int i =0;i<TowerCardType.values().length;i++) {
+				System.out.println(t.getClass());
+				System.out.println(TowerCardType.values()[i].getTower());
+				if(t.getClass().equals(TowerCardType.values()[i].getTower())) {
+					try {
+						TowerCardType.values()[i].getTowerCard().newInstance().Upgrade(t);
+						board.updateBoard(row, col);
+					} catch (InstantiationException | IllegalAccessException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		}else {
+			((TowerCard)currentPlayer.getSelectedCard()).Upgrade(t);
+			currentPlayer.addToDiscard(currentPlayer.getSelectedCard());
+			currentPlayer.setSelectedCard(null);
+			currentTurn.addMove(new TowerUpgradedMessage(row, col));
+		}
 	}
 	
 	/**
@@ -389,6 +416,7 @@ public class TowerDefenseController {
 		if(!isServer) {
 			return;
 		}
+		System.out.println(isServer);
 		if(minion.getPlayer().equals(otherPlayer)) {
 			currentPlayer.damageTaken(minion.getDamage());
 			currentTurn.addMove(new StatIncreaseMessage(minion.getDamage()*-1, 0));
@@ -407,6 +435,7 @@ public class TowerDefenseController {
 		if(!isServer) {
 			return;
 		}
+		System.out.println(minion.getPlayer());
 		if(minion.getPlayer().equals(currentPlayer)) {
 			currentTurn.addMove(new StatIncreaseMessage(0, minion.getReward()));
 			otherPlayer.increaseGold(minion.getReward());
@@ -641,7 +670,12 @@ public class TowerDefenseController {
      * 
      */
 	public void setMinionsFinished(boolean b) {
-		minionsFinished = b;
+		if(b&&xOr) {
+			minionsFinished = true;
+			return;
+		}
+		xOr = b;
+		minionsFinished = false;
 	}
 	
 

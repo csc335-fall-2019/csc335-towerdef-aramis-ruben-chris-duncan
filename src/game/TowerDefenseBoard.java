@@ -64,13 +64,22 @@ public class TowerDefenseBoard extends Observable implements Serializable{
 	public void addTower(int row, int col, TowerType type){
 		Viewable[][][] boardArr = board.getBoard();
 		System.out.println(row +" "+col);
-		// Trying to add the tower to the grid if it's a illegal placement
-		try {
-			boardArr[col][row][0] = type.getTower().newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if(type.equals(TowerType.Deleted)) {
+			boardArr[col][row][0] = null;
+		}else {
+			// Trying to add the tower to the grid if it's a illegal placement
+			try {
+				boardArr[col][row][0] = type.getTower().newInstance();
+			} catch (InstantiationException | IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
+		setChanged();
+		notifyObservers(row+" "+col);
+	}
+	
+	public void updateBoard(int row, int col) {
 		setChanged();
 		notifyObservers(row+" "+col);
 	}
@@ -83,6 +92,11 @@ public class TowerDefenseBoard extends Observable implements Serializable{
 		setChanged();
 		notifyObservers(true);
 	}
+  
+  	public void beginningOfTurn() {
+  		setChanged();
+  		notifyObservers(false);
+  	}
   
 	public TowerDefenseBoard flip() {
 		TowerDefenseBoard tdBoard = new TowerDefenseBoard();

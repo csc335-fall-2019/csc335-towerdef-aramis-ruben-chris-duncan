@@ -189,7 +189,7 @@ public class ChatView{
 	private VBox createMessageStack(TextField text, TextField name, TextField address, TextField port) {
 		VBox box = new VBox();
 		HBox h = new HBox();
-		h.getChildren().add(name);
+		//h.getChildren().add(name);
 		Button b = new Button();
 		b.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -208,7 +208,7 @@ public class ChatView{
 				}
 			}
 		});
-		h.getChildren().add(b);
+		h.getChildren().addAll(address, port);
 		box.getChildren().add(h);
 		box.getChildren().add(text);
 		return box;

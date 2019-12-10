@@ -14,11 +14,13 @@ import java.io.FileNotFoundException;
 import game.TowerDefenseController;
 import javafx.event.EventHandler;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseEvent;
 import viewable.Viewable;
 import viewable.gameObjects.Tower;
+import viewable.gameObjects.TowerType;
 
-public class GameObjectClickedHandler implements EventHandler<MouseEvent>{
+public class GameObjectContextMenuHandler implements EventHandler<ContextMenuEvent>{
 	
 	private int row;
 	private int col;
@@ -36,7 +38,7 @@ public class GameObjectClickedHandler implements EventHandler<MouseEvent>{
 	 * 
 	 * @param controller the main TowerDefenseController object
 	 */
-	public GameObjectClickedHandler(Viewable view, int col, int row, TowerDefenseController controller) {
+	public GameObjectContextMenuHandler(Viewable view, int col, int row, TowerDefenseController controller) {
 		this.view = view;
 		this.row = row;
 		this.col = col;
@@ -49,26 +51,19 @@ public class GameObjectClickedHandler implements EventHandler<MouseEvent>{
 	 *  @param e is the MouseEvent being handled
 	 */
 	@Override
-	public void handle(MouseEvent e) {
+	public void handle(ContextMenuEvent e) {
 		if(!controller.hasConnected()||controller.getPlayer().isFinished()||controller.isPaused()) {
 			return;
 		}
 		if(col>controller.getMapArray().length/2) {
 			return;
 		}
-		if(view!=null&&((Tower)view).getUpgraded()) {
-			return;
-		}
-		if(controller.canUpgrade(row, col)) {
-			controller.upgradeTower((Tower)view, row, col);
-			try {
-				((ImageView) e.getTarget()).setImage(ImageResourceLoadingHandler.getResource(view).getImage());
-			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}else {
-			controller.useTowerCard(row, col);
+		controller.addTower(row, col, TowerType.Deleted);
+		try {
+			controller.getPlayer().drawCards(1);
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 	}
 }
