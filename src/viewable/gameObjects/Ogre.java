@@ -13,8 +13,8 @@ public class Ogre extends Minion {
 	/**
 	 * constructor for the ogre minion
 	 */
-	public Ogre() {
-		super(defaultHealth, defaultDamage, defaultSpeed, defaultReward);
+	public Ogre(Player player) {
+		super(defaultHealth, defaultDamage, defaultSpeed, defaultReward, player);
 	}
 
 	/**

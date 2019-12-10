@@ -147,6 +147,7 @@ public class TowerDefenseView extends Application implements Observer{
 	private Pane attackGrid;
 	private int round;
 	private WaveGenerator wave;
+	private WaveGenerator otherWave;
 	private List<ImageView> lsPath;
 	private List<Integer> direction;
 	private java.util.Map<Minion, Timeline> transitions;
@@ -201,9 +202,6 @@ public class TowerDefenseView extends Application implements Observer{
 			File path = fileChooser.showOpenDialog(stage);
 			if (path != null) {
 				try {
-
-					controller.getBoard().load(path.getCanonicalPath());
-
 					controller.getBoard().getBoard().load(path.getCanonicalPath());
 
 					controller.startServer();
@@ -300,6 +298,7 @@ public class TowerDefenseView extends Application implements Observer{
 				e.consume();
 			}
 			controller.startClient(host.getText(), Integer.parseInt(port.getText()));
+			client.setDisable(true);
 		});
 
 		pane.add(host, 0, 1);
@@ -319,7 +318,8 @@ public class TowerDefenseView extends Application implements Observer{
 	public void newGame() throws IOException {
 		// Initial Set Up
 		round = 1;
-		wave = new WaveGenerator();
+		wave = new WaveGenerator(controller.getPlayer());
+		otherWave = new WaveGenerator(controller.getOtherPlayer());
 		model = new ViewModel(1080,1920);
 		lsPath = new ArrayList<ImageView>();
 		direction = new ArrayList<Integer>();
@@ -353,9 +353,9 @@ public class TowerDefenseView extends Application implements Observer{
 
 		stage.setScene(new Scene(root, model.getWidth(), model.getHeight()));
 		stage.getScene().getStylesheets().add(getClass().getResource("mainView.css").toExternalForm());
-		stage.setResizable(false);
-		stage.setFullScreen(true);
-		stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+//		stage.setResizable(false);
+//		stage.setFullScreen(true);
+//		stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 
 		stage.sizeToScene();
 		loadMusic();
@@ -392,6 +392,7 @@ public class TowerDefenseView extends Application implements Observer{
 	public GridPane createGrid() throws FileNotFoundException {
 		GridPane grid = new GridPane();
 		Viewable[][][] board = controller.getMapArray();
+		
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board[i].length; j++) {
 				HBox box = new HBox();
@@ -415,7 +416,7 @@ public class TowerDefenseView extends Application implements Observer{
 	public void update() {
 		transitions.clear();
 		Thread thread = new Thread(()-> {
-			List<Minion> currentWave = wave.generateRandom(round); 
+			List<Minion> currentWave = wave.generateRandom(); 
 			round++;
 			List<ImageView> minions = new ArrayList<ImageView>();
 			for(Minion m: currentWave) {
@@ -453,23 +454,92 @@ public class TowerDefenseView extends Application implements Observer{
 			}
 			for(int i =0;i<currentWave.size();i++) {
 				try {
-					move(i, currentWave.get(i), minions, currentWave, (int)(Math.random()*85));
+					move(i, 0, currentYVal, currentWave.get(i), minions, currentWave, direction, (int)(Math.random()*85));
 				}catch(Exception ex) {
 					ex.printStackTrace();
 				}
 			}
 		});
 		generatePath(thread);
+		Thread thread2 = new Thread(()-> {
+			List<Minion> currentWave = otherWave.generateRandom();
+			round++;
+			List<ImageView> minions = new ArrayList<ImageView>();
+			for(Minion m: currentWave) {
+				try {
+					
+					ImageView view = ImageResourceLoadingHandler.getResource(m);
+					view.setScaleX(-1);
+					view.setViewport(new Rectangle2D(0, 0, SIZE_IMAGE, SIZE_IMAGE));
+					Timeline t = new Timeline(new KeyFrame(Duration.millis(100), (e) -> {
+						Rectangle2D viewport = view.getViewport();
+						view.setViewport(
+								new Rectangle2D(
+										viewport.getMinX() + 47 > SIZE_IMAGE * 2 ? 0 : viewport.getMinX() + 47,
+										viewport.getMinY(),
+										SIZE_IMAGE + 2, SIZE_IMAGE + 2
+										)
+								);
+					}));
+					t.setCycleCount(Timeline.INDEFINITE);
+					t.play();
+					
+					minions.add(view);
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+			}
+			int y =currentYVal;
+			for(int i =0;i<direction.size();i++) {
+				if(direction.get(i)==3||direction.get(i)==1) {
+					y+=direction.get(i)==1?-1:1;
+				}
+			}
+			for(Node n: grid.getChildrenUnmodifiable()) {
+				if(GridPane.getColumnIndex(n)==controller.getMapArray().length-1&&GridPane.getRowIndex(n)==y) {
+					int finY = y;
+					Platform.runLater(()->{
+						for(int i =0;i<minions.size();i++) {
+							animationGrid.add(minions.get(i), controller.getMapArray().length-1, finY);
+						}
+					});
+				}
+			}
+			for(int i =0;i<currentWave.size();i++) {
+				try {
+					List<Integer> reverse = reverse(direction);
+					move(i, controller.getMapArray().length-1, y,currentWave.get(i), minions, currentWave, reverse, (int)(Math.random()*85));
+				}catch(Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		});
+		generatePath(thread2);
 	}
 	
-	private void move(int index, Minion minion, List<ImageView> minions, List<Minion> minionsL, int offset) {
+	private List<Integer> reverse(List<Integer> vals){
+		List<Integer> ints = new ArrayList<Integer>();
+		for(int i =0;i<vals.size();i++) {
+			int dir = vals.get(i);
+			int val = 0;
+			if(dir==4||dir==2) {
+				val = dir==4?2:4;
+			}else {
+				val = dir==1?3:1;
+			}
+			ints.add(0, val);
+		}
+		return ints;
+	}
+	
+	private void move(int index, int initialX, int initialY, Minion minion, List<ImageView> minions, List<Minion> minionsL, List<Integer> direction, int offset) {
 		if(minion.isDead()) {
 			checkMinionsFinished(minionsL);
 			return;
 		}
 		
-		int x = 0;
-		int y = currentYVal;
+		int x = initialX;
+		int y = initialY;
 		for(int k =0;k<minion.getStep();k++) {
 			int dir = direction.get(k);
 			if(dir==4||dir==2) {
@@ -496,7 +566,7 @@ public class TowerDefenseView extends Application implements Observer{
 				return;
 			}
 			if(minion.getStep()>=direction.size()-1) {
-				controller.damageOther(minion.getDamage());
+				controller.damageOther(minion);
 				minion.takeDamage(minion.getHealth());
 				checkMinionsFinished(minionsL);
 				Platform.runLater(()->{
@@ -509,7 +579,7 @@ public class TowerDefenseView extends Application implements Observer{
 					animationGrid.add(minions.get(index), xFin, yFin);
 				});
 
-				move(index, minion, minions, minionsL, (int)(Math.random()*85));
+				move(index, initialX, initialY, minion, minions, minionsL, direction, (int)(Math.random()*85));
 			}
 		}));
 		transitions.put(minion, t);
@@ -534,14 +604,6 @@ public class TowerDefenseView extends Application implements Observer{
 	private void checkTowers(Minion minion, int x, int y) throws FileNotFoundException {
 		Viewable[][][] map = controller.getMapArray();
 		for(int i =0;i<map.length;i++) {
-
-			if(i>map.length/2) {
-				break;
-
-			if(i<=map.length/2) {
-				continue;
-
-			}
 			for(int j =0;j<map[i].length;j++) {
 				if(map[i][j][0]!=null&&map[i][j][0] instanceof Tower) {
 					Tower t = (Tower)map[i][j][0];
@@ -550,6 +612,9 @@ public class TowerDefenseView extends Application implements Observer{
 						if(range+j>=y&&j-range<=y) {
 							if(!t.canAttack()) {
 								continue;
+							}
+							if(controller.getPlayer().equals(minion.getPlayer())) {
+								
 							}
 							ImageView view = new ImageView();
 							view.setImage(new Image(new FileInputStream("./resources/images/tst.jpeg")));
@@ -585,32 +650,6 @@ public class TowerDefenseView extends Application implements Observer{
 			}
 		}
 		return null;
-	}
-	
-	public void generatePath() {
-		Viewable[][][] map = controller.getMapArray();
-		int x = 0;
-		int y = 0;
-		for (int i = 0; i < map[0].length; i++) {
-			if (map[0][i][0] instanceof Path) {
-				lsPath.add((ImageView)findNode(0,i));
-				y = i;
-			}
-		}
-		while (true) {
-			int topy = y - 1;
-			int boty = y + 1;
-			int leftx = x - 1;
-			int rightx = x + 1;
-			if (leftx >= 0) {
-				if (map[leftx][y][0] instanceof Path&&!lsPath.contains(findNode(y, leftx))) {
-					lsPath.add((ImageView)findNode(leftx, y));
-					direction.add(1);
-					x = leftx;
-					continue;
-				}
-			}
-		}
 	}
 					
 	public void generatePath(Thread callback) {
@@ -818,6 +857,7 @@ public class TowerDefenseView extends Application implements Observer{
 		market.getChildren().add(view);
 		
 		view.setOnMouseClicked((e)->{
+			System.out.println(view.getSelectionModel().getSelectedItem());
 			if(view.getSelectionModel().getSelectedItem()==null) {
 				e.consume();
 				return;
@@ -825,7 +865,7 @@ public class TowerDefenseView extends Application implements Observer{
 			view.getSelectionModel().getSelectedItem().getOnMouseClicked().handle(e);
 		});
 		
-		int prefWidth = 350;
+		int prefWidth = 250;
 		model.addSubWidth(prefWidth);
 		market.setPrefWidth(prefWidth);
 		input.close();

@@ -13,8 +13,8 @@ public class Hound extends Minion {
 	/**
 	 * constructor for the hound minion
 	 */
-	public Hound() {
-		super(defaultHealth, defaultDamage, defaultSpeed, defaultReward);
+	public Hound(Player player) {
+		super(defaultHealth, defaultDamage, defaultSpeed, defaultReward, player);
 	}
 
 	/**

@@ -16,11 +16,16 @@ public class WaveGenerator {
 	private List<String> three;
 	private List<Integer> points;
 	private int additionalMinions;
+	private Player currentPlayer;
+	private int round;
 
 	/**
 	 * @purpose: constructor for the wave generator
 	 */
-	public WaveGenerator() {
+	public WaveGenerator(Player player) {
+		round=1;
+		currentPlayer = player;
+		
 		sendEm = new ArrayList<Minion>();
 		one = new ArrayList<String>();
 		two = new ArrayList<String>();
@@ -57,7 +62,7 @@ public class WaveGenerator {
 	 * 
 	 * @return: the wave composition to send
 	 */
-	public List<Minion> generateRandom(int round) {
+	public List<Minion> generateRandom() {
 		sendEm = new ArrayList<Minion>();
 		int enemyPoints = (round * 10) + additionalMinions;
 		List<String> useableMinions = null;
@@ -72,7 +77,7 @@ public class WaveGenerator {
 		}
 		if (round % 5 == 0) {
 			for (int i = 0; i < (round / 5); i++) {
-				sendEm.add(new Boss());
+				sendEm.add(new Boss(currentPlayer));
 				enemyPoints -= 50;
 			}
 		}
@@ -80,31 +85,32 @@ public class WaveGenerator {
 			Collections.shuffle(useableMinions);
 			String name = useableMinions.get(0);
 			if (name.equals("Hound")) {
-				minion = new Hound();
+				minion = new Hound(currentPlayer);
 				points = 1;
 			} else if (name.equals("Goblin")) {
-				minion = new Goblin();
+				minion = new Goblin(currentPlayer);
 				points = 1;
 			} else if (name.equals("Goblin Knight")) {
-				minion = new GoblinKnight();
+				minion = new GoblinKnight(currentPlayer);
 				points = 3;
 			} else if (name.equals("Wolf Rider")) {
-				minion = new WolfRider();
+				minion = new WolfRider(currentPlayer);
 				points = 3;
 			} else if (name.equals("Charger")) {
-				minion = new Charger();
+				minion = new Charger(currentPlayer);
 				points = 5;
 			} else if (name.equals("Ogre")) {
-				minion = new Ogre();
+				minion = new Ogre(currentPlayer);
 				points = 5;
 			}
 			sendEm.add(minion);
 			enemyPoints -= points;
 		}
+		round++;
 		return sendEm;
 	}
 	
 	public void addMinions(int amount) {
-		
+		additionalMinions+=amount;
 	}
 }
