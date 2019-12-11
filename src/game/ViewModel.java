@@ -1,7 +1,7 @@
 package game;
 
 /**
- * TowerDefenseView.java
+ * ViewModel.java
  * 
  * Determines the dimensions for the view.
  * 
