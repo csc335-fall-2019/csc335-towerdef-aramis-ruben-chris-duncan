@@ -83,6 +83,7 @@ import network.TurnFinishedMessage;
 import viewable.Viewable;
 import viewable.cards.Card;
 import viewable.cards.abilityCards.AbilityCard;
+import viewable.cards.abilityCards.DamageCard;
 import viewable.cards.towers.TowerCard;
 import viewable.cards.towers.TowerCardType;
 import viewable.gameObjects.Map;
@@ -318,8 +319,14 @@ public class TowerDefenseController {
      * 
      */
 	public void	useAbilityCard(AbilityCard card) {
-		card.ability(currentPlayer);
-		currentTurn.addMove(new AbilityCardUsedMessage(card));
+		if(card instanceof DamageCard) {
+			DamageCard d = (DamageCard)card;
+			card.ability(otherPlayer);
+			currentTurn.addMove(new StatIncreaseMessage(d.getDamage()*-1, 0));
+		}else {
+			card.ability(currentPlayer);
+			currentTurn.addMove(new AbilityCardUsedMessage(card));
+		}
 		currentPlayer.addToDiscard(card);
 	}
 	
