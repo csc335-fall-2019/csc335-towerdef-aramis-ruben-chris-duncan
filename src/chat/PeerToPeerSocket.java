@@ -89,6 +89,9 @@ public class PeerToPeerSocket implements Runnable{
 				continue;
 			}
 		}
+		if(servers.size()==0) {
+			throw new IOException();
+		}
 		activeConnections = new ArrayList<Socket>();
 	}
 	

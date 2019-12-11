@@ -62,8 +62,10 @@ import java.util.Observer;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import chat.ChatView;
 import handlers.ExitHandler;
 import handlers.GameObjectClickedHandler;
+import handlers.GameObjectContextMenuHandler;
 import handlers.ImageResourceLoadingHandler;
 import handlers.MapEditorHandler;
 import handlers.SoundHandler;
@@ -152,8 +154,10 @@ public class TowerDefenseView extends Application implements Observer{
 	private List<ImageView> lsPath;
 	private List<Integer> direction;
 	private java.util.Map<Minion, Timeline> transitions;
+	private MediaPlayer player;
 	private int currentYVal;
 	private Market m;
+	private Button endTurn;
 	
 	/**
 	 * @purpose: Launches the GUI for the tower defense game.
@@ -447,11 +451,10 @@ public class TowerDefenseView extends Application implements Observer{
 		Viewable[][][] board = controller.getMapArray();
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board[i].length; j++) {
-				HBox box = new HBox();
-				box.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1,1,1,1), Insets.EMPTY)));
-				ImageView view = createGridResource(board[i][j][0], i, j);
-				box.getChildren().add(view);
-				grid.add(box, i, j);
+				
+				HBox view = createGridResource(board[i][j][0], i, j);
+				
+				grid.add(view, i, j);
 			}
 		}
 		return grid;	
@@ -474,11 +477,15 @@ public class TowerDefenseView extends Application implements Observer{
      * 
      */
 	private ImageView createGridResource(Viewable obj, int row, int col) throws FileNotFoundException {
+		HBox box = new HBox();
 		ImageView x = ImageResourceLoadingHandler.getResource(obj);
 		x.setFitHeight(SIZE_IMAGE);
 		x.setFitWidth(SIZE_IMAGE);
 		x.setOnMouseClicked(new GameObjectClickedHandler(obj, row, col, controller));
-		return x;
+		x.setOnContextMenuRequested(new GameObjectContextMenuHandler(obj, row, col, controller));
+		box.getChildren().add(x);
+		box.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1,1,1,1), Insets.EMPTY)));
+		return box;
 	}
 
 	/**
@@ -661,7 +668,6 @@ public class TowerDefenseView extends Application implements Observer{
 		int xFin = x;
 		int yFin = y;
 		Timeline t = new Timeline(new KeyFrame(Duration.millis((MINION_MAX_SPEED/minion.getSpeed()-offset)*(fastForwardState?.5:1)), (e)-> {
-			
 			try {
 				checkTowers(minion, xFin, yFin);
 			} catch (FileNotFoundException e2) {
@@ -676,8 +682,7 @@ public class TowerDefenseView extends Application implements Observer{
 				checkMinionsFinished(minionsL);
 				return;
 			}
-			// Determine its next direction
-			if(minion.getStep()>=direction.size()-1) {
+			if(minion.getStep()>=direction.size()) {
 				controller.damageOther(minion);
 				minion.takeDamage(minion.getHealth());
 				checkMinionsFinished(minionsL);
@@ -712,7 +717,6 @@ public class TowerDefenseView extends Application implements Observer{
 				flag = false;
 			}
 		}
-		System.out.println(flag);
 		if(flag) {
 			controller.setMinionsFinished(true);
 		}
@@ -743,8 +747,14 @@ public class TowerDefenseView extends Application implements Observer{
 							if(!t.canAttack()) {
 								continue;
 							}
-							if(controller.getPlayer().equals(minion.getPlayer())) {
-								
+							if(minion.getPlayer().equals(controller.getPlayer())) {
+								if(i<=map.length/2) {
+									continue;
+								}
+							}else {
+								if(i>map.length/2) {
+									continue;
+								}
 							}
 							ImageView view = new ImageView();
 							view.setImage(new Image(new FileInputStream("./resources/images/MortarShell.png")));
@@ -755,7 +765,9 @@ public class TowerDefenseView extends Application implements Observer{
 							});
 							view.setX(i*SIZE_IMAGE+SIZE_IMAGE/2);
 							view.setY(j*SIZE_IMAGE+SIZE_IMAGE/2);
-							TranslateTransition tt = new TranslateTransition(Duration.millis((TOWER_MAX_ATTACK_SPEED/t.getAttackSpeed())*(fastForwardState?5:10)), view);
+							TranslateTransition tt = new TranslateTransition(
+									Duration.millis((TOWER_MAX_ATTACK_SPEED/t.getAttackSpeed())*(fastForwardState?5:10)), 
+									view);
 							tt.setByX((x-i)*SIZE_IMAGE);
 							tt.setByY((y-j)*SIZE_IMAGE);
 							t.startCooldown();
@@ -765,7 +777,6 @@ public class TowerDefenseView extends Application implements Observer{
 								t.endCooldown();
 							});
 							tt.play();
-							return;
 						}
 					}
 				}
@@ -939,6 +950,7 @@ public class TowerDefenseView extends Application implements Observer{
 		Button endTurn = new Button("End Turn");
 		endTurn.setOnAction((e)->{
 			controller.endTurn();
+			endTurn.setDisable(true);
 		});
 		stat2.getChildren().add(endTurn);
 		bottom.getChildren().add(stat2);
@@ -1124,12 +1136,31 @@ public class TowerDefenseView extends Application implements Observer{
 				fastForward.setText("Fast Forward");
 			}
 		});
+		
+		MenuItem chat = new MenuItem("Chat");
+		chat.setOnAction((e)->{
+			ChatView view = new ChatView();
+			try {
+				view.create(5000).show();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				Stage stage = new Stage();
+				Label label = new Label("Ports all blocked.");
+				Pane pane = new Pane();
+				VBox box = new VBox();
+				box.getChildren().add(label);
+				pane.getChildren().add(box);
+				stage.setScene(new Scene(pane, 400, 400));
+				stage.showAndWait();
+			}
+		});
+		
 		// exit menu option
 		MenuItem exit = new MenuItem();
 		exit.setText("Exit");
 		exit.setOnAction(new ExitHandler());
 		
-		file.getItems().addAll(newGame, mapEditor, pause,fastForward, exit);
+		file.getItems().addAll(newGame, mapEditor, chat, pause,fastForward, exit);
 		file.setText("File");
 		return file;
 	}
@@ -1166,7 +1197,7 @@ public class TowerDefenseView extends Application implements Observer{
 		try {
 			String randomMusic = findRandomMusic();
 			Media music = new Media(randomMusic);
-			MediaPlayer player = new MediaPlayer(music);
+			player = new MediaPlayer(music);
 			player.setOnEndOfMedia(new Runnable() {
 				@Override
 				public void run() {
@@ -1244,7 +1275,18 @@ public class TowerDefenseView extends Application implements Observer{
 				e1.printStackTrace();
 			}
 		}else if(e instanceof Boolean) {
-			update();
+			if((Boolean)e) {
+				update();
+			}else {
+				endTurn.setDisable(false);
+				try {
+					animationGrid = createClearGrid();
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				attackGrid = createClickThrough();
+			}
 		}
 	}
 	
@@ -1262,7 +1304,6 @@ public class TowerDefenseView extends Application implements Observer{
 	private void setBoard(int row, int col) throws FileNotFoundException {
 		Viewable[][][] board = controller.getMapArray();
 		Viewable obj = board[col][row][0];
-		System.out.println(obj.getResource());
 		Node node = null;
 		Node toRemove = null;
 		for(Node n: grid.getChildren()) {

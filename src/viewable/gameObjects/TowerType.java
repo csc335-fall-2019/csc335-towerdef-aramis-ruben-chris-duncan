@@ -6,7 +6,8 @@ public enum TowerType{
 	FreezeTower(FreezeTower.class),
 	CurrencyTower(CurrencyTower.class),
 	MinionTower(MinionTower.class),
-	MageTower(MageTower.class);
+	MageTower(MageTower.class),
+	Deleted(null);
 	
 	private Class<? extends Tower> c;
 	private TowerType(Class<? extends Tower> c) {
