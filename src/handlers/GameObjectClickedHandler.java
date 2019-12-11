@@ -56,6 +56,9 @@ public class GameObjectClickedHandler implements EventHandler<MouseEvent>{
 		if(col>controller.getMapArray().length/2) {
 			return;
 		}
+		if(!(view instanceof Tower)) {
+			return;
+		}
 		if(view!=null&&((Tower)view).getUpgraded()) {
 			return;
 		}

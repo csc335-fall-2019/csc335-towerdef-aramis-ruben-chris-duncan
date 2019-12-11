@@ -223,6 +223,8 @@ public class TowerDefenseController {
      */
 	public void endTurn() {
 		currentPlayer.setComplete(true);
+		minionsFinished = false;
+		xOr = false;
 		Thread thread = new Thread(()-> {
 			try {
 				out.writeObject(new TurnFinishedMessage());
