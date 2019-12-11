@@ -64,7 +64,7 @@ public class WaveGenerator {
 	 */
 	public List<Minion> generateRandom() {
 		sendEm = new ArrayList<Minion>();
-		int enemyPoints = (round * 10) + additionalMinions+currentPlayer.getExtraMinions();
+		int enemyPoints = (round * 15) + additionalMinions+currentPlayer.getExtraMinions();
 		List<String> useableMinions = null;
 		Minion minion = null;
 		int points = 0;
@@ -78,7 +78,7 @@ public class WaveGenerator {
 		if (round % 5 == 0) {
 			for (int i = 0; i < (round / 5); i++) {
 				sendEm.add(new Boss(currentPlayer));
-				enemyPoints -= 50;
+				enemyPoints -= 60;
 			}
 		}
 		while (enemyPoints > 0) {

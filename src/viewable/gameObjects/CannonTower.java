@@ -9,7 +9,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class CannonTower extends Tower {
-	private static final int defaultAttack 			= 10;
+	private static final int defaultAttack 			= 50;
 	private static final int defaultRange 			= 1;
 	private static final double defaultAttackSpeed	= 0.5;
 	private static final String name				= "Cannon Tower";
