@@ -1324,7 +1324,7 @@ public class TowerDefenseView extends Application implements Observer{
 					try {
 						newGame();
 					}catch(Exception ex) {
-						ex.printStackTrace();
+						createModal("Something went terribly wrong.");
 					}
 				});
 		}else if(e instanceof String) {
@@ -1335,7 +1335,7 @@ public class TowerDefenseView extends Application implements Observer{
 				setBoard(i, j);
 			} catch (FileNotFoundException e1) {
 				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				createModal("You're missing resources.");
 			}
 		}else if(e instanceof Boolean) {
 			if((Boolean)e) {
