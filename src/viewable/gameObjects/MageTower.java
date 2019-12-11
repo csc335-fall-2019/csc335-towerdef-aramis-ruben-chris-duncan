@@ -14,17 +14,34 @@ public class MageTower extends Tower {
 	private static final double defaultAttackSpeed	= 0.75;
 	private static final String name				= "Mage Tower";
 	
+	/**
+	 * constructor for the mage tower
+	 */
 	public MageTower() {
 		super(defaultAttack, defaultRange, defaultAttackSpeed, name);
 	}
 	
+	/**
+	 * purpose: loads the image for the archer tower if placed on an unused grid
+	 * and updates the tower with upgraded art if the tower is upgraded
+	 * 
+	 * @return string path of the resource to be loaded
+	 * 
+	 */
 	@Override
 	public String getResource() {
-		try {
-			return (new File("./resources/images/tst.jpeg")).getCanonicalPath();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			return "";
+		if (this.getUpgraded()) {
+			try {
+				return (new File("./resources/images/MageTower_Upgrade.png")).getCanonicalPath();
+			} catch (IOException e) {
+				return "";
+			}
+		} else {
+			try {
+				return (new File("./resources/images/MageTower_Default.png")).getCanonicalPath();
+			} catch (IOException e) {
+				return "";
+			}
 		}
 	}
 }

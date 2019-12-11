@@ -14,16 +14,24 @@ public class MinionTower extends Tower {
 	private static final double defaultAttackSpeed	= 1;
 	private static final String name				= "Minion Tower";
 	
+	/**
+	 * constructor for the minion tower
+	 */
 	public MinionTower() {
 		super(defaultAttack, defaultRange, defaultAttackSpeed, name);
 	}
 	
+	/**
+	 * purpose: loads the image for the archer tower if placed on an unused grid
+	 * 
+	 * @return string path of the resource to be loaded
+	 * 
+	 */
 	@Override
 	public String getResource() {
 		try {
-			return (new File("./resources/images/tst.jpeg")).getCanonicalPath();
+			return (new File("./resources/images/MinionTower_Default.png")).getCanonicalPath();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			return "";
 		}
 	}

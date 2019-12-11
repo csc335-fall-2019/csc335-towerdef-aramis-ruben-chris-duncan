@@ -1,4 +1,9 @@
 package handlers;
+/**
+ * NewGameHandler.java
+ * 
+ * Handles a new game call
+ */
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;

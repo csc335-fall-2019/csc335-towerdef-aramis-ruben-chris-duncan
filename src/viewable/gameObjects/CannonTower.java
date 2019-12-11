@@ -9,22 +9,36 @@ import java.io.File;
 import java.io.IOException;
 
 public class CannonTower extends Tower {
-	private static final int defaultAttack 			= 3;
+	private static final int defaultAttack 			= 10;
 	private static final int defaultRange 			= 1;
 	private static final double defaultAttackSpeed	= 0.5;
 	private static final String name				= "Cannon Tower";
 	
+	/**
+	 * purpose: constructor for the cannon tower
+	 */
 	public CannonTower() {
 		super(defaultAttack, defaultRange, defaultAttackSpeed, name);
 	}
 	
+	/**
+	 * purpose: loads the image for the archer tower if placed on an unused grid
+	 * and updates the tower with upgraded art if the tower is upgraded
+	 */
 	@Override
 	public String getResource() {
-		try {
-			return (new File("./resources/images/tst.jpeg")).getCanonicalPath();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			return "";
+		if (this.getUpgraded()) {
+			try {
+				return (new File("./resources/images/CannonTower_Upgrade.png")).getCanonicalPath();
+			} catch (IOException e) {
+				return "";
+			}
+		} else {
+			try {
+				return (new File("./resources/images/CannonTower_Default.png")).getCanonicalPath();
+			} catch (IOException e) {
+				return "";
+			}
 		}
 	}
 }
