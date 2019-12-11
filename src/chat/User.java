@@ -43,7 +43,7 @@ public class User implements Serializable{
 	 * @throws IOException - throws an exception if the port number is 
 	 * incorrect or closes before the connection is established.
 	 * 
-	 * throws NoSuchAlgorithemException - throws an exception if the user's username and/or
+	 * @throws NoSuchAlgorithmException - throws an exception if the user's username and/or
 	 * password is incorrect.
 	 * 
 	 */
