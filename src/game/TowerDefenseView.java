@@ -107,6 +107,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
@@ -144,6 +145,28 @@ public class TowerDefenseView extends Application implements Observer{
 	private MenuItem fastForward;
 	
 	/**
+	 * Factory for creating simple notification modals.
+	 * @param message
+	 */
+	private void createModal(String message) {
+		Platform.runLater(()->{
+			Stage s = new Stage();
+			BorderPane textPane = new BorderPane();
+			Text label = new Text();
+			label.setText("Alert");
+			Text reason = new Text();
+			reason.setText(message);
+	
+			textPane.setCenter(reason);
+			s.setScene(new Scene(textPane, 600,200));
+			s.setTitle("Alert");
+			s.initModality(Modality.WINDOW_MODAL);
+			s.initOwner(stage);
+			s.showAndWait();
+		});
+	}
+	
+	/**
 	 * purpose: Launches the GUI for the tower defense game.
 	 * 
 	 * @param primaryStage - the main stage created by JavaFX and used to display
@@ -163,6 +186,8 @@ public class TowerDefenseView extends Application implements Observer{
 		Runtime.getRuntime().addShutdownHook(new Thread(()->{
 			controller.setRunning(false);
 		}));
+
+		loadMusic();
 		currentYVal = 0;
 		mainMenu();
 	}
@@ -203,7 +228,7 @@ public class TowerDefenseView extends Application implements Observer{
 					newGame();
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					createModal(e1.getMessage());
 					fileChooser.showOpenDialog(stage);
 				}
 				
@@ -251,7 +276,7 @@ public class TowerDefenseView extends Application implements Observer{
 				controller.scanPorts();
 			} catch (IOException ex) {
 				// TODO Auto-generated catch block
-				ex.printStackTrace();
+				createModal("Failed to run the correct command. Please restart the game.");
 			}
 		});
 		
@@ -298,8 +323,7 @@ public class TowerDefenseView extends Application implements Observer{
 			try {
 				Integer.parseInt(port.getText());
 			}catch(Exception ex) {
-				Stage error = new Stage();
-				error.showAndWait();
+				createModal("Port is not an integer.");
 				e.consume();
 			}
 			controller.startClient(host.getText(), Integer.parseInt(port.getText()));
@@ -368,7 +392,6 @@ public class TowerDefenseView extends Application implements Observer{
 		stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 
 		stage.sizeToScene();
-		loadMusic();
 		stage.show();
 	}
 	
@@ -500,7 +523,7 @@ public class TowerDefenseView extends Application implements Observer{
 					t.play();
 					minions.add(view);
 				} catch (FileNotFoundException e) {
-					e.printStackTrace();
+					createModal("You're missing resource files, please check the github page again...");
 				}
 			}
 			// Adding minions to the grid
@@ -520,7 +543,7 @@ public class TowerDefenseView extends Application implements Observer{
 				try {
 					move(i, 0, currentYVal, currentWave.get(i), minions, currentWave, direction, (int)(Math.random()*85));
 				}catch(Exception ex) {
-					ex.printStackTrace();
+					createModal(ex.getMessage());
 				}
 			}
 		});
@@ -551,7 +574,7 @@ public class TowerDefenseView extends Application implements Observer{
 					
 					minions.add(view);
 				} catch (FileNotFoundException e) {
-					e.printStackTrace();
+					createModal("You're missing resources. Check the github page again...");
 				}
 			}
 			int y =currentYVal;
@@ -575,7 +598,7 @@ public class TowerDefenseView extends Application implements Observer{
 					List<Integer> reverse = reverse(direction);
 					move(i, controller.getMapArray().length-1, y,currentWave.get(i), minions, currentWave, reverse, (int)(Math.random()*85));
 				}catch(Exception ex) {
-					ex.printStackTrace();
+					createModal(ex.getMessage()+"\nTry restarting the game...");
 				}
 			}
 		});
@@ -652,7 +675,7 @@ public class TowerDefenseView extends Application implements Observer{
 			try {
 				checkTowers(minion, xFin, yFin);
 			} catch (FileNotFoundException e2) {
-				e2.printStackTrace();
+				createModal("You're missing resources...");
 			}
 			// Check if minion is still alive
 			if(minion.isDead()) {
@@ -912,7 +935,7 @@ public class TowerDefenseView extends Application implements Observer{
 							mainMenu();
 						} catch (IOException e1) {
 							// TODO Auto-generated catch block
-							e1.printStackTrace();
+							createModal("Something went terribly wrong.");
 						}
 					});
 					box.getChildren().add(button);
@@ -1014,7 +1037,7 @@ public class TowerDefenseView extends Application implements Observer{
 							mainMenu();
 						} catch (IOException e1) {
 							// TODO Auto-generated catch block
-							e1.printStackTrace();
+							createModal("Something went terribly wrong.");
 						}
 					});
 					box.getChildren().add(button);
@@ -1119,7 +1142,7 @@ public class TowerDefenseView extends Application implements Observer{
 			try {
 				newGame();
 			} catch (IOException e1) {
-				e1.printStackTrace();
+				createModal("Something went terribly wrong.");
 			}
 		});
 		// Map editor option
@@ -1261,7 +1284,7 @@ public class TowerDefenseView extends Application implements Observer{
 			player.play();
 		}catch(Exception ex) {
 			// Show modal.
-			System.out.println(ex.getMessage());
+			createModal("Please try restarting the game.");
 		}
 	}
 	
@@ -1275,6 +1298,11 @@ public class TowerDefenseView extends Application implements Observer{
 		File file = new File("./resources/music");
 		List<File> files = new ArrayList<File>();
 		for(File f: file.listFiles()) {
+			int i = f.getAbsolutePath().lastIndexOf(".");
+			System.out.println(f.getAbsolutePath().substring(i+1));
+			if(!f.getAbsolutePath().substring(i+1).equals("mp3")) {
+				continue;
+			}
 			files.add(f);
 		}
 		Collections.shuffle(files);

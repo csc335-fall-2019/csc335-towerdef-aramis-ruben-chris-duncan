@@ -444,6 +444,10 @@ public class TowerDefenseController {
 		otherPlayer.gainLife(amount*-1);
 	}
 	
+	/**
+	 * This method damages the other player from the server side, sending the correct corresponding message.
+	 * @param minion the minion that inflicted the damage.
+	 */
 	public void damageOther(Minion minion) {
 		if(!isServer) {
 			return;
@@ -533,7 +537,7 @@ public class TowerDefenseController {
      * the host's port
      * 
      */
-	public void scanPorts() throws IOException {
+	public void scanPorts() throws IOException{
 		try {
 			if(!InetAddress.getLocalHost().getHostAddress().contains(".")) {
 				return;
