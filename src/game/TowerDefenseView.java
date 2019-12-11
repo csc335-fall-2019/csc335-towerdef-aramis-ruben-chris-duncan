@@ -476,7 +476,7 @@ public class TowerDefenseView extends Application implements Observer{
      * cannot be located.
      * 
      */
-	private ImageView createGridResource(Viewable obj, int row, int col) throws FileNotFoundException {
+	private HBox createGridResource(Viewable obj, int row, int col) throws FileNotFoundException {
 		HBox box = new HBox();
 		ImageView x = ImageResourceLoadingHandler.getResource(obj);
 		x.setFitHeight(SIZE_IMAGE);
