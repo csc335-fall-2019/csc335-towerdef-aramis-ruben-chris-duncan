@@ -60,7 +60,7 @@ public class MapEditor {
      * 
      * @return stage - returns the stage that was created for the GUI
      * 
-     * @throws - FileNotFoundException
+     * @throws FileNotFoundException
      */
 	public Stage create() throws FileNotFoundException {
 		Stage stage = new Stage();

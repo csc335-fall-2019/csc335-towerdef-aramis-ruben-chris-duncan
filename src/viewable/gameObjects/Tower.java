@@ -23,7 +23,7 @@ public abstract class Tower extends Viewable{
 		upgraded = false;
 	}
 	/** 
-	 * @purpose Mutator for attack
+	 * purpose Mutator for attack
 	 * 
 	 * @param newAttack: the new attack value
 	 */
@@ -31,7 +31,7 @@ public abstract class Tower extends Viewable{
 		this.attack = newAttack;
 	}
 	/**
-	 * @purpose Mutator for range
+	 * purpose Mutator for range
 	 * 
 	 * @param newRange: the new range
 	 */
@@ -39,7 +39,7 @@ public abstract class Tower extends Viewable{
 		this.range = newRange;
 	}
 	/**
-	 * @purpose Mutator for attack speed
+	 * purpose Mutator for attack speed
 	 * 
 	 * @param newAttackSpeed: new attack speed
 	 */
@@ -47,7 +47,7 @@ public abstract class Tower extends Viewable{
 		this.attackSpeed = newAttackSpeed;
 	}
 	/**
-	 * @purpose Accessor for attack
+	 * purpose Accessor for attack
 	 * 
 	 * @return this.attack: new attack
 	 */
@@ -55,7 +55,7 @@ public abstract class Tower extends Viewable{
 		return this.attack;
 	}
 	/**
-	 * @purpose Accessor for range
+	 * purpose Accessor for range
 	 * 
 	 * @return this.range: new range
 	 */
@@ -63,7 +63,7 @@ public abstract class Tower extends Viewable{
 		return this.range;
 	}
 	/**
-	 * @purpose Accessor for attack speed
+	 * purpose Accessor for attack speed
 	 * 
 	 * @return this.attackSpeed: new attack speed
 	 */
@@ -71,7 +71,7 @@ public abstract class Tower extends Viewable{
 		return this.attackSpeed;
 	}
 	/**
-	 * @purpose Accessor for name
+	 * purpose Accessor for name
 	 * 
 	 * @return this.name: the name
 	 */
@@ -80,21 +80,21 @@ public abstract class Tower extends Viewable{
 	}
 	
 	/**
-	 * @purpose: starts the cooldown for the tower
+	 * purpose: starts the cooldown for the tower
 	 */
 	public void startCooldown() {
 		onCooldown = true;
 	}
 	
 	/**
-	 * @purpose: ends the cooldown for a tower
+	 * purpose: ends the cooldown for a tower
 	 */
 	public void endCooldown() {
 		onCooldown = false;
 	}
 	
 	/**
-	 * @purpose: checks if a tower is on cooldown
+	 * purpose: checks if a tower is on cooldown
 	 * 
 	 * @return: true if on cooldown
 	 */
@@ -103,16 +103,16 @@ public abstract class Tower extends Viewable{
 	}
 	
 	/**
-	 * @purpose: set how many upgrades the tower has
+	 * purpose: set how many upgrades the tower has
 	 * 
-	 * @param val
+	 * @param val true if tower being set to upgraded
 	 */
 	public void setUpgraded(boolean val) {
 		upgraded = val;
 	}
 	
 	/**
-	 * @purpose: checks if a tower is upgraded
+	 * purpose: checks if a tower is upgraded
 	 * 
 	 * @return: true if upgraded
 	 */

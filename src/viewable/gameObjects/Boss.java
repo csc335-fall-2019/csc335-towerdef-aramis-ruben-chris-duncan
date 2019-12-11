@@ -12,13 +12,16 @@ public class Boss extends Minion {
 
 	/**
 	 * constructor for the boss minion
+	 * 
+	 * @param player Player object
+	 * 
 	 */
 	public Boss(Player player) {
 		super(defaultHealth, defaultDamage, defaultSpeed, defaultReward, player);
 	}
 
 	/**
-	 * @purpose: loads the sprite for this minion
+	 * purpose: loads the sprite for this minion
 	 */
 	@Override
 	public String getResource() {

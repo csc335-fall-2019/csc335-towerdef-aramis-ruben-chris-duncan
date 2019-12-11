@@ -42,18 +42,12 @@ public class Server implements Runnable{
 	/**
      * Purpose: Initializes a Server object.
      * 
-     * @param host - the name of the host to connect to.
-     * 
-     * @param port - the port to connect through
-     * 
-     * @param controller - a Connect4Controller object to have reference back
+     * @param c - a TowerDefenseController object to have reference back
      * to the controller
      * 
      * @param lostModal - a modal to display if the client player has lost
      * 
      * @param tieModal - a modal to display if the client player has tied
-     * 
-     * @return None.
      */
 	public Server(TowerDefenseController c, Runnable lostModal, Runnable tieModal) {
 		controller = c;
@@ -65,9 +59,6 @@ public class Server implements Runnable{
      * Purpose: Opens the socket to establish a connection and waits for a
      * client to connect. Maintains the connection until the program is ended.
      * 
-     * @param None.
-     *  
-     * @return None.
      */
 	@Override
 	public void run() {

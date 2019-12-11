@@ -20,7 +20,7 @@ import javafx.stage.Stage;
 public class Interim extends Application{
 	
 	/**
-	 * @purpose: Launches the chat system within the main game
+	 * purpose: Launches the chat system within the main game
 	 * 
 	 * @param primaryStage - the main stage where the main game is launched
 	 */
@@ -33,7 +33,6 @@ public class Interim extends Application{
 			Stage stage = view2.create(6000);
 			stage.show();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		primaryStage.show();

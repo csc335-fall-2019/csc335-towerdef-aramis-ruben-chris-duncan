@@ -43,7 +43,7 @@ public class Message implements Serializable{
 	private Sender from;
 	
 	/**
-	 * @purpose: Initializes a Message object and its attributes.
+	 * purpose: Initializes a Message object and its attributes.
 	 * 
 	 * @param from - the user that is sending the message
 	 * 
@@ -76,7 +76,7 @@ public class Message implements Serializable{
 	}
 	
 	/**
-	 * @purpose: Determines if two messages are equal to each other.
+	 * purpose: Determines if two messages are equal to each other.
 	 * 
 	 * @param o - an Object that should represent a message
 	 * 

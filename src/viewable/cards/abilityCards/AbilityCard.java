@@ -12,6 +12,13 @@ public abstract class AbilityCard extends Card {
 	
 	/**
 	 *  Purpose - constructor for this class
+	 *  
+	 *  @param name - name of card
+	 *  
+	 *  @param id - id of card
+	 *  
+	 *  @param cost - cost of card
+	 *  
 	 */
 	public AbilityCard(String name, int id, int cost) {
 		super(name, id, cost);
@@ -19,6 +26,8 @@ public abstract class AbilityCard extends Card {
 	
 	/**
 	 * Purpose - gets the resource for the object
+	 * 
+	 * @param p - Player object
 	 */
 	public abstract void ability(Player p);
 }

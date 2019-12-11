@@ -36,7 +36,7 @@ public class LoggedInUser{
 	private User user;
 	
 	/**
-	 * @purpose: Initializes a LoggedInUser object and its attributes
+	 * purpose: Initializes a LoggedInUser object and its attributes
 	 * 
 	 * @param u - a User object determining who is using the chat system
 	 */
@@ -46,7 +46,7 @@ public class LoggedInUser{
 	}
 	
 	/**
-	 * @purpose: Adds a message to the chat stream
+	 * purpose: Adds a message to the chat stream
 	 * 
 	 * @param m - the message being sent
 	 * 
@@ -66,7 +66,7 @@ public class LoggedInUser{
 	}
 	
 	/**
-	 * @purpose: Adds the message to the thread holding the chat system
+	 * purpose: Adds the message to the thread holding the chat system
 	 * 
 	 * @param c - the Chat object holding all the chat messages
 	 * 
@@ -81,7 +81,7 @@ public class LoggedInUser{
 	}
 	
 	/**
-	 * @purpose: Allows the user to add a new message to the list of messages
+	 * purpose: Allows the user to add a new message to the list of messages
 	 * 
 	 * @param m - the message the user wants to add
 	 * 
@@ -114,7 +114,7 @@ public class LoggedInUser{
 	}
 	
 	/**
-	 * @purpose: Removes chats that have been terminated
+	 * purpose: Removes chats that have been terminated
 	 * 
 	 * @param c - a Chat object of previously used chats
 	 * 

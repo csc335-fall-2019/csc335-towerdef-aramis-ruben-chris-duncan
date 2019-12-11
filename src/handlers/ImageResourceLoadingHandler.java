@@ -21,7 +21,7 @@ public class ImageResourceLoadingHandler {
 	 * 
 	 * @return an ImageView with the resource
 	 * 
-	 * @throws FileNotFoundException
+	 * @throws FileNotFoundException throws if resource can not be found
 	 */
 	public static ImageView getResource(Viewable obj) throws FileNotFoundException {
 		ImageView view;

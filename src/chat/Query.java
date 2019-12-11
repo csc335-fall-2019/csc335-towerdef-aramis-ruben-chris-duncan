@@ -29,7 +29,7 @@ public class Query implements Serializable{
 	private String desiredHostName;
 	
 	/**
-	 * @purpose: Initializes a Query object and its attributes.
+	 * purpose: Initializes a Query object and its attributes.
 	 * 
 	 * @param desiredHostName - the IP address or hostname of the other
 	 * connected computer
@@ -40,7 +40,7 @@ public class Query implements Serializable{
 	}
 	
 	/**
-	 * @purpose: Initializes a Query object and its attributes.
+	 * purpose: Initializes a Query object and its attributes.
 	 * 
 	 * @param desiredHost - the IP address or hostname of the other
 	 * connected computer

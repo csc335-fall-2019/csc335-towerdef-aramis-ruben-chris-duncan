@@ -37,13 +37,15 @@ public class TowerDefenseBoard extends Observable implements Serializable{
 	}
 	
 	/**
-     * @purpose: Creates a new board that is observable by the view.
+     * purpose: Creates a new board that is observable by the view.
      * 
      * @param view - A TowerDefenseView object that is the window that displays
      * the entire game.
      * 
      * @param controller - the game controller that handles all the internal game 
      * logic.
+     * 
+     * @throws FileNotFoundException throws if can not find resources
      */
 	public TowerDefenseBoard(TowerDefenseView view, TowerDefenseController controller) throws FileNotFoundException {
 		board = new Map();
@@ -52,7 +54,7 @@ public class TowerDefenseBoard extends Observable implements Serializable{
 	}
 
 	/**
-     * @purpose: Adds a tower to the board.
+     * purpose: Adds a tower to the board.
      * 
      * @param row - tells which row the tower was added to.
      * 
@@ -85,7 +87,7 @@ public class TowerDefenseBoard extends Observable implements Serializable{
 	}
 	
 	/**
-     * @purpose: A process for generating enemy waves.
+     * purpose: A process for generating enemy waves.
      * 
      */
   public void triggerMinions() {
@@ -99,7 +101,7 @@ public class TowerDefenseBoard extends Observable implements Serializable{
   	}
   
   /**
-   * @purpose: Flips the board through the middle horizontally so the other
+   * purpose: Flips the board through the middle horizontally so the other
    * player sees the board in the proper orientation.
    * 
    * @return tdBoard - is a TowerDefenseBoard with all the attributes flipped across
@@ -115,15 +117,16 @@ public class TowerDefenseBoard extends Observable implements Serializable{
 	}
 	
 	/**
-     * @purpose: sets the view as an observer to the board.
+     * purpose: sets the view as an observer to the board.
      * 
+     * @param view - TowerDefenseView object
      */
 	public void setView(TowerDefenseView view) {
 		addObserver(view);
 	}
 	
 	/**
-     * @purpose: Getter method for the board.
+     * purpose: Getter method for the board.
      * 
      * @return board - returns the board created for the game
      */
@@ -132,8 +135,9 @@ public class TowerDefenseBoard extends Observable implements Serializable{
 	}
 	
 	/**
-     * @purpose: Setter method for board attribute.
+     * purpose: Setter method for board attribute.
      * 
+     * @param m - Map object
      */
 	public void setBoard(Map m) {
 		board = m;
@@ -143,16 +147,16 @@ public class TowerDefenseBoard extends Observable implements Serializable{
 	}
 	
 	/**
-     * @purpose: Getter method for the market.
+     * purpose: Getter method for the market.
      * 
-     * @returns market - returns the market for the current game and turn
+     * @return market - returns the market for the current game and turn
      */
 	public Market getMarket() {
 		return market;
 	}
 	
 	/**
-     * @purpose: Setter method for the market.
+     * purpose: Setter method for the market.
      * 
      */
 	private void setMarket(Market m) {

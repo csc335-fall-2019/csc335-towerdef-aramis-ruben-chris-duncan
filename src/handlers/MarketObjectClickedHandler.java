@@ -36,7 +36,7 @@ public class MarketObjectClickedHandler implements EventHandler<MouseEvent>{
 	/**
 	 * Purpose: constructor for the class
 	 * @param card - a Card object
-	 * @param market - a Market object
+	 * @param controller - A TowerDefenseController object
 	 * @param view - a TowerDefenseView object
 	 */
 	public MarketObjectClickedHandler(Card card, TowerDefenseController controller, TowerDefenseView view) {

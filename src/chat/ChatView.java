@@ -54,7 +54,7 @@ public class ChatView{
 	private LoggedInUser user;
 	
 	/**
-	 * @purpose: Launches the GUI for the chat system.
+	 * purpose: Launches the GUI for the chat system.
 	 * 
 	 * @param portNum - the port number the network is working on
 	 * 
@@ -83,7 +83,7 @@ public class ChatView{
 	}
 	
 	/**
-	 * @purpose: Creates the chat box that will display messages from both users
+	 * purpose: Creates the chat box that will display messages from both users
 	 * and allows the user to send messages to the other player.
 	 * 
 	 * @param p2p - the peer to peer socket the networked portion of the program
@@ -207,7 +207,7 @@ public class ChatView{
 	}
 	
 	/**
-	 * @purpose: Sets up the chat windows.
+	 * purpose: Sets up the chat windows.
 	 * 
 	 * @param pane - the BorderPan holding the chat windows
 	 * 
@@ -241,7 +241,7 @@ public class ChatView{
 	}
 
 	/**
-	 * @purpose: Displays the messages that have been sent in a first in
+	 * purpose: Displays the messages that have been sent in a first in
 	 * first out manner.
 	 * 
 	 * @param text - the text box the message is typed into
@@ -287,7 +287,7 @@ public class ChatView{
 	}
 
 	/**
-	 * @purpose: An inner class to handle the updating of chat messages.
+	 * purpose: An inner class to handle the updating of chat messages.
 	 * 
 	 */
 	static class ChatCell extends ListCell<Chat> {
@@ -297,7 +297,7 @@ public class ChatView{
 		private TextField port;
 		
 		/**
-		 * @purpose: Initializes ChatCell objects and their attributes.
+		 * purpose: Initializes ChatCell objects and their attributes.
 		 * 
 		 * @param address - the IP address or hostname of the hosting computer
 		 * 
@@ -309,7 +309,7 @@ public class ChatView{
 		}
 		
 		/**
-		 * @purpose: Pulls the text that was sent between the users.
+		 * purpose: Pulls the text that was sent between the users.
 		 * 
 		 * @param item - a Chat object representing a passed message
 		 * 
@@ -328,7 +328,7 @@ public class ChatView{
 	
 	class MessageCell extends ListCell<Message>{
 		/**
-		 * @purpose: Displays the messages to the users that were sent and
+		 * purpose: Displays the messages to the users that were sent and
 		 * received
 		 * 
 		 * @param item - the message that was sent or received

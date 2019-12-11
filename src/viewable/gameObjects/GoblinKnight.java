@@ -12,20 +12,21 @@ public class GoblinKnight extends Minion {
 	
 	/**
 	 * constructor for the goblin knight minion
+	 * 
+	 * @param player Player object
 	 */
 	public GoblinKnight(Player player) {
 		super(defaultHealth, defaultDamage, defaultSpeed, defaultReward, player);
 	}
 
 	/**
-	 * @purpose: loads the sprite for this minion
+	 * purpose: loads the sprite for this minion
 	 */
 	@Override
 	public String getResource() {
 		try {
 			return (new File("./resources/images/MonsterSprites/GoblinKnight_01.png")).getCanonicalPath();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			return "";
 		}
 	}

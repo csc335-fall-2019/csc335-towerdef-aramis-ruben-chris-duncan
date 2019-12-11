@@ -30,11 +30,11 @@ public class Chat implements Serializable{
 	private Sender recipient;
 	
 	/**
-	 * @purpose: Initializes Chat objects and their attributes.
+	 * purpose: Initializes Chat objects and their attributes.
 	 * 
-	 * @param user - the current player utilizing the chat
+	 * @param user the current player utilizing the chat
 	 * 
-	 * @throws sendTo - a sender object representing the other player
+	 * @param sendTo a sender object representing the other player
 	 * on the other side of the network connection.
 	 */
 	public Chat(User user, Sender sendTo) {
@@ -44,7 +44,7 @@ public class Chat implements Serializable{
 	}
 	
 	/**
-	 * @purpose: Adds messages to an observable list that can be transmitted
+	 * purpose: Adds messages to an observable list that can be transmitted
 	 * across the network and interpreted by the other end
 	 * 
 	 * @param m - the message to be sent
@@ -60,7 +60,7 @@ public class Chat implements Serializable{
 	}
 	
 	/**
-	 * @purpose: Pulls the messages out of the observable list to be displayed 
+	 * purpose: Pulls the messages out of the observable list to be displayed 
 	 * on this end.
 	 * 
 	 * @return messages - the message to be displayed

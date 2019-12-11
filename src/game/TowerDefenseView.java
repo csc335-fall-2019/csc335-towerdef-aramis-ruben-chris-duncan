@@ -143,7 +143,7 @@ public class TowerDefenseView extends Application implements Observer{
 	private Button endTurn;
 	
 	/**
-	 * @purpose: Launches the GUI for the tower defense game.
+	 * purpose: Launches the GUI for the tower defense game.
 	 * 
 	 * @param primaryStage - the main stage created by JavaFX and used to display
 	 * all game variables
@@ -168,7 +168,7 @@ public class TowerDefenseView extends Application implements Observer{
 	}
 	
 	/**
-	 * @purpose: creates the opening main menu for the game
+	 * purpose: creates the opening main menu for the game
 	 * 
 	 * @throws IOException - an exception is thrown if any resources for the
 	 * main menu aren't able to be found.
@@ -235,7 +235,7 @@ public class TowerDefenseView extends Application implements Observer{
 	}
 	
 	/**
-     * @purpose: Creates the window to be displayed when the user clicks
+     * purpose: Creates the window to be displayed when the user clicks
      * connect. Allows the user to scan for games or manually input hostname
      * and port number of host.
      * 
@@ -321,7 +321,7 @@ public class TowerDefenseView extends Application implements Observer{
 	}
 	
 	/**
-     * @purpose: Resets all values to begin a new game.
+     * purpose: Resets all values to begin a new game.
      * 
      * @throws IOException - throws an error if newGame was called before the 
      * very first game was completely instantiated.
@@ -373,7 +373,7 @@ public class TowerDefenseView extends Application implements Observer{
 	}
 	
 	/**
-     * @purpose: Creates a pane for ammunition to be displayed and still
+     * purpose: Creates a pane for ammunition to be displayed and still
      * allowing the user to click on the board through this pane.
      * 
      * @return box - is a Pane that holds tower fire animations
@@ -389,7 +389,7 @@ public class TowerDefenseView extends Application implements Observer{
 	}
 	
 	/**
-     * @purpose: Creates the bottom layer of the board that displays either the
+     * purpose: Creates the bottom layer of the board that displays either the
      * empty grass squares where the user can place towers or the dirt path
      * squares where the enemy waves walk on.
      * 
@@ -418,7 +418,7 @@ public class TowerDefenseView extends Application implements Observer{
 	}
 	
 	/**
-     * @purpose: Applies a grid of squares to the playing field so the players can
+     * purpose: Applies a grid of squares to the playing field so the players can
      * see where towers can be placed.
      * 
      * @return grid - the GridPane that separates the grid into squares to the players
@@ -442,7 +442,7 @@ public class TowerDefenseView extends Application implements Observer{
 	}
 	
 	/**
-     * @purpose: Iterates through the entire board and applies an image for 
+     * purpose: Iterates through the entire board and applies an image for 
      * each square that is associated to the object at that location.
      * 
      * @param obj - the Viewable object that is currently at that grid location
@@ -470,7 +470,7 @@ public class TowerDefenseView extends Application implements Observer{
 	}
 
 	/**
-     * @purpose: Handles the game animation for minions and how they traverse the path.
+     * purpose: Handles the game animation for minions and how they traverse the path.
      * 
      */
 	public void update() {
@@ -584,7 +584,7 @@ public class TowerDefenseView extends Application implements Observer{
 	}
 	
 	/**
-     * @purpose: Reverses the path the minions take which is used for the other
+     * purpose: Reverses the path the minions take which is used for the other
      * player.
      * 
      * @param vals - a list of values that represent the direciton the minions
@@ -609,7 +609,7 @@ public class TowerDefenseView extends Application implements Observer{
 	}
 	
 	/**
-     * @purpose: Moves the minions to their new position on the grid.
+     * purpose: Moves the minions to their new position on the grid.
      * 
      * @param index - the minion's position within the wave list.
      * 
@@ -686,7 +686,7 @@ public class TowerDefenseView extends Application implements Observer{
 	}
 	
 	/**
-     * @purpose: Determine if the minion has finished moving for the cycle
+     * purpose: Determine if the minion has finished moving for the cycle
      * 
      * @param minions - a list of minions for the current wave
      * 
@@ -704,7 +704,7 @@ public class TowerDefenseView extends Application implements Observer{
 	}
 	
 	/**
-     * @purpose: Checks to see if the minion is within range of a tower and
+     * purpose: Checks to see if the minion is within range of a tower and
      * has the tower fire if it does. Deals damage to the minion when it hits it.
      * 
      * @param minion - the minion being checked
@@ -766,7 +766,7 @@ public class TowerDefenseView extends Application implements Observer{
 	}
 	
 	/**
-     * @purpose: Determines which node is at a specific position.
+     * purpose: Determines which node is at a specific position.
      * 
      * @param col - the col position on the grid
      * 
@@ -785,7 +785,7 @@ public class TowerDefenseView extends Application implements Observer{
 	}
 					
 	/**
-     * @purpose: Determines the path for the minions to take as they traverse the map
+     * purpose: Determines the path for the minions to take as they traverse the map
      * 
      * @param callback - the thread of the current player.
      * 
@@ -860,7 +860,7 @@ public class TowerDefenseView extends Application implements Observer{
 	}
 	
 	/**
-     * @purpose: Creates the area for the bottom players cards and stats.
+     * purpose: Creates the area for the bottom players cards and stats.
      * 
      * @return bottom - an HBox holding all the objects necessary for a player's area
      * 
@@ -959,7 +959,7 @@ public class TowerDefenseView extends Application implements Observer{
 	}
 	
 	/**
-     * @purpose: Creates the area for the top player's cards and stats.
+     * purpose: Creates the area for the top player's cards and stats.
      * 
      * @return top - an HBox holding all the objects necessary for a player's area
      * 
@@ -1042,7 +1042,7 @@ public class TowerDefenseView extends Application implements Observer{
 	}
 	
 	/**
-     * @purpose: Creates the area for the market cards that can be bought.
+     * purpose: Creates the area for the market cards that can be bought.
      * 
      * @return market - an HBox holding all the cards that are available for purchase
      * 
@@ -1083,7 +1083,7 @@ public class TowerDefenseView extends Application implements Observer{
 	}
 	
 	/**
-     * @purpose: Creates the menu bar that is displayed at the top right of the GUI.
+     * purpose: Creates the menu bar that is displayed at the top right of the GUI.
      * 
      * @return bar - the MenuBar to be displayed
      */
@@ -1102,7 +1102,7 @@ public class TowerDefenseView extends Application implements Observer{
 	}
 	
 	/**
-     * @purpose: Creates the dropdown menu when file is selected from the main menu bar.
+     * purpose: Creates the dropdown menu when file is selected from the main menu bar.
      * 
      * @return file - the dropdown menu to be displayed
      */
@@ -1187,7 +1187,7 @@ public class TowerDefenseView extends Application implements Observer{
 	}
 	
 	/**
-     * @purpose: Creates the dropdown menu when option is selected in the 
+     * purpose: Creates the dropdown menu when option is selected in the 
      * main menu bar.
      * 
      * @return options - the dropdown menu for options
@@ -1225,7 +1225,7 @@ public class TowerDefenseView extends Application implements Observer{
 	}
 
 	/**
-     * @purpose: Randomly selects music from a source folder to play during the game.
+     * purpose: Randomly selects music from a source folder to play during the game.
      * 
      */
 	private void loadMusic() {
@@ -1263,7 +1263,7 @@ public class TowerDefenseView extends Application implements Observer{
 	}
 	
 	/**
-     * @purpose: Randomly picks a music file from the music folder
+     * purpose: Randomly picks a music file from the music folder
      * 
      * @return - a string that is the file path to the selected music file
      * 
@@ -1279,7 +1279,7 @@ public class TowerDefenseView extends Application implements Observer{
 	}
 
 	/**
-     * @purpose: The observer method that takes notice of any changes that occur to the 
+     * purpose: The observer method that takes notice of any changes that occur to the 
      * board state.
      * 
      * @param o - the object that is being observed
@@ -1317,7 +1317,7 @@ public class TowerDefenseView extends Application implements Observer{
 	}
 	
 	/**
-     * @purpose: sets all objects within the board.
+     * purpose: sets all objects within the board.
      * 
      * @param row - the row in the grid where the object is to be set
      * 
@@ -1357,7 +1357,7 @@ public class TowerDefenseView extends Application implements Observer{
 	}
 	
 	/**
-     * @purpose: Tests whether a connection can be made with the given parameters.
+     * purpose: Tests whether a connection can be made with the given parameters.
      * 
      */
 	private class PossibleConnectionCell extends ListCell{
@@ -1366,7 +1366,7 @@ public class TowerDefenseView extends Application implements Observer{
 		}
 		
 		/**
-	     * @purpose: Updates the client with all the board attributes used by the other player.
+	     * purpose: Updates the client with all the board attributes used by the other player.
 	     * 
 	     * @param update - the object to be updated across the network
 	     * 
