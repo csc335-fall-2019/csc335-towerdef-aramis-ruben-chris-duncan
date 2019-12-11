@@ -228,7 +228,7 @@ public class Player implements Serializable{
 	 * @param amount: amount to damage the other player
 	 */
 	public void damageOther(int amount) {
-		health.set(health.intValue() - amount);
+		controller.damageOther(amount);
 	}
 	
 	/**
