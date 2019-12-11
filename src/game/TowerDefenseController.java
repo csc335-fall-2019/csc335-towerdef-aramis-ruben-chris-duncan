@@ -271,6 +271,8 @@ public class TowerDefenseController {
 			// ending turns
 			currentPlayer.setComplete(false);
 			otherPlayer.setComplete(false);
+			currentPlayer.reset();
+			otherPlayer.reset();
 		});
 		thread.start();
 	}
@@ -416,8 +418,6 @@ public class TowerDefenseController {
 	public void upgradeTower(Tower t, int row, int col) {
 		if(currentPlayer.getSelectedCard()==null) {
 			for(int i =0;i<TowerCardType.values().length;i++) {
-				System.out.println(t.getClass());
-				System.out.println(TowerCardType.values()[i].getTower());
 				if(t.getClass().equals(TowerCardType.values()[i].getTower())) {
 					try {
 						TowerCardType.values()[i].getTowerCard().newInstance().Upgrade(t);
@@ -479,11 +479,11 @@ public class TowerDefenseController {
 		}
 		System.out.println(minion.getPlayer());
 		if(minion.getPlayer().equals(currentPlayer)) {
-			currentTurn.addMove(new StatIncreaseMessage(0, minion.getReward()));
-			otherPlayer.increaseGold(minion.getReward());
+			currentTurn.addMove(new StatIncreaseMessage(0, minion.getReward(otherPlayer)));
+			otherPlayer.increaseGold(minion.getReward(otherPlayer));
 		}else {
-			currentTurn.addMove(new OtherStatIncreaseMessage(0, minion.getReward()));
-			currentPlayer.increaseGold(minion.getReward());
+			currentTurn.addMove(new OtherStatIncreaseMessage(0, minion.getReward(currentPlayer)));
+			currentPlayer.increaseGold(minion.getReward(currentPlayer));
 		}
 	}
 	

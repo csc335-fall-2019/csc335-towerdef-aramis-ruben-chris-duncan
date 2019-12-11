@@ -42,6 +42,7 @@ public class Player implements Serializable{
 	private int goldMultiplier;
 	private transient TowerDefenseController controller;
 	private volatile boolean turnComplete;
+	private int extraMinions;
 	
 	/**
 	 * constructor for the player
@@ -53,6 +54,7 @@ public class Player implements Serializable{
 	public Player(TowerDefenseController controller) throws FileNotFoundException {
 		this.controller = controller;
 		turnComplete = false;
+		extraMinions = 0;
 		health = new SimpleIntegerProperty(20);
 		mapCards = new HashMap<Card, ImageView>();
 		ObservableList<ImageView> observableList = FXCollections.observableArrayList(new ArrayList<ImageView>());
@@ -78,6 +80,13 @@ public class Player implements Serializable{
 			mapCards.put(c, view);
 		}
 		Collections.shuffle(hand);
+	}
+	
+	/**
+	 * Resets the single turn multipliers.
+	 */
+	public void reset() {
+		goldMultiplier=1;
 	}
 	
 	/**
@@ -219,7 +228,7 @@ public class Player implements Serializable{
 	 * purpose: increases the amount of gold to be received from killing minions
 	 */
 	public void buffReward() {
-		goldMultiplier = 2;
+		goldMultiplier ++;
 	}
 	
 	/**
@@ -322,7 +331,19 @@ public class Player implements Serializable{
 		System.out.println(cards);
 	}
 
+	// Setter for extra minions.
 	public void summonMinion(int minionstosummon) {
-		
+		extraMinions = minionstosummon;
+	}
+	
+	public int getExtraMinions() {
+		int extra = extraMinions;
+		extraMinions = 0;
+		return extra;
+	}
+	
+	// Getter for gold mult.
+	public int getGoldMultiplier() {
+		return goldMultiplier;
 	}
 }
