@@ -121,7 +121,113 @@ class ViewableGameObjectsTests {
 		
 	}
 	
+	@Test
+	void MarketTest() throws IOException {
+		TowerDefenseView v = new TowerDefenseView();
+		TowerDefenseController c = new TowerDefenseController(v);
+		Market m = new Market(v, c);
+		m.populateForSale();
+		Card card = new ArcherTowerCard();
+		m.removeFromForSale(card);
+		m.repopulateForSale();
+		m.removeFromForSale(0);
+		m.getRemovedIndex();
+		m.repopulateImages();
+	    m.getForSale();
+	    m.setController(c);
+	    m.setView(v);
+	}
 	
+	@Test
+	void MinionTest() throws IOException {
+		TowerDefenseController cont = new TowerDefenseController(new TowerDefenseView());
+		Player p = new Player(cont);
+		Minion m = new Charger(p);
+		m.getPlayer();
+		m.setHealth(100);
+		m.setDamage(1);
+		m.setSpeed(1);
+		m.incrementStep();
+		m.getStep();
+		m.getHealth();
+		m.getSpeed();
+		m.getReward();
+		m.takeDamage(1);
+		m.getCurrentHealth();
+		m.isDead();
+		m.getDamage();
+	}
+	
+	@Test
+	void OgreTest() throws IOException {
+		TowerDefenseController cont = new TowerDefenseController(new TowerDefenseView());
+		Player p = new Player(cont);
+		Minion m = new Ogre(p);
+		m.getResource();
+	}
+	
+	@Test
+	void PlayerTest() throws IOException {
+		TowerDefenseController cont = new TowerDefenseController(new TowerDefenseView());
+		Player p = new Player(cont);
+		Card card = new ArcherTowerCard();
+		Deck deck = new Deck();
+		p.getHand();
+		p.discardHand();
+		p.resetDraw();
+
+		p.drawCards(5);
+		p.isFinished();
+		p.setComplete(false);
+		p.gainLife(10);
+		p.payLife(1);
+		p.buffReward();
+		p.damageOther(1);
+		p.damageTaken(0);
+		p.getHealth();
+		p.setSelectedCard(card);
+		p.getSelectedCard();
+		p.getViewableHealth();
+		p.getViewableGold();
+		p.getDiscard();
+		p.getCardHand();
+		p.printCards(deck);
+		
+	}
+	
+	@Test
+	void TowerTest() {
+		Tower t = new ArcherTower();
+		t.setAttack(1);
+		t.setRange(1);
+		t.setAttackSpeed(1.0);
+		t.getAttack();
+		t.getRange();
+		t.getAttackSpeed();
+		t.getName();
+		t.startCooldown();
+		t.endCooldown();
+		t.canAttack();
+		t.setUpgraded(true);
+		t.getUpgraded();
+	}
+	
+	@Test
+	void WaveGeneratorTest() throws IOException {
+		TowerDefenseController cont = new TowerDefenseController(new TowerDefenseView());
+		Player p = new Player(cont);
+		WaveGenerator w = new WaveGenerator(p);
+		w.generateRandom();
+		w.addMinions(0);
+	}
+	
+	@Test
+	void WolfRiderTest() throws IOException {
+		TowerDefenseController cont = new TowerDefenseController(new TowerDefenseView());
+		Player p = new Player(cont);
+		Minion m = new WolfRider(p);
+		m.getResource();
+	}
 
 	
 
