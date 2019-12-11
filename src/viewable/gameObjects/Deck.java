@@ -35,6 +35,13 @@ public class Deck implements Serializable{
 	}
 	
 	/**
+	 * Resets the deck to the pre game state.
+	 */
+	public void reset() {
+		deck.clear();
+	}
+	
+	/**
 	 * purpose: draws a card and removes it from the deck
 	 * 
 	 * @return: the card that was drawn

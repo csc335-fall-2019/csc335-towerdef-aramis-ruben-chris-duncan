@@ -52,6 +52,13 @@ public class TowerDefenseBoard extends Observable implements Serializable{
 		market = new Market(view, controller);
 		addObserver(view);
 	}
+	
+	/**
+	 * Resets the board back to normal.
+	 */
+	public void reset() {
+		board.reset();
+	}
 
 	/**
      * purpose: Adds a tower to the board.

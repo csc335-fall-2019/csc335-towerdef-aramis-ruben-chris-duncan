@@ -15,6 +15,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 import viewable.Viewable;
+import viewable.mapObjects.Path;
 
 public class Map implements Serializable{
 	
@@ -33,14 +34,34 @@ public class Map implements Serializable{
 		board = new Viewable[NUM_COLS][NUM_ROWS][STACK_SIZE];
 	}
 	
+	public void reset() {
+		for(int i =0;i<board.length;i++) {
+			for(int j =0;j<board[i].length;j++) {
+				if(board[i][j][0] ==null || board[i][j][0] instanceof Path) {
+					continue;
+				}
+				board[i][j][0] = null;
+			}
+		}
+	}
+	
+	// Getter for the board.
 	public Viewable[][][] getBoard() {
 		return board;
 	}
 	
+	/**
+	 * Sets the board.
+	 * @param v the board to set.
+	 */
 	public void setBoard(Viewable[][][] v) {
 		board = v;
 	}
 	
+	/**
+	 * Transposes the board for 2 player stuff.
+	 * @return the transposed board.
+	 */
 	public Map flip(){
 		Viewable[][][] flipped = new Viewable[NUM_COLS][NUM_ROWS][STACK_SIZE];
 		int last = 0;
@@ -56,6 +77,11 @@ public class Map implements Serializable{
 		return map;
 	}
 	
+	/**
+	 * Saves the board to a file.
+	 * @param path the path to the file.
+	 * @throws IOException when the file cannot be accessed.
+	 */
 	public void save(String path) throws IOException {
 		File file = new File(path);
 		file.createNewFile();
@@ -65,6 +91,11 @@ public class Map implements Serializable{
 		out.close();
 	}
 	
+	/**
+	 * Loads the map from the desired path.
+	 * @param path the path to the file.
+	 * @throws Exception when the file is not of the correct format.
+	 */
 	public void load(String path) throws Exception {
 		File file = new File(path);
 		if(!file.exists()) { // Would use UI to have user select file?

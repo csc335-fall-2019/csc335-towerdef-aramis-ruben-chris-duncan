@@ -78,7 +78,6 @@ public class Client implements Runnable{
 			controller.setOut(new ObjectOutputStream(socket.getOutputStream()));
 			in = new ObjectInputStream(socket.getInputStream());
 			TowerDefenseBoard map = (TowerDefenseBoard)in.readObject();
-			System.out.println(map);
 			map.setView(controller.getView());
 			controller.setBoard(map);
 		} catch (IOException | ClassNotFoundException e) {

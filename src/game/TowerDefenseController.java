@@ -83,6 +83,7 @@ import network.TurnFinishedMessage;
 import viewable.Viewable;
 import viewable.cards.Card;
 import viewable.cards.abilityCards.AbilityCard;
+import viewable.cards.abilityCards.DamageCard;
 import viewable.cards.towers.TowerCard;
 import viewable.cards.towers.TowerCardType;
 import viewable.gameObjects.Map;
@@ -143,6 +144,19 @@ public class TowerDefenseController {
 		fastForwardState = false;
 		xOr = false;
 		possibleConnections = FXCollections.observableArrayList(new ArrayList<SocketAddress>());
+	}
+	
+	/**
+	 * Sets the controller up to run another game.
+	 * @throws FileNotFoundException when resources are missing
+	 */
+	public void reset() throws FileNotFoundException {
+		currentPlayer.resetAsNew();
+		otherPlayer.resetAsNew();
+		minionsFinished = false;
+		fastForwardState = false;
+		xOr = false;
+		board.reset();
 	}
 
 	/**
@@ -270,6 +284,8 @@ public class TowerDefenseController {
 			// ending turns
 			currentPlayer.setComplete(false);
 			otherPlayer.setComplete(false);
+			currentPlayer.reset();
+			otherPlayer.reset();
 		});
 		thread.start();
 	}
@@ -318,8 +334,14 @@ public class TowerDefenseController {
      * 
      */
 	public void	useAbilityCard(AbilityCard card) {
-		card.ability(currentPlayer);
-		currentTurn.addMove(new AbilityCardUsedMessage(card));
+		if(card instanceof DamageCard) {
+			DamageCard d = (DamageCard)card;
+			card.ability(otherPlayer);
+			currentTurn.addMove(new StatIncreaseMessage(d.getDamage()*-1, 0));
+		}else {
+			card.ability(currentPlayer);
+			currentTurn.addMove(new AbilityCardUsedMessage(card));
+		}
 		currentPlayer.addToDiscard(card);
 	}
 	
@@ -409,8 +431,6 @@ public class TowerDefenseController {
 	public void upgradeTower(Tower t, int row, int col) {
 		if(currentPlayer.getSelectedCard()==null) {
 			for(int i =0;i<TowerCardType.values().length;i++) {
-				System.out.println(t.getClass());
-				System.out.println(TowerCardType.values()[i].getTower());
 				if(t.getClass().equals(TowerCardType.values()[i].getTower())) {
 					try {
 						TowerCardType.values()[i].getTowerCard().newInstance().Upgrade(t);
@@ -472,11 +492,11 @@ public class TowerDefenseController {
 		}
 		System.out.println(minion.getPlayer());
 		if(minion.getPlayer().equals(currentPlayer)) {
-			currentTurn.addMove(new StatIncreaseMessage(0, minion.getReward()));
-			otherPlayer.increaseGold(minion.getReward());
+			currentTurn.addMove(new StatIncreaseMessage(0, minion.getReward(otherPlayer)));
+			otherPlayer.increaseGold(minion.getReward(otherPlayer));
 		}else {
-			currentTurn.addMove(new OtherStatIncreaseMessage(0, minion.getReward()));
-			currentPlayer.increaseGold(minion.getReward());
+			currentTurn.addMove(new OtherStatIncreaseMessage(0, minion.getReward(currentPlayer)));
+			currentPlayer.increaseGold(minion.getReward(currentPlayer));
 		}
 	}
 	
@@ -772,7 +792,6 @@ public class TowerDefenseController {
 	public void setRunning(boolean b) {
 		isRunning = b;
 		try {
-			System.out.println(out);
 			if(socket!=null&&!b) {
 				socket.close();
 			}

@@ -116,13 +116,20 @@ public abstract class Minion extends Viewable {
 		return this.speed;
 	}
 	
+	// Getter for reward.
+	public Integer getReward() {
+		return reward;
+	}
+	
 	/**
 	 * purpose: getter for the minions reward value
 	 * 
+	 * @param player the player to add the gold multiplier
+	 * 
 	 * @return: the minions reward value
 	 */
-	public Integer getReward() {
-		return this.reward;
+	public Integer getReward(Player player) {
+		return this.reward*player.getGoldMultiplier();
 	}
 	
 	/**

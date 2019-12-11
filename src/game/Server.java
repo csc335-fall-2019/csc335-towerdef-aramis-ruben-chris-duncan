@@ -73,6 +73,7 @@ public class Server implements Runnable{
 			controller.setOut(new ObjectOutputStream(socket.getOutputStream()));
 			in = new ObjectInputStream(socket.getInputStream());
 			controller.getOut().writeObject(controller.getBoard().flip());
+			controller.getOut().flush();
 			while(controller.isRunning()) {
 				try {
 					Object obj = in.readObject();

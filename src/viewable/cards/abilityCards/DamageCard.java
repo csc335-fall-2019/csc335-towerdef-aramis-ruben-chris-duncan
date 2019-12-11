@@ -36,6 +36,10 @@ public class DamageCard extends AbilityCard {
 		p.damageOther(damageAmount);
 	}
 	
+	public int getDamage() {
+		return damageAmount;
+	}
+	
 	/**
 	 * Purpose - gets the resource for the object
 	 * 
