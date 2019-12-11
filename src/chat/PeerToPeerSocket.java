@@ -1,5 +1,31 @@
 package chat;
 
+/**
+ * PeerToPeerSocket.java
+ * 
+ * Opens up the port that messages will be streamed through.
+ * 
+ * Usage instructions:
+ * 
+ * Construct PeerToPeerSocket
+ * PeerToPeerSocket p2p = new PeerToPeerSocket()
+ * PeerToPeerSocket p2p = new PeerToPeerSocket(offset)
+ * 
+ * Other Useful Methods:
+ * p2p.run()
+ * p2p.checkServers()
+ * p2p.checkSockets()
+ * p2p.handleMessages(obj, s)
+ * p2p.verifyQuery(q, s)
+ * p2p.connect(host, port, callback, failed)
+ * p2p.sendMessage(hostname, message)
+ * p2p.sendMessage(hostTo, port, message)
+ * p2p.login(username, password)
+ * p2p.getUser()
+ * p2p.setUser(u)
+ * 
+ */
+
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,6 +47,8 @@ import javafx.application.Platform;
 
 
 public class PeerToPeerSocket implements Runnable{
+	
+	// Field variables for PeerToPeerSocket objects
 	private volatile List<ServerSocket> servers;
 	private volatile List<Socket> activeConnections;
 	private volatile List<Sender> currentConnections;
@@ -30,10 +58,24 @@ public class PeerToPeerSocket implements Runnable{
 	private Sender from;
 	private Thread failedGeneric;
 	
+	/**
+	 * @purpose: Initializes a PeerToPeerSocket object and its attributes.
+	 * 
+	 * @throws IOException - throws an exception if the port number is 
+	 * incorrect or closes before the connection is established.
+	 */
 	public PeerToPeerSocket() throws IOException {
 		this(6881);
 	}
 	
+	/**
+	 * @purpose: Initializes a PeerToPeerSocket object and its attributes.
+	 * 
+	 * @param offset - a number to add to the port to hit an unused port
+	 * 
+	 * @throws IOException - throws an exception if the port number is 
+	 * incorrect or closes before the connection is established.
+	 */
 	public PeerToPeerSocket(int offset) throws IOException {
 		this.host = InetAddress.getLocalHost().getHostAddress().toString();
 		mapConnections = new HashMap<Socket, Object[]>();
@@ -53,6 +95,10 @@ public class PeerToPeerSocket implements Runnable{
 		activeConnections = new ArrayList<Socket>();
 	}
 	
+	/**
+	 * @purpose: Keeps the connections running and checked.
+	 * 
+	 */
 	@Override
 	public void run() {
 		while(true) {
@@ -61,6 +107,10 @@ public class PeerToPeerSocket implements Runnable{
 		}
 	}
 	
+	/**
+	 * @purpose: Checks to see if the server is still up and communicating.
+	 * 
+	 */
 	private void checkServers() {
 		List<ServerSocket> toRemove = new ArrayList<ServerSocket>();
 		for(ServerSocket server: servers) {
@@ -123,6 +173,11 @@ public class PeerToPeerSocket implements Runnable{
 		servers.removeAll(toRemove);
 	}
 	
+	/**
+	 * @purpose: Checks to see if the sock being used is still open and useable.
+	 * Blocks the port while in use
+	 * 
+	 */
 	private void checkSockets() {
 		for(Socket s: activeConnections) {
 			try {
@@ -153,6 +208,16 @@ public class PeerToPeerSocket implements Runnable{
 		}
 	}
 	
+	/**
+	 * @purpose: Determines how to send a message and how to receive one.
+	 * 
+	 * @param obj - the sender of the message
+	 * 
+	 * @param s - the socket the connection is running over
+	 * 
+	 * @throws IOException - throws an exception if the port number is 
+	 * incorrect or closes before the connection is established.
+	 */
 	public void handleMessage(Object obj, Socket s) throws IOException {
 		Message message = (Message)obj;
 		// Can we verify that the message is meant for us?
@@ -211,7 +276,7 @@ public class PeerToPeerSocket implements Runnable{
 	 * This method checks to make sure that the message is either meant for the user or for host.
 	 * @param q the query.
 	 * @param s the socket that the connection is held on.
-	 * @return
+	 * @return a boolean value of true if the message is meant for the host, false otherwise
 	 */
 	public boolean verifyQuery(Query q, Socket s) {
 		// Username takes preference. 
@@ -290,6 +355,19 @@ public class PeerToPeerSocket implements Runnable{
 		thread.start();
 	}
 	
+	/**
+	 * @purpose: Established the connection between the two networked computers.
+	 * 
+	 * @param hostname - the IP address or hostname of the computer hosting the program
+	 * 
+	 * @param callback - the thread between the two users so messages can be sent
+	 * between the two
+	 * 
+	 * @param failed - tells the program if the message failed to send
+	 * 
+	 * @throws IOException - throws an exception if the port number is 
+	 * incorrect or closes before the connection is established.
+	 */
 	public void connect(String hostname, Thread callback, Thread failed) throws Exception {
 		int port = 0;
 		String host = "";
@@ -302,6 +380,18 @@ public class PeerToPeerSocket implements Runnable{
 		connect(host, port, callback, failed);
 	}
 	
+	/**
+	 * @purpose: Sends the message to the outputstream to be received
+	 * by the other player.
+	 * 
+	 * @param hostname - the IP address or hostname of the computer that
+	 * hosted the game
+	 * 
+	 * @param message - the message that is being sent to the other player
+	 * 
+	 * @throws IOException - throws an exception if the port number is 
+	 * incorrect or closes before the connection is established.
+	 */
 	public void sendMessage(String hostname, String message) throws Exception {
 		Thread thread2 = new Thread(new Runnable() {
 			@Override
@@ -354,6 +444,20 @@ public class PeerToPeerSocket implements Runnable{
 		connect(host, thread2, failed);
 	}
 	
+	/**
+	 * @purpose: Sends the message to the outputstream to be received
+	 * by the other player.
+	 * 
+	 * @param hostTo - the IP address or hostname of the other computer that
+	 * is connected
+	 * 
+	 * @param port - the port the two computer are communicating on
+	 * 
+	 * @param message - the message that is being sent to the other player
+	 * 
+	 * @throws IOException - throws an exception if the port number is 
+	 * incorrect or closes before the connection is established.
+	 */
 	public void sendMessage(String hostTo, int port, String message) throws Exception {
 		if(hostTo.equals("localhost")) {
 			hostTo = InetAddress.getLocalHost().getHostAddress();
@@ -417,6 +521,21 @@ public class PeerToPeerSocket implements Runnable{
 		connect(hostTo, port, thread2, failed);
 	}
 	
+	/**
+	 * @purpose: Allows the users to login and maintain a continuous chat.
+	 * 
+	 * @param username - the user's login ID
+	 * 
+	 * @param password - the user's password used to verify the user
+	 * 
+	 * @return true if the user logged in successfully, false otherwise
+	 * 
+	 * @throws IOException - throws an exception if the port number is 
+	 * incorrect or closes before the connection is established.
+	 * 
+	 * @throws NoSuchAlgorithemException - throws an exception if the user's username and/or
+	 * password is incorrect.
+	 */
 	public boolean login(String username, String password) throws IOException, NoSuchAlgorithmException {
 		File users = new File("users.txt");
 		// Need to read in the file adding each user to an array and then adding the new user to the end if need be.
@@ -471,10 +590,12 @@ public class PeerToPeerSocket implements Runnable{
 		return true;
 	}
 	
+	// Getter method for user
 	public LoggedInUser getUser() {
 		return user;
 	}
 	
+	// Setter method for user
 	public void setUser(LoggedInUser u) {
 		user = u;
 	}

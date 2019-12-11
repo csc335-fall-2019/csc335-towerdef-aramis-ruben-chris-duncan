@@ -1,6 +1,23 @@
 package chat;
 
-import java.awt.Paint;
+/**
+ * ChatView.java
+ * 
+ * Sets up the windows for the chat system and enables messaging 
+ * between the two connected players.
+ * 
+ * Usage instructions:
+ * 
+ * Construct ChatView
+ * ChatView.create(portNum)
+ * 
+ * Other Useful Methods:
+ * createChatBottom(p2p)
+ * createBackButton(pane, view, input, connect)
+ * createMessageStack(pane, name, address, port)
+ * 
+ */
+
 import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
@@ -30,13 +47,24 @@ import javafx.util.Callback;
 
 
 public class ChatView{
+	
+	//Field variables for ChatView Objects
 	private static Stage MESSAGE_RECEIVED; 
 	private Thread thread;
 	private LoggedInUser user;
 	
+	/**
+	 * @purpose: Launches the GUI for the chat system.
+	 * 
+	 * @param portNum - the port number the network is working on
+	 * 
+	 * @return primaryStage - the stage the message system is a part of
+	 * 
+	 * @throws IOException - throws an exception if the port number is 
+	 * incorrect or closes before the connection is established.
+	 */
 	public Stage create(int portNum) throws IOException {
 		Stage primaryStage = new Stage();
-		// TODO Auto-generated method stub
 		MESSAGE_RECEIVED = new Stage();
 		BorderPane textPane = new BorderPane();
 		Text label = new Text();
@@ -54,6 +82,17 @@ public class ChatView{
 		return primaryStage;
 	}
 	
+	/**
+	 * @purpose: Creates the chat box that will display messages from both users
+	 * and allows the user to send messages to the other player.
+	 * 
+	 * @param p2p - the peer to peer socket the networked portion of the program
+	 * is running on
+	 * 
+	 * @return box - the borderpane containing all the chat message system 
+	 * objects
+	 * 
+	 */
 	private BorderPane createChatBottom(PeerToPeerSocket p2p) {
 		BorderPane box = new BorderPane();
 		HBox hbox = new HBox();
@@ -65,6 +104,7 @@ public class ChatView{
 		VBox input = createMessageStack(text, name, address, port);
 		Button send = new Button();
 		send.setText("Send");
+		// Sending of a message
 		send.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
@@ -166,6 +206,20 @@ public class ChatView{
 		return box;
 	}
 	
+	/**
+	 * @purpose: Sets up the chat windows.
+	 * 
+	 * @param pane - the BorderPan holding the chat windows
+	 * 
+	 * @param view - the list of chat messages that have been sent
+	 * 
+	 * @param input - the area of the window messages are typed into
+	 * 
+	 * @param connect - a button that pushes all the settings and connects the users
+	 * 
+	 * @return box - an HBox holding the graphical representation of the messaging system
+	 * 
+	 */
 	private HBox createBackButton(BorderPane pane, ListView<Chat> view, VBox input, Button connect) {
 		// TODO Auto-generated method stub
 		HBox box = new HBox();
@@ -186,6 +240,21 @@ public class ChatView{
 		return box;
 	}
 
+	/**
+	 * @purpose: Displays the messages that have been sent in a first in
+	 * first out manner.
+	 * 
+	 * @param text - the text box the message is typed into
+	 * 
+	 * @param name - the field containig the user's username
+	 * 
+	 * @param address - the sender's IP address or hostname
+	 * 
+	 * @param port - the sender's port number
+	 * 
+	 * @return box - a VBox hold the messages list
+	 * 
+	 */
 	private VBox createMessageStack(TextField text, TextField name, TextField address, TextField port) {
 		VBox box = new VBox();
 		HBox h = new HBox();
@@ -194,11 +263,13 @@ public class ChatView{
 		b.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
+				// Adding of a message to the current chat flow from the other end
 				if(h.getChildren().contains(name)) {
 					name.setText("");
 					h.getChildren().remove(name);
 					h.getChildren().add(0,port);
 					h.getChildren().add(0,address);
+					// The sending of a message to the other player
 				}else {
 					h.getChildren().add(0,name);
 					h.getChildren().remove(address);
@@ -215,15 +286,35 @@ public class ChatView{
 		
 	}
 
-	
+	/**
+	 * @purpose: An inner class to handle the updating of chat messages.
+	 * 
+	 */
 	static class ChatCell extends ListCell<Chat> {
+		
+		// Field variables for ChatCell Objects
 		private TextField address;
 		private TextField port;
 		
+		/**
+		 * @purpose: Initializes ChatCell objects and their attributes.
+		 * 
+		 * @param address - the IP address or hostname of the hosting computer
+		 * 
+		 * @param port - the port number of the hosting computer
+		 */
 		public ChatCell(TextField address, TextField port) {
 			this.address = address;
 			this.port = port;
 		}
+		
+		/**
+		 * @purpose: Pulls the text that was sent between the users.
+		 * 
+		 * @param item - a Chat object representing a passed message
+		 * 
+		 * @param empty - a variable used to determine if the message sent was empty
+		 */
         @Override
         public void updateItem(Chat item, boolean empty) {
             super.updateItem(item, empty);
@@ -236,6 +327,14 @@ public class ChatView{
     }
 	
 	class MessageCell extends ListCell<Message>{
+		/**
+		 * @purpose: Displays the messages to the users that were sent and
+		 * received
+		 * 
+		 * @param item - the message that was sent or received
+		 * 
+		 * @param empty - a variable used to determine if the message sent was empty
+		 */
 		@Override
 		public void updateItem(Message item, boolean empty) {
 			super.updateItem(item, empty);

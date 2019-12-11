@@ -39,7 +39,6 @@ package game;
  * view.update(o, e)
  * view.setBoard(row, col)
  * view.getPrimaryStage()
- * view.
  * 
  */
 
