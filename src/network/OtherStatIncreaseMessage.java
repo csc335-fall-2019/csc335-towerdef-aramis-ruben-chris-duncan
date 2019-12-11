@@ -20,7 +20,7 @@ public class OtherStatIncreaseMessage extends TowerDefenseMoveMessage{
 	private int goldIncrease;
 	
 	/**
-	 * @purpose: Initializes OtherStatIncreaseMessage.
+	 * purpose: Initializes OtherStatIncreaseMessage.
 	 * 
 	 * @param h - amount to change health by
 	 * 

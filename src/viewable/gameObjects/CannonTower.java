@@ -15,14 +15,14 @@ public class CannonTower extends Tower {
 	private static final String name				= "Cannon Tower";
 	
 	/**
-	 * @purpose: constructor for the cannon tower
+	 * purpose: constructor for the cannon tower
 	 */
 	public CannonTower() {
 		super(defaultAttack, defaultRange, defaultAttackSpeed, name);
 	}
 	
 	/**
-	 * @purpose: loads the image for the archer tower if placed on an unused grid
+	 * purpose: loads the image for the archer tower if placed on an unused grid
 	 * and updates the tower with upgraded art if the tower is upgraded
 	 */
 	@Override
@@ -31,14 +31,12 @@ public class CannonTower extends Tower {
 			try {
 				return (new File("./resources/images/CannonTower_Upgrade.png")).getCanonicalPath();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				return "";
 			}
 		} else {
 			try {
 				return (new File("./resources/images/CannonTower_Default.png")).getCanonicalPath();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				return "";
 			}
 		}

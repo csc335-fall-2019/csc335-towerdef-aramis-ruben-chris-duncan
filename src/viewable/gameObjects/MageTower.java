@@ -22,8 +22,11 @@ public class MageTower extends Tower {
 	}
 	
 	/**
-	 * @purpose: loads the image for the archer tower if placed on an unused grid
+	 * purpose: loads the image for the archer tower if placed on an unused grid
 	 * and updates the tower with upgraded art if the tower is upgraded
+	 * 
+	 * @return string path of the resource to be loaded
+	 * 
 	 */
 	@Override
 	public String getResource() {
@@ -31,14 +34,12 @@ public class MageTower extends Tower {
 			try {
 				return (new File("./resources/images/MageTower_Upgrade.png")).getCanonicalPath();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				return "";
 			}
 		} else {
 			try {
 				return (new File("./resources/images/MageTower_Default.png")).getCanonicalPath();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				return "";
 			}
 		}

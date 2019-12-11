@@ -48,7 +48,7 @@ public class Player implements Serializable{
 	 * 
 	 * @param controller: the game controller
 	 * 
-	 * @throws FileNotFoundException: throws exception if card resources can not be found
+	 * @throws FileNotFoundException throws exception if card resources can not be found
 	 */
 	public Player(TowerDefenseController controller) throws FileNotFoundException {
 		this.controller = controller;
@@ -81,13 +81,13 @@ public class Player implements Serializable{
 	}
 	
 	/**
-	 * @purpose: loads the resource image for the cards a player owns
+	 * purpose: loads the resource image for the cards a player owns
 	 * 
 	 * @param obj: card object
 	 * 
 	 * @return: the art of the card
 	 * 
-	 * @throws FileNotFoundException: throws exception if art can not be found
+	 * @throws FileNotFoundException throws exception if art can not be found
 	 */
 	private ImageView getResource(Card obj) throws FileNotFoundException {
 		ImageView view;
@@ -106,16 +106,16 @@ public class Player implements Serializable{
 	}
 	
 	/**
-	 * @purpose: getter for the players hand
+	 * purpose: getter for the players hand
 	 * 
-	 * @return: the players hand
+	 * @return the players hand
 	 */
 	public ObservableList<ImageView> getHand(){
 		return hand;
 	}
 	
 	/**
-	 * @purpose: add a card to the discard once it is played
+	 * purpose: add a card to the discard once it is played
 	 * 
 	 * @param card: the card
 	 */
@@ -127,7 +127,7 @@ public class Player implements Serializable{
 	}
 	
 	/**
-	 * @purpose: reshuffles cards into draw pile
+	 * purpose: reshuffles cards into draw pile
 	 */
 	public void resetDraw() {
 		for (Card card : discard.getDeck()) {
@@ -138,11 +138,11 @@ public class Player implements Serializable{
 	}
 	
 	/**
-	 * @purpose: draws the cards, resets the draw pile if it is empty
+	 * purpose: draws the cards, resets the draw pile if it is empty
 	 * 
 	 * @param x: number of cards
 	 * 
-	 * @throws FileNotFoundException: throws exception if resource can not be acquired
+	 * @throws FileNotFoundException throws exception if resource can not be acquired
 	 */
 	public void drawCards(int x) throws FileNotFoundException {
 		for (int i = 0; i < x; i++) {
@@ -160,7 +160,7 @@ public class Player implements Serializable{
 	}
 	
 	/**
-	 * @purpose: discards a card
+	 * purpose: discards a card
 	 */
 	public void discardHand() {
 		for (Card c : mapCards.keySet()) {
@@ -171,43 +171,43 @@ public class Player implements Serializable{
 	}
 	
 	/**
-	 * @purpose: check if the turn is completed
+	 * purpose: check if the turn is completed
 	 * 
-	 * @return: true if turn is complete
+	 * @return true if turn is complete
 	 */
 	public boolean isFinished() {
 		return turnComplete;
 	}
 	
 	/**
-	 * @purpose: sets whether the turn has been completed or not
+	 * purpose: sets whether the turn has been completed or not
 	 * 
-	 * @param b: boolean of whether turn is done or not yet
+	 * @param b boolean of whether turn is done or not yet
 	 */
 	public void setComplete(boolean b) {
 		turnComplete = b;
 	}
 	
 	/**
-	 * @purpose: increases the players gold when they kill a minion
+	 * purpose: increases the players gold when they kill a minion
 	 * 
-	 * @param amount: amount to increase gold by
+	 * @param amount amount to increase gold by
 	 */
 	public void increaseGold(int amount) {
 		gold.setValue((amount * goldMultiplier)+getGold());
 	}
 	
 	/**
-	 * @purpose: gains life for the purpose of the gain life ability card
+	 * purpose: gains life for the purpose of the gain life ability card
 	 * 
-	 * @param amount: amount to increase life by
+	 * @param amount amount to increase life by
 	 */
 	public void gainLife(int amount) {
 		health.setValue(amount+getHealth());
 	}
 	
 	/**
-	 * @purpose: pays life for card that requires a life cost
+	 * purpose: pays life for card that requires a life cost
 	 * 
 	 * @param amount: amount life to pay
 	 */
@@ -216,27 +216,14 @@ public class Player implements Serializable{
 	}
 	
 	/**
-	 * @purpose: adds extra minions to the enemies wave
-	 * 
-	 * @param amount: number of minions to add
-	 */
-	public void summonMinion(int amount) {
-		// TODO
-	}
-	
-	public void summonBigMinion() {
-		// TODO
-	}
-	
-	/**
-	 * @purpose: increases the amount of gold to be received from killing minions
+	 * purpose: increases the amount of gold to be received from killing minions
 	 */
 	public void buffReward() {
 		goldMultiplier = 2;
 	}
 	
 	/**
-	 * @purpose: damages the other player
+	 * purpose: damages the other player
 	 * 
 	 * @param amount: amount to damage the other player
 	 */
@@ -245,7 +232,7 @@ public class Player implements Serializable{
 	}
 	
 	/**
-	 * @purpose: getter for the amount of gold currently owned
+	 * purpose: getter for the amount of gold currently owned
 	 * 
 	 * @return: the amount of gold owned
 	 */
@@ -254,7 +241,7 @@ public class Player implements Serializable{
 	}
  	
 	/**
-	 * @purpose: takes damage
+	 * purpose: takes damage
 	 *  
 	 * @param amount: amount of damage taken
 	 */
@@ -263,7 +250,7 @@ public class Player implements Serializable{
 	}
 	
 	/**
-	 * @purpose: getter for current player health
+	 * purpose: getter for current player health
 	 * 
 	 * @return: amount of health
 	 */
@@ -272,7 +259,7 @@ public class Player implements Serializable{
 	}
 
 	/**
-	 * @purpose: selects the card that has been chosen
+	 * purpose: selects the card that has been chosen
 	 * 
 	 * @param s: the card
 	 */
@@ -281,7 +268,7 @@ public class Player implements Serializable{
 	}
 	
 	/**
-	 * @purpose: getter for the selected card
+	 * purpose: getter for the selected card
 	 * 
 	 * @return: the selected card
 	 */
@@ -290,7 +277,7 @@ public class Player implements Serializable{
 	}
 	
 	/**
-	 * @purpose: gets health of player
+	 * purpose: gets health of player
 	 * 
 	 * @return: players health
 	 */
@@ -299,7 +286,7 @@ public class Player implements Serializable{
 	}
 	
 	/**
-	 * @purpose: gets player gold
+	 * purpose: gets player gold
 	 * 
 	 * @return: player gold
 	 */
@@ -308,7 +295,7 @@ public class Player implements Serializable{
 	}
 	
 	/**
-	 * @purpose: gets the players discard pile
+	 * purpose: gets the players discard pile
 	 * 
 	 * @return: the discard pile
 	 */
@@ -317,7 +304,7 @@ public class Player implements Serializable{
 	}
 	
 	/**
-	 * @purpose: getter for the players cards in hands
+	 * purpose: getter for the players cards in hands
 	 * 
 	 * @return: the cards in hands
 	 */
@@ -326,12 +313,16 @@ public class Player implements Serializable{
 	}
 	
 	/**
-	 * @purpose: prints out the cards the player has
+	 * purpose: prints out the cards the player has
 	 * 
 	 * @param deck: the deck of the cards
 	 */
 	public void printCards(Deck deck) {
 		List<Card> cards = deck.getDeckAsList();
 		System.out.println(cards);
+	}
+
+	public void summonMinion(int minionstosummon) {
+		
 	}
 }

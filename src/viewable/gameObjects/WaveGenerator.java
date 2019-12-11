@@ -20,7 +20,9 @@ public class WaveGenerator {
 	private int round;
 
 	/**
-	 * @purpose: constructor for the wave generator
+	 * purpose: constructor for the wave generator
+	 * 
+	 * @param player Player object
 	 */
 	public WaveGenerator(Player player) {
 		round=1;
@@ -54,11 +56,9 @@ public class WaveGenerator {
 	}
 	
 	/**
-	 * @purpose: generates a random composition for each wave based upon the wave number
+	 * purpose: generates a random composition for each wave based upon the wave number
 	 * this method takes the round and multiplies it by a constant to get a point value
 	 * and then adds random minions until the value is less than or equal to zero
-	 * 
-	 * @param round: the current round number
 	 * 
 	 * @return: the wave composition to send
 	 */

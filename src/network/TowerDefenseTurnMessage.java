@@ -26,7 +26,7 @@ public class TowerDefenseTurnMessage implements Serializable{
 	private ObjectOutputStream out;
 	
 	/**
-	 * @purpose: Initializes TowerDefenseTurnMessage.
+	 * purpose: Initializes TowerDefenseTurnMessage.
 	 * 
 	 * @param out - the outputstream that this message must be sent out of
 	 */
@@ -40,7 +40,7 @@ public class TowerDefenseTurnMessage implements Serializable{
 	}
 	
 	/**
-	 * @purpose: Adds the moves being taken to the outputstream.
+	 * purpose: Adds the moves being taken to the outputstream.
 	 * 
 	 * @param move - a move message detailing the player's move
 	 */
@@ -48,7 +48,6 @@ public class TowerDefenseTurnMessage implements Serializable{
 		try {
 			out.writeObject(move);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

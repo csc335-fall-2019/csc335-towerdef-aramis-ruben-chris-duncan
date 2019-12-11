@@ -20,7 +20,7 @@ public class TowerUpgradedMessage extends TowerDefenseMoveMessage{
 	private int col;
 
 	/**
-	 * @purpose: Initializes TowerUpgradeMessage.
+	 * purpose: Initializes TowerUpgradeMessage.
 	 * 
 	 * @param row - the row in the grid of the tower that was upgraded
 	 * 

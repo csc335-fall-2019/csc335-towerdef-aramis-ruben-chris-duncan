@@ -8,6 +8,9 @@ public abstract class TowerCard extends Card{
 
 	/**
 	 *  Purpose- Constructor for the class
+	 *  @param name name of tower
+	 *  @param id id of tower
+	 *  @param cost cost of tower
 	 */
 	public TowerCard(String name, int id, int cost) {
 		super(name, id, cost);
@@ -24,7 +27,7 @@ public abstract class TowerCard extends Card{
 	/**
 	 *  Purpose - Upgrades the tower
 	 *  
-	 *  @param m - the Tower object to be upgraded
+	 *  @param t - the Tower object to be upgraded
 	 */
 	public abstract void Upgrade(Tower t);
 }
