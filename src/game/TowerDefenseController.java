@@ -70,9 +70,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import network.AbilityCardUsedMessage;
 import network.DamageOtherMessage;
-
+import network.FastForwardMessage;
 import network.MarketCardRemovedMessage;
 import network.OtherStatIncreaseMessage;
+import network.PauseMessage;
 import network.StatIncreaseMessage;
 import network.TowerDefenseMoveMessage;
 import network.TowerDefenseTurnMessage;
@@ -99,6 +100,8 @@ public class TowerDefenseController {
 	private volatile boolean isRunning = true;
 	
 	private volatile boolean hasConnected = false;
+
+	private volatile boolean fastForwardState;
 	
 	private volatile ServerSocket server;
 	
@@ -137,6 +140,7 @@ public class TowerDefenseController {
 		currentPlayer = new Player(this);
 		otherPlayer = new Player(this);
 		minionsFinished = false;
+		fastForwardState = false;
 		xOr = false;
 		possibleConnections = FXCollections.observableArrayList(new ArrayList<SocketAddress>());
 	}
@@ -213,6 +217,14 @@ public class TowerDefenseController {
 				System.out.println(row+" "+col);
 				System.out.println(getMapArray()[col][row][0]);
 				upgradeTower((Tower)getMapArray()[col][row][0], row, col);
+			}else if(move instanceof FastForwardMessage) {
+				FastForwardMessage f = (FastForwardMessage)move;
+				fastForwardState = f.getState();
+				board.notifyMenu(2);
+			}else if(move instanceof PauseMessage) {
+				PauseMessage p = (PauseMessage)move;
+				isPaused= p.getState();
+				board.notifyMenu(1);
 			}
 		});
 	}
@@ -743,6 +755,7 @@ public class TowerDefenseController {
      */
 	public void setPaused(boolean b) {
 		isPaused = b;
+		currentTurn.addMove(new PauseMessage(b));
 	}
 	
 
@@ -801,6 +814,17 @@ public class TowerDefenseController {
 	// Getter for output stream.
 	public ObjectOutputStream getOut() {
 		return out;
+	}
+	
+	// Setter for fast forward state.
+	public void setFastForward(boolean b) {
+		fastForwardState = b;
+		currentTurn.addMove(new FastForwardMessage(b));
+	}
+	
+	// Getter for fastforward state.
+	public boolean getFastForward() {
+		return fastForwardState;
 	}
 	
 	// Setter for output stream.

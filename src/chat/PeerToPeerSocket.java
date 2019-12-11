@@ -430,6 +430,7 @@ public class PeerToPeerSocket implements Runnable{
 			public void run() {
 				Query query = new Query(hostname);
 				Message m = new Message(from, query, message);
+				ChatView.createMessage("Failed to send message. No guarantee that peers are connected.");
 				for(Socket s: activeConnections) {
 					try {
 						ObjectOutputStream out = (ObjectOutputStream)mapConnections.get(s)[0];
@@ -505,6 +506,7 @@ public class PeerToPeerSocket implements Runnable{
 			public void run() {
 				Query query = new Query(hostFinal, port);
 				Message m = new Message(from, query, message);
+				ChatView.createMessage("Failed to send message. No guarantee that peers are connected.");
 				for(Socket s: activeConnections) {
 					try {
 						if(s.getInetAddress().getHostAddress().equals(s.getInetAddress().getHostAddress())&&s.getPort()==port) {

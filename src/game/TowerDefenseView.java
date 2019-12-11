@@ -125,7 +125,6 @@ public class TowerDefenseView extends Application implements Observer{
 	private static final int SIZE_IMAGE = 47;
 	private static final int MINION_MAX_SPEED = 500;
 	private static final int TOWER_MAX_ATTACK_SPEED = 5;
-	private volatile boolean fastForwardState;
 	private Stage stage;
 	private TowerDefenseController controller;
 	private ViewModel model;
@@ -141,6 +140,8 @@ public class TowerDefenseView extends Application implements Observer{
 	private volatile int currentYVal;
 	private Market m;
 	private Button endTurn;
+	private MenuItem pause;
+	private MenuItem fastForward;
 	
 	/**
 	 * purpose: Launches the GUI for the tower defense game.
@@ -154,8 +155,7 @@ public class TowerDefenseView extends Application implements Observer{
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		stage = primaryStage;
-
-		fastForwardState = false;
+		
 		transitions = new HashMap<Minion,Timeline>();
 
 		controller = new TowerDefenseController(this);
@@ -368,7 +368,7 @@ public class TowerDefenseView extends Application implements Observer{
 		stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 
 		stage.sizeToScene();
-		//loadMusic();
+		loadMusic();
 		stage.show();
 	}
 	
@@ -647,7 +647,7 @@ public class TowerDefenseView extends Application implements Observer{
 		}
 		int xFin = x;
 		int yFin = y;
-		Timeline t = new Timeline(new KeyFrame(Duration.millis((MINION_MAX_SPEED/minion.getSpeed()-offset)*(fastForwardState?.5:1)), (e)-> {
+		Timeline t = new Timeline(new KeyFrame(Duration.millis((MINION_MAX_SPEED/minion.getSpeed()-offset)*(controller.getFastForward()?.5:1)), (e)-> {
 			
 			try {
 				checkTowers(minion, xFin, yFin);
@@ -747,7 +747,7 @@ public class TowerDefenseView extends Application implements Observer{
 							view.setX(i*(SIZE_IMAGE+2)+(SIZE_IMAGE+2)/2);
 							view.setY(j*(SIZE_IMAGE+2)+(SIZE_IMAGE+2)/2);
 							TranslateTransition tt = new TranslateTransition(
-									Duration.millis((TOWER_MAX_ATTACK_SPEED/t.getAttackSpeed())*(fastForwardState?5:10)), 
+									Duration.millis((TOWER_MAX_ATTACK_SPEED/t.getAttackSpeed())*(controller.getFastForward()?5:10)), 
 									view);
 							tt.setByX((x-i)*SIZE_IMAGE);
 							tt.setByY((y-j)*SIZE_IMAGE);
@@ -948,6 +948,9 @@ public class TowerDefenseView extends Application implements Observer{
 		pane.setBackground(Background.EMPTY);
 		endTurn = new Button("End Turn");
 		endTurn.setOnAction((e)->{
+			if(!controller.hasConnected()||controller.isPaused()) {
+				return;
+			}
 			controller.endTurn();
 			endTurn.setDisable(true);
 		});
@@ -1124,7 +1127,7 @@ public class TowerDefenseView extends Application implements Observer{
 		mapEditor.setText("Open Map Editor");
 		mapEditor.setOnAction(new MapEditorHandler());
 		// Pause menu option
-		MenuItem pause = new MenuItem();
+		pause = new MenuItem();
 		pause.setText("Pause");
 		pause.setOnAction((e)->{
 			controller.setPaused(!controller.isPaused());
@@ -1144,11 +1147,11 @@ public class TowerDefenseView extends Application implements Observer{
 			}
 		});
 		// fast forward menu option
-		MenuItem fastForward = new MenuItem();
+		fastForward = new MenuItem();
 		fastForward.setText("Fast Forward");
 		fastForward.setOnAction((e)->{
-			fastForwardState = !fastForwardState;
-			if(fastForwardState) {
+			controller.setFastForward(!controller.getFastForward());
+			if(controller.getFastForward()) {
 				fastForward.setText("Regular Speed");
 			}else {
 				fastForward.setText("Fast Forward");
@@ -1312,6 +1315,29 @@ public class TowerDefenseView extends Application implements Observer{
 			}else {
 				endTurn.setDisable(false);
 				attackGrid.getChildren().clear();
+			}
+		}else if(e instanceof Integer) {
+			if(((Integer) e).intValue()==1) {
+				for(Minion m: transitions.keySet()) {
+					Timeline t = transitions.get(m);
+					if(controller.isPaused()) {
+						t.pause();
+					}
+					else{
+						t.play();
+					}
+				}
+				if(controller.isPaused()){
+					pause.setText("Unpause");
+				}else {
+					pause.setText("Pause");
+				}
+			}else if(((Integer) e).intValue()==2) {
+				if(controller.getFastForward()) {
+					fastForward.setText("Regular Speed");
+				}else {
+					fastForward.setText("Fast Forward");
+				}
 			}
 		}
 	}
