@@ -247,6 +247,7 @@ public class TowerDefenseController {
 					board.getMarket().repopulateForSale();
 					currentPlayer.discardHand();
 					currentPlayer.drawCards(5);
+					board.beginningOfTurn();
 				} catch (FileNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -729,8 +730,12 @@ public class TowerDefenseController {
 	public void setRunning(boolean b) {
 		isRunning = b;
 		try {
-			if(out!=null&&!b) {
-				out.close();
+			System.out.println(out);
+			if(socket!=null&&!b) {
+				socket.close();
+			}
+			if(server!=null&&!b) {
+				server.close();
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
