@@ -19,7 +19,7 @@ public class DamageOtherMessage extends TowerDefenseMoveMessage{
 	private int amount;
 
 	/**
-	 * @purpose: Initializes DamageOtherMessage.
+	 * purpose: Initializes DamageOtherMessage.
 	 * 
 	 * @param amount - the amount of damage done
 	 */

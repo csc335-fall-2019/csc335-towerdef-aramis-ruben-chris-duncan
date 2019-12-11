@@ -29,7 +29,7 @@ public class FreezeTowerCard extends TowerCard {
 	/**
 	 *  Purpose - Upgrades the tower
 	 *  
-	 *  @param m - the Tower object to be upgraded
+	 *  @param f - the Tower object to be upgraded
 	 */
 	@Override
 	public void Upgrade(Tower f) {
@@ -49,7 +49,6 @@ public class FreezeTowerCard extends TowerCard {
 		try {
 			return (new File("./resources/images/freezeTowerCard.png")).getCanonicalPath();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			return "";
 		}
 	}
@@ -61,7 +60,6 @@ public class FreezeTowerCard extends TowerCard {
 	 */
 	@Override
 	public Class<? extends Tower> getTower() {
-		// TODO Auto-generated method stub
 		return FreezeTower.class;
 	}
 }

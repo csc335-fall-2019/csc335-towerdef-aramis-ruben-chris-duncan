@@ -19,15 +19,17 @@ public abstract class Minion extends Viewable {
 	
 	
 	/**
-	 * @purpose: parent constructor for each minion
+	 * purpose: parent constructor for each minion
 	 * 
-	 * @param health: health of the minion
+	 * @param health health of the minion
 	 * 
-	 * @param damage: damage the minion does
+	 * @param damage damage the minion does
 	 * 
-	 * @param speed: speed the minion moves at
+	 * @param speed speed the minion moves at
 	 * 
-	 * @param reward: gold reward for killing the minion
+	 * @param reward gold reward for killing the minion
+	 * 
+	 * @param player Player object
 	 * 
 	 */
 	public Minion(Integer health, Integer damage, Integer speed, Integer reward, Player player) {
@@ -45,7 +47,7 @@ public abstract class Minion extends Viewable {
 	}
 	
 	/**
-	 * @purpose: setter for updating the minions health when it takes damage
+	 * purpose: setter for updating the minions health when it takes damage
 	 * 
 	 * @param newHealth: new value for health to be updated to
 	 */
@@ -54,7 +56,7 @@ public abstract class Minion extends Viewable {
 	}
 	
 	/**
-	 * @purpose: setter for changing the amount of damage a minion does
+	 * purpose: setter for changing the amount of damage a minion does
 	 * 
 	 * @param newDamage: new value of the minions damage
 	 */
@@ -63,7 +65,7 @@ public abstract class Minion extends Viewable {
 	}
 	
 	/**
-	 * @purpose: setter for changing the speed of a minion
+	 * purpose: setter for changing the speed of a minion
 	 * 
 	 * @param newSpeed: new speed value for the minion
 	 */
@@ -72,14 +74,14 @@ public abstract class Minion extends Viewable {
 	}
 	
 	/**
-	 * @purpose: increases the step of the minion
+	 * purpose: increases the step of the minion
 	 */
 	public void incrementStep() {
 		currentStep++;
 	}
 	
 	/**
-	 * @purpose: getter for the minions currentStep
+	 * purpose: getter for the minions currentStep
 	 * 
 	 * @return: the minions currentStep value
 	 */
@@ -88,7 +90,7 @@ public abstract class Minion extends Viewable {
 	}
 	
 	/**
-	 * @purpose: getter for the minions current health
+	 * purpose: getter for the minions current health
 	 * 
 	 * @return: the minions health value
 	 */
@@ -97,7 +99,7 @@ public abstract class Minion extends Viewable {
 	}
 	
 	/**
-	 * @purpose: getter for the minions damage value
+	 * purpose: getter for the minions damage value
 	 * 
 	 * @return: the minions damage value
 	 */
@@ -106,7 +108,7 @@ public abstract class Minion extends Viewable {
 	}
 	
 	/**
-	 * @purpose: getter for the minions speed value
+	 * purpose: getter for the minions speed value
 	 * 
 	 * @return: the minions speed value
 	 */
@@ -115,7 +117,7 @@ public abstract class Minion extends Viewable {
 	}
 	
 	/**
-	 * @purpose: getter for the minions reward value
+	 * purpose: getter for the minions reward value
 	 * 
 	 * @return: the minions reward value
 	 */
@@ -124,7 +126,7 @@ public abstract class Minion extends Viewable {
 	}
 	
 	/**
-	 * @purpose: reduces the minions health when it is damaged
+	 * purpose: reduces the minions health when it is damaged
 	 * 
 	 * @param damage: amount of damage done to the minion
 	 */
@@ -133,7 +135,7 @@ public abstract class Minion extends Viewable {
 	}
 	
 	/**
-	 * @purpose: getter for the minions current health
+	 * purpose: getter for the minions current health
 	 * 
 	 * @return: the minions current health
 	 */
@@ -142,7 +144,7 @@ public abstract class Minion extends Viewable {
 	}
 	
 	/**
-	 * @purpose: checks if the minion's health has dropped below zero to 
+	 * purpose: checks if the minion's health has dropped below zero to 
 	 * determine if it has died
 	 * 
 	 * @return: true for dead and false for alive

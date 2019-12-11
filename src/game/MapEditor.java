@@ -56,11 +56,14 @@ public class MapEditor {
 	private Viewable[] currentObject = new Viewable[1];	
 	
 	/**
-     * @purpose: Builds the initial window that the map editor opens up in.
+     * purpose: Builds the initial window that the map editor opens up in.
      * 
      * @return stage - returns the stage that was created for the GUI
      * 
-     * @throws FileNotFoundException
+     * @throws FileNotFoundException exception
+     * 
+     * @return Stage object
+     * 
      */
 	public Stage create() throws FileNotFoundException {
 		Stage stage = new Stage();
@@ -78,7 +81,7 @@ public class MapEditor {
 	}
 	
 	/**
-     * @purpose: Redraws the grid after the user has made changes.
+     * purpose: Redraws the grid after the user has made changes.
      * 
      * @throws - FileNotFoundException - thrown if the image that is to be set
      * is not found.
@@ -100,7 +103,7 @@ public class MapEditor {
 	}
 	
 	/**
-     * @purpose: Creates a menu of towers.
+     * purpose: Creates a menu of towers.
      * 
      * @return pane - The pane that holds all the viewables that can be seen on the grid
      * 
@@ -126,7 +129,7 @@ public class MapEditor {
 	}
 	
 	/**
-     * @purpose: Create the top menu bar.
+     * purpose: Create the top menu bar.
      * 
      * @return bar - the menu bar that displays at the top right of the GUI
      * 
@@ -145,7 +148,7 @@ public class MapEditor {
 	}
 	
 	/**
-     * @purpose: Creates the menus that are in the menu bar.
+     * purpose: Creates the menus that are in the menu bar.
      * 
      * @return file - the dropdown menu list that appears when menu is clicked
      * 
@@ -227,7 +230,7 @@ public class MapEditor {
 	}
 	
 	/**
-     * @purpose: Creates the grid that acts as the play area for the game.
+     * purpose: Creates the grid that acts as the play area for the game.
      * 
      * @return grid - the grid with all the images for each object the gridpane holds
      * 
@@ -252,7 +255,7 @@ public class MapEditor {
 	}
 	
 	/**
-     * @purpose: Gets the image resource for any square the was clicked on and
+     * purpose: Gets the image resource for any square the was clicked on and
      * changed.
      * 
      * @param obj - a viewable game object that can be modified for the intent

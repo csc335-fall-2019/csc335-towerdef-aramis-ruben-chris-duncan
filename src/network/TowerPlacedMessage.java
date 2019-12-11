@@ -23,7 +23,7 @@ public class TowerPlacedMessage extends TowerDefenseMoveMessage{
 	private int col;
 	
 	/**
-	 * @purpose: Initializes TowerPlacedMessage.
+	 * purpose: Initializes TowerPlacedMessage.
 	 * 
 	 * @param tower - a TowerType object that tells what kind of tower
 	 * was placed

@@ -21,7 +21,7 @@ public class AbilityCardUsedMessage extends TowerDefenseMoveMessage{
 	private Card card;
 	
 	/**
-	 * @purpose: Initializes AbilityCardUsedMessage.
+	 * purpose: Initializes AbilityCardUsedMessage.
 	 * 
 	 * @param card - the Card object being used
 	 */

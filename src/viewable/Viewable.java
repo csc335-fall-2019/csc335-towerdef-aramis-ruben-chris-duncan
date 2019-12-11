@@ -22,7 +22,9 @@ public abstract class Viewable implements Serializable{
 	public abstract String getResource();
 	
 	/**
-	 * @purpose: Gets the default grass image for squares.
+	 * purpose: Gets the default grass image for squares.
+	 * 
+	 * @return string path of the resource
 	 *
 	 */
 	public static String getDefaultResource() {

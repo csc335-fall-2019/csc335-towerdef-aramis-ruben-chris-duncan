@@ -19,7 +19,7 @@ public class MinionDamageMessage extends TowerDefenseMoveMessage{
 	private int amount;
 	
 	/**
-	 * @purpose: Initializes MinionDamageMessage.
+	 * purpose: Initializes MinionDamageMessage.
 	 * 
 	 * @param amount - the amount of damage being dealt
 	 */

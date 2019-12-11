@@ -22,8 +22,10 @@ public class FreezeTower extends Tower {
 	}
 	
 	/**
-	 * @purpose: loads the image for the archer tower if placed on an unused grid
+	 * purpose: loads the image for the archer tower if placed on an unused grid
 	 * and updates the tower with upgraded art if the tower is upgraded
+	 * 
+	 * @return string path of the resource to be loaded
 	 */
 	@Override
 	public String getResource() {

@@ -35,7 +35,7 @@ public class Deck implements Serializable{
 	}
 	
 	/**
-	 * @purpose: draws a card and removes it from the deck
+	 * purpose: draws a card and removes it from the deck
 	 * 
 	 * @return: the card that was drawn
 	 */
@@ -49,14 +49,14 @@ public class Deck implements Serializable{
 	}
 	
 	/**
-	 * @purpose: shuffles the collection of cards in the deck
+	 * purpose: shuffles the collection of cards in the deck
 	 */
 	public void shuffle() {
 		Collections.shuffle(deck);
 	}
 	
 	/**
-	 * @purpose: adds a card to the deck when it is purchased from the market
+	 * purpose: adds a card to the deck when it is purchased from the market
 	 * 
 	 * @param card: card to be added to the deck
 	 */
@@ -65,7 +65,7 @@ public class Deck implements Serializable{
 	}
   
 	/**
-	 * @purpose: checks if the deck is empty
+	 * purpose: checks if the deck is empty
 	 * 
 	 * @return: true if the deck is empty and false otherwise
 	 */
@@ -74,7 +74,7 @@ public class Deck implements Serializable{
 	}
 	
 	/**
-	 * @purpose: getter for the deck object
+	 * purpose: getter for the deck object
 	 * 
 	 * @return: the deck
 	 */
@@ -83,14 +83,14 @@ public class Deck implements Serializable{
 	}
 	
 	/**
-	 * @purpose: empties the deck
+	 * purpose: empties the deck
 	 */
 	public void empty() {
 		deck.removeAll(deck);
 	}
 	
 	/**
-	 * @purpose: getter for the size of the deck
+	 * purpose: getter for the size of the deck
 	 * 
 	 * @return: the number of cards in the deck
 	 */
@@ -99,7 +99,7 @@ public class Deck implements Serializable{
 	}
 	
 	/**
-	 * @purpose: gets the deck as a list
+	 * purpose: gets the deck as a list
 	 * 
 	 * @return: deck as a list
 	 */
@@ -108,7 +108,7 @@ public class Deck implements Serializable{
 	}
 	
 	/**
-	 * @purpose: prints the names of the cards as strings
+	 * purpose: prints the names of the cards as strings
 	 */
 	public String toString() {
 		String s = "";

@@ -22,14 +22,16 @@ public class MinionTower extends Tower {
 	}
 	
 	/**
-	 * @purpose: loads the image for the archer tower if placed on an unused grid
+	 * purpose: loads the image for the archer tower if placed on an unused grid
+	 * 
+	 * @return string path of the resource to be loaded
+	 * 
 	 */
 	@Override
 	public String getResource() {
 		try {
 			return (new File("./resources/images/MinionTower_Default.png")).getCanonicalPath();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			return "";
 		}
 	}

@@ -64,8 +64,6 @@ public class Client implements Runnable{
 	/**
      * purpose: Opens the socket to connect with the server and maintains that
      * connection until the program is closed.
-     * 
-     * @param None.
      */
 	@Override
 	public void run() {

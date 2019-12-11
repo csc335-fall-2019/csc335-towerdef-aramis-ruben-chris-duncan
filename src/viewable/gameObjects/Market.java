@@ -49,14 +49,14 @@ public class Market implements Serializable{
 	
 
 	/**
-	 * @purpose: constructor the market; initializes a deck for the market,
+	 * purpose: constructor the market; initializes a deck for the market,
 	 * sets the view and the controller, fills the market with cards to be bought,
 	 * 
 	 * @param view: the view for the game
 	 * 
 	 * @param controller: the controller for the game
 	 * 
-	 * @throws FileNotFoundException: throws exception if the images can not be found
+	 * @throws FileNotFoundException throws exception if the images can not be found
 	 */
 	public Market(TowerDefenseView view, TowerDefenseController controller) throws FileNotFoundException {
 		market = new Deck();
@@ -72,7 +72,7 @@ public class Market implements Serializable{
 	}
 
 	/**
-	 * @purpose: fills the market deck with cards to be bought
+	 * purpose: fills the market deck with cards to be bought
 	 */
 	private void fillMarket() {
 		for (int i = 0; i < 4; i++) {
@@ -92,9 +92,9 @@ public class Market implements Serializable{
 	}
 	
 	/**
-	 * @purpose: populates the 6 cards that are available to be bought in the market
+	 * purpose: populates the 6 cards that are available to be bought in the market
 	 * 
-	 * @throws FileNotFoundException: throws exception if card arts can not be found
+	 * @throws FileNotFoundException throws exception if card arts can not be found
 	 */
 	public void populateForSale() throws FileNotFoundException {
 		int x = 6 - forSale.size();
@@ -122,12 +122,12 @@ public class Market implements Serializable{
 	
 
 	/**
-	 * @purpose: removes a card from currently displayed market cards after it is 
+	 * purpose: removes a card from currently displayed market cards after it is 
 	 * purchased by a player
 	 * 
 	 * @param card: card object 
 	 * 
-	 * @return: a boolean if the card is removed or not
+	 * @return a boolean if the card is removed or not
 	 */
 
 	public boolean removeFromForSale(Card card) {
@@ -173,10 +173,10 @@ public class Market implements Serializable{
 	}
 	
 	/**
-	 * @purpose: repopulates the current market with the number of cards that had been
+	 * purpose: repopulates the current market with the number of cards that had been
 	 * purchased by the player
 	 * 
-	 * @throws FileNotFoundException: throws exception if resource is not found
+	 * @throws FileNotFoundException throws exception if resource is not found
 	 */
 	public void repopulateForSale() throws FileNotFoundException {
 		int size = forSale.getSize();

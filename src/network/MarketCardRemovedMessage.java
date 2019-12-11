@@ -21,7 +21,7 @@ public class MarketCardRemovedMessage extends TowerDefenseMoveMessage{
 	private int index;
 	
 	/**
-	 * @purpose: Initializes AbilityCardUsedMessage.
+	 * purpose: Initializes AbilityCardUsedMessage.
 	 * 
 	 * @param index - the index within the market list of the card that
 	 * was purchased

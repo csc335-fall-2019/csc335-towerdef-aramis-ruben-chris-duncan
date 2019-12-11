@@ -22,14 +22,13 @@ public class CurrencyTower extends Tower {
 	}
 	
 	/**
-	 * @purpose: loads the image for the archer tower if placed on an unused grid
+	 * purpose: loads the image for the archer tower if placed on an unused grid
 	 */
 	@Override
 	public String getResource() {
 		try {
 			return (new File("./resources/images/CurrencyTower_Default.png")).getCanonicalPath();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			return "";
 		}
 	}

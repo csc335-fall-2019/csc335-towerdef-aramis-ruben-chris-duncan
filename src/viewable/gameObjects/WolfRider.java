@@ -16,20 +16,21 @@ public class WolfRider extends Minion {
 
 	/**
 	 * constructor for the wolf rider minion
+	 * 
+	 * @param player Player object
 	 */
 	public WolfRider(Player player) {
 		super(defaultHealth, defaultDamage, defaultSpeed, defaultReward, player);
 	}
 
 	/**
-	 * @purpose: loads the sprite for this minion
+	 * purpose: loads the sprite for this minion
 	 */
 	@Override
 	public String getResource() {
 		try {
 			return (new File("./resources/images/MonsterSprites/WolfRider.png")).getCanonicalPath();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			return "";
 		}
 	}
