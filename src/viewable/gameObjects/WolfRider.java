@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public class WolfRider extends Minion {
 	
-	private static final int defaultHealth = 25;
+	private static final int defaultHealth = 15;
 	private static final int defaultDamage = 2;
 	private static final int defaultSpeed = 2;
 	private static final int defaultReward = 5;
