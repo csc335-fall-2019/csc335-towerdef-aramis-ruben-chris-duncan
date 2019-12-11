@@ -5,7 +5,7 @@ import java.io.IOException;
 
 public class Boss extends Minion {
 	
-	private static final int defaultHealth = 40;
+	private static final int defaultHealth = 75;
 	private static final int defaultDamage = 10;
 	private static final int defaultSpeed = 1;
 	private static final int defaultReward = 100;

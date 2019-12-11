@@ -5,7 +5,7 @@ import java.io.IOException;
 
 public class Ogre extends Minion {
 	
-	private static final int defaultHealth = 15;
+	private static final int defaultHealth = 35;
 	private static final int defaultDamage = 5;
 	private static final int defaultSpeed = 1;
 	private static final int defaultReward = 10;
