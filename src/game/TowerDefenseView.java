@@ -162,7 +162,6 @@ public class TowerDefenseView extends Application implements Observer{
 		// Closing threads when exit is selected
 		Runtime.getRuntime().addShutdownHook(new Thread(()->{
 			controller.setRunning(false);
-			System.out.println("Exiting...");
 		}));
 		currentYVal = 0;
 		mainMenu();
@@ -274,7 +273,6 @@ public class TowerDefenseView extends Application implements Observer{
 				e.consume();
 				return;
 			}
-			System.out.println("Connecting...");
 			InetSocketAddress address = (InetSocketAddress)view.getSelectionModel().getSelectedItem();
 			if(address==null) {
 				e.consume();
@@ -532,7 +530,6 @@ public class TowerDefenseView extends Application implements Observer{
 		Thread thread2 = new Thread(()-> {
 			List<Minion> currentWave = otherWave.generateRandom();
 			List<ImageView> minions = new ArrayList<ImageView>();
-			System.out.println(currentWave.size());
 			for(Minion m: currentWave) {
 				try {
 					
@@ -747,9 +744,8 @@ public class TowerDefenseView extends Application implements Observer{
 							Platform.runLater(()->{
 								attackGrid.getChildren().add(view);
 							});
-							System.out.println(x+" "+y+" : "+i+" "+j);
-							view.setX(i*SIZE_IMAGE+SIZE_IMAGE/2);
-							view.setY(j*SIZE_IMAGE+SIZE_IMAGE/2);
+							view.setX(i*(SIZE_IMAGE+2)+(SIZE_IMAGE+2)/2);
+							view.setY(j*(SIZE_IMAGE+2)+(SIZE_IMAGE+2)/2);
 							TranslateTransition tt = new TranslateTransition(
 									Duration.millis((TOWER_MAX_ATTACK_SPEED/t.getAttackSpeed())*(fastForwardState?5:10)), 
 									view);
@@ -796,7 +792,6 @@ public class TowerDefenseView extends Application implements Observer{
      */
 	public void generatePath(Thread callback) {
 		Thread thread = new Thread(()-> {
-			System.out.println("Started.");
 			if(lsPath.size()>0&&direction.size()>0) {
 				callback.start();
 				return;
@@ -905,6 +900,25 @@ public class TowerDefenseView extends Application implements Observer{
 			public void changed(ObservableValue<? extends Number> arg0, Number arg1, Number arg2) {
 				// TODO Auto-generated method stub
 				health.setText(arg2.toString());
+				if(arg2.intValue()<=0) {
+					Pane pane = new Pane();
+					HBox box = new HBox();
+					Label label = new Label("You Died");
+					box.getChildren().add(label);
+					pane.getChildren().add(box);
+					Button button = new Button("Go Back");
+					button.setOnAction((e)->{
+						try {
+							mainMenu();
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					});
+					box.getChildren().add(button);
+					stage.setScene(new Scene(pane, 300, 200));
+					stage.show();
+				}
 			}
 			
 		});
@@ -985,6 +999,26 @@ public class TowerDefenseView extends Application implements Observer{
 			public void changed(ObservableValue<? extends Number> arg0, Number arg1, Number arg2) {
 				// TODO Auto-generated method stub
 				health.setText(arg2.toString());
+				if(arg2.intValue()<=0) {
+					Pane pane = new Pane();
+					HBox box = new HBox();
+					Label label = new Label("You Won");
+					box.getChildren().add(label);
+					pane.getChildren().add(box);
+					Button button = new Button("Go Back");
+					button.setOnAction((e)->{
+						try {
+							mainMenu();
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					});
+					box.getChildren().add(button);
+					controller.setRunning(false);
+					stage.setScene(new Scene(pane, 300, 200));
+					stage.show();
+				}
 			}
 			
 		});
@@ -1034,7 +1068,6 @@ public class TowerDefenseView extends Application implements Observer{
 		market.getChildren().add(view);
 		// What to do when a card in the market is clicked
 		view.setOnMouseClicked((e)->{
-			System.out.println(view.getSelectionModel().getSelectedItem());
 			if(view.getSelectionModel().getSelectedItem()==null) {
 				e.consume();
 				return;
@@ -1258,9 +1291,6 @@ public class TowerDefenseView extends Application implements Observer{
 		if(e instanceof Map) {
 				Platform.runLater(()->{
 					try {
-
-						System.out.println("New game");
-
 						newGame();
 					}catch(Exception ex) {
 						ex.printStackTrace();
@@ -1281,7 +1311,7 @@ public class TowerDefenseView extends Application implements Observer{
 				update();
 			}else {
 				endTurn.setDisable(false);
-				attackGrid = createClickThrough();
+				attackGrid.getChildren().clear();
 			}
 		}
 	}

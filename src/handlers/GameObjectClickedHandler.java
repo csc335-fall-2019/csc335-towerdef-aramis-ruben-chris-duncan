@@ -16,7 +16,9 @@ import javafx.event.EventHandler;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import viewable.Viewable;
+import viewable.cards.towers.TowerCard;
 import viewable.gameObjects.Tower;
+import viewable.mapObjects.Path;
 
 public class GameObjectClickedHandler implements EventHandler<MouseEvent>{
 	
@@ -56,7 +58,7 @@ public class GameObjectClickedHandler implements EventHandler<MouseEvent>{
 		if(col>controller.getMapArray().length/2) {
 			return;
 		}
-		if(!(view instanceof Tower)) {
+		if(view instanceof Path||!(controller.getPlayer().getSelectedCard() instanceof TowerCard)) {
 			return;
 		}
 		if(view!=null&&((Tower)view).getUpgraded()) {

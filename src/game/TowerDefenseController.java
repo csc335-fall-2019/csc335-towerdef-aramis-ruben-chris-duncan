@@ -197,15 +197,15 @@ public class TowerDefenseController {
 				currentPlayer.gainLife(d.getAmount()*-1);
 			}else if(move instanceof StatIncreaseMessage) {
 				StatIncreaseMessage s = (StatIncreaseMessage)move;
-				otherPlayer.gainLife(s.getHealth());
-				otherPlayer.increaseGold(s.getGold());
+				currentPlayer.gainLife(s.getHealth());
+				currentPlayer.increaseGold(s.getGold());
 			}else if(move instanceof MarketCardRemovedMessage) {
 				MarketCardRemovedMessage m = (MarketCardRemovedMessage)move;
 				board.getMarket().removeFromForSale(m.getIndex());
 			}else if(move instanceof OtherStatIncreaseMessage) {
 				OtherStatIncreaseMessage o = (OtherStatIncreaseMessage)move;
-				currentPlayer.gainLife(o.getHealth());
-				currentPlayer.increaseGold(o.getGold());
+				otherPlayer.gainLife(o.getHealth());
+				otherPlayer.increaseGold(o.getGold());
 			}else if(move instanceof TowerUpgradedMessage) {
 				TowerUpgradedMessage t = (TowerUpgradedMessage)move;
 				int col = getMapArray().length-1-t.getCol();
@@ -408,6 +408,9 @@ public class TowerDefenseController {
 				}
 			}
 		}else {
+			if(!(currentPlayer.getSelectedCard() instanceof TowerCard)) {
+				return;
+			}
 			((TowerCard)currentPlayer.getSelectedCard()).Upgrade(t);
 			currentPlayer.addToDiscard(currentPlayer.getSelectedCard());
 			currentPlayer.setSelectedCard(null);
@@ -424,16 +427,16 @@ public class TowerDefenseController {
 	public void damageOther(int amount) {
 		// send message to other player to take damage.
 		currentTurn.addMove(new DamageOtherMessage(amount));
+		otherPlayer.gainLife(amount*-1);
 	}
 	
 	public void damageOther(Minion minion) {
 		if(!isServer) {
 			return;
 		}
-		System.out.println(isServer);
 		if(minion.getPlayer().equals(otherPlayer)) {
+			currentTurn.addMove(new OtherStatIncreaseMessage(minion.getDamage()*-1, 0));
 			currentPlayer.damageTaken(minion.getDamage());
-			currentTurn.addMove(new StatIncreaseMessage(minion.getDamage()*-1, 0));
 		}else {
 			damageOther(minion.getDamage());
 		}
