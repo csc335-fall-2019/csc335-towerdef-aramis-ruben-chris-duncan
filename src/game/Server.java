@@ -110,7 +110,9 @@ public class Server implements Runnable{
 				return;
 			}
 			controller.setConnected(false);
-			run();
+			if(controller.isRunning()) {
+				run();
+			}
 			
 		}catch(Exception ex) {
 			ex.printStackTrace();

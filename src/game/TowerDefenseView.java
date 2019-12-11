@@ -46,31 +46,19 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
-
 import java.util.HashMap;
-
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import chat.ChatView;
-import handlers.ExitHandler;
 import handlers.GameObjectClickedHandler;
 import handlers.GameObjectContextMenuHandler;
 import handlers.ImageResourceLoadingHandler;
 import handlers.MapEditorHandler;
-import handlers.SoundHandler;
-import handlers.VideoHandler;
-import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
@@ -78,8 +66,6 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -94,10 +80,10 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
@@ -135,10 +121,7 @@ import viewable.gameObjects.Tower;
 public class TowerDefenseView extends Application implements Observer{
 	
 	// Field variables for TowerDefenseView Objects
-	public static Stage MESSAGE_RECEIVED;
 	private static final int SIZE_IMAGE = 47;
-	private static final int CARD_WIDTH = 128;
-	private static final int CARD_HEIGHT = 196;
 	private static final int MINION_MAX_SPEED = 500;
 	private static final int TOWER_MAX_ATTACK_SPEED = 5;
 	private volatile boolean fastForwardState;
@@ -171,8 +154,6 @@ public class TowerDefenseView extends Application implements Observer{
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		stage = primaryStage;
-
-		System.out.println(stage);
 
 		fastForwardState = false;
 		transitions = new HashMap<Minion,Timeline>();
@@ -244,7 +225,10 @@ public class TowerDefenseView extends Application implements Observer{
 		});
 		
 		mapEditor.setOnAction(new MapEditorHandler());
-		exit.setOnAction(new ExitHandler());
+		exit.setOnAction((e)->{
+			controller.setRunning(false);
+			Platform.exit();
+		});
 		Scene scene = new Scene(vbox);
 		stage.setTitle("Power Tower");
 		stage.setScene(scene);
@@ -657,7 +641,7 @@ public class TowerDefenseView extends Application implements Observer{
 		
 		int x = initialX;
 		int y = initialY;
-		for(int k =0;k<minion.getStep();k++) {
+		for(int k =0;k<(initialX>0?minion.getStep()-1:minion.getStep());k++) {
 			int dir = direction.get(k);
 			if(dir==4||dir==2) {
 				x+=dir==4?1:-1;
@@ -947,7 +931,7 @@ public class TowerDefenseView extends Application implements Observer{
 		});
 		pane.setPrefWidth(1000);
 		pane.setBackground(Background.EMPTY);
-		Button endTurn = new Button("End Turn");
+		endTurn = new Button("End Turn");
 		endTurn.setOnAction((e)->{
 			controller.endTurn();
 			endTurn.setDisable(true);
@@ -1158,7 +1142,10 @@ public class TowerDefenseView extends Application implements Observer{
 		// exit menu option
 		MenuItem exit = new MenuItem();
 		exit.setText("Exit");
-		exit.setOnAction(new ExitHandler());
+		exit.setOnAction((e)->{
+			controller.setRunning(false);
+			Platform.exit();
+		});
 		
 		file.getItems().addAll(newGame, mapEditor, chat, pause,fastForward, exit);
 		file.setText("File");
@@ -1177,14 +1164,28 @@ public class TowerDefenseView extends Application implements Observer{
 		// sound menu option
 		MenuItem sound = new MenuItem();
 		sound.setText("Sound");
-		sound.setOnAction(new SoundHandler());
-		// video menu option
-		MenuItem video = new MenuItem();
-		video.setText("Video");
-		video.setOnAction(new VideoHandler());
-		
+		sound.setOnAction((e)->{
+			Stage stage = new Stage();
+			Pane pane = new Pane();
+			HBox box = new HBox();
+			VBox v = new VBox();
+			Label label = new Label("Volume Percent");
+			Slider slider = new Slider();
+			slider.setMin(0);
+			slider.setMax(100);
+			slider.setValue(100);
+			Button button = new Button("Save");
+			button.setOnAction((f)->{
+				player.setVolume(slider.getValue());
+			});
+			v.getChildren().addAll(label, slider, button);
+			box.getChildren().add(v);
+			pane.getChildren().add(box);
+			stage.setScene(new Scene(pane, 300, 200));
+			stage.show();
+		});
+
 		options.getItems().add(sound);
-		options.getItems().add(video);
 		options.setText("Options");
 		return options;
 	}

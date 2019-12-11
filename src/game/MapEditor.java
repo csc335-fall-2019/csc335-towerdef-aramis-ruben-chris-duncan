@@ -27,10 +27,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import handlers.ExitHandler;
 import handlers.MapEditorImageClickedHandler;
-import handlers.SoundHandler;
-import handlers.VideoHandler;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -42,6 +40,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -138,7 +137,6 @@ public class MapEditor {
 		MenuBar bar = new MenuBar();
 		
 		bar.getMenus().add(createFileMenu(stage));
-		bar.getMenus().add(createOptionMenu());
 		int menuHeight = 30;
 		bar.setMinHeight(menuHeight);
 		bar.setPrefHeight(menuHeight);
@@ -219,35 +217,13 @@ public class MapEditor {
 		MenuItem exit = new MenuItem();
 		exit.setText("Exit");
 		// Event handler for when the exit menu option is selected
-		exit.setOnAction(new ExitHandler());
+		exit.setOnAction((e)->{
+			Platform.exit();
+		});
 		
 		file.getItems().addAll(newGame, exit, load);
 		file.setText("File");
 		return file;
-	}
-	
-	/**
-     * @purpose: Creates the drop down menu for options.
-     * 
-     * @return options - the dropdown menu list when options is clicked in the main menu bar
-     * 
-     */
-	private Menu createOptionMenu() {
-		// Create the option menu option, holds sound settings and game visual settings.
-		Menu options = new Menu();
-		
-		MenuItem sound = new MenuItem();
-		sound.setText("Sound");
-		sound.setOnAction(new SoundHandler());
-		
-		MenuItem video = new MenuItem();
-		video.setText("Video");
-		video.setOnAction(new VideoHandler());
-		
-		options.getItems().add(sound);
-		options.getItems().add(video);
-		options.setText("Options");
-		return options;
 	}
 	
 	/**

@@ -102,6 +102,7 @@ public class Client implements Runnable{
 		}
 		try {
 			socket.close();
+			controller.setConnected(false);
 		} catch (IOException e) {
 		}
 	}
