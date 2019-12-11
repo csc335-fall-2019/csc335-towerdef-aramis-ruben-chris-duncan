@@ -90,6 +90,40 @@ public class Player implements Serializable{
 	}
 	
 	/**
+	 * Resets the player.
+	 * @throws FileNotFoundException when resources are missing
+	 */
+	public void resetAsNew() throws FileNotFoundException {
+		goldMultiplier = 1;
+		turnComplete = false;
+		extraMinions = 0;
+		health.setValue(20);;
+		mapCards.clear();
+		hand.clear();
+		draw.reset();
+		discard.reset();
+		gold.setValue(20);;
+		goldMultiplier = 1;
+		for (int i = 0; i < 6; i++) {
+			draw.add(new ArcherTowerCard());
+		}
+		for (int i = 0; i < 4; i++) {
+			draw.add(new PlunderCard());
+		}
+		draw.shuffle();
+		for (int i = 0; i < 5; i++) {
+			Card c = draw.drawCard();
+			if(c==null) {
+				continue;
+			}
+			ImageView view = getResource(c);
+			hand.add(view);
+			mapCards.put(c, view);
+		}
+		Collections.shuffle(hand);
+	}
+	
+	/**
 	 * purpose: loads the resource image for the cards a player owns
 	 * 
 	 * @param obj: card object

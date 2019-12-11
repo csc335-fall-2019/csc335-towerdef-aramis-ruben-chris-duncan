@@ -188,7 +188,7 @@ public class TowerDefenseView extends Application implements Observer{
 		}));
 
 		loadMusic();
-		currentYVal = 0;
+		
 		mainMenu();
 	}
 	
@@ -352,8 +352,10 @@ public class TowerDefenseView extends Application implements Observer{
      */
 	public void newGame() throws IOException {
 		// Initial Set Up
+		currentYVal = 0;
 		wave = new WaveGenerator(controller.getPlayer());
 		otherWave = new WaveGenerator(controller.getOtherPlayer());
+		controller.reset();
 		model = new ViewModel(1080,1920);
 		lsPath = new ArrayList<ImageView>();
 		direction = new ArrayList<Integer>();

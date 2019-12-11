@@ -145,6 +145,19 @@ public class TowerDefenseController {
 		xOr = false;
 		possibleConnections = FXCollections.observableArrayList(new ArrayList<SocketAddress>());
 	}
+	
+	/**
+	 * Sets the controller up to run another game.
+	 * @throws FileNotFoundException when resources are missing
+	 */
+	public void reset() throws FileNotFoundException {
+		currentPlayer.resetAsNew();
+		otherPlayer.resetAsNew();
+		minionsFinished = false;
+		fastForwardState = false;
+		xOr = false;
+		board.reset();
+	}
 
 	/**
      * purpose: Getter method for the board attribute.
@@ -779,7 +792,6 @@ public class TowerDefenseController {
 	public void setRunning(boolean b) {
 		isRunning = b;
 		try {
-			System.out.println(out);
 			if(socket!=null&&!b) {
 				socket.close();
 			}
