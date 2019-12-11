@@ -22,7 +22,7 @@ public class ChatViewModel {
 	private String selectedUser;
 	
 	/**
-	 * @purpose: Initializes ChatViewModel objects and their attributes.
+	 * purpose: Initializes ChatViewModel objects and their attributes.
 	 */
 	public ChatViewModel() {
 		selectedUser = "";

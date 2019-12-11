@@ -11,21 +11,22 @@ public class Charger extends Minion {
 	private static final int defaultReward = 10;
 
 	/**
-	 * @purpose: constructor for charger minion
+	 * purpose: constructor for charger minion
+	 * 
+	 * @param player Player object
 	 */
 	public Charger(Player player) {
 		super(defaultHealth, defaultDamage, defaultSpeed, defaultReward, player);
 	}
 
 	/**
-	 * @purpose: loads the sprite for this minion
+	 * purpose: loads the sprite for this minion
 	 */
 	@Override
 	public String getResource() {
 		try {
 			return (new File("./resources/images/MonsterSprites/Charger.png")).getCanonicalPath();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			return "";
 		}
 	}

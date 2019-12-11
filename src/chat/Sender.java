@@ -30,7 +30,7 @@ public class Sender implements Serializable{
 	private int port;
 	
 	/**
-	 * @purpose: Initializes a Sender object and its attributes.
+	 * purpose: Initializes a Sender object and its attributes.
 	 * 
 	 * @param username - a String representing the user's login ID
 	 * 
@@ -42,7 +42,7 @@ public class Sender implements Serializable{
 	}
 	
 	/**
-	 * @purpose: Initializes a Sender object and its attributes.
+	 * purpose: Initializes a Sender object and its attributes.
 	 * 
 	 * @param username - a String representing the user's login ID
 	 * 
@@ -50,7 +50,7 @@ public class Sender implements Serializable{
 	 * 
 	 * @param port - the port number the game is running on
 	 * 
-	 * @throws UnknownHostException - throws an error if the username
+	 * throws UnknownHostException - throws an error if the username
 	 * doesn't match an existing username
 	 */
 	public Sender(String username, String host, int port) {
@@ -60,7 +60,7 @@ public class Sender implements Serializable{
 	}
 	
 	/**
-	 * @purpose: Determines if two Sender objects are equal.
+	 * purpose: Determines if two Sender objects are equal.
 	 * 
 	 * @param o - an object that should be an instance of sender
 	 * 

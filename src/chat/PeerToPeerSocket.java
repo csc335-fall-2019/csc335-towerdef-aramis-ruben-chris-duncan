@@ -59,7 +59,7 @@ public class PeerToPeerSocket implements Runnable{
 	private Thread failedGeneric;
 	
 	/**
-	 * @purpose: Initializes a PeerToPeerSocket object and its attributes.
+	 * purpose: Initializes a PeerToPeerSocket object and its attributes.
 	 * 
 	 * @throws IOException - throws an exception if the port number is 
 	 * incorrect or closes before the connection is established.
@@ -69,7 +69,7 @@ public class PeerToPeerSocket implements Runnable{
 	}
 	
 	/**
-	 * @purpose: Initializes a PeerToPeerSocket object and its attributes.
+	 * purpose: Initializes a PeerToPeerSocket object and its attributes.
 	 * 
 	 * @param offset - a number to add to the port to hit an unused port
 	 * 
@@ -96,7 +96,7 @@ public class PeerToPeerSocket implements Runnable{
 	}
 	
 	/**
-	 * @purpose: Keeps the connections running and checked.
+	 * purpose: Keeps the connections running and checked.
 	 * 
 	 */
 	@Override
@@ -108,7 +108,7 @@ public class PeerToPeerSocket implements Runnable{
 	}
 	
 	/**
-	 * @purpose: Checks to see if the server is still up and communicating.
+	 * purpose: Checks to see if the server is still up and communicating.
 	 * 
 	 */
 	private void checkServers() {
@@ -174,7 +174,7 @@ public class PeerToPeerSocket implements Runnable{
 	}
 	
 	/**
-	 * @purpose: Checks to see if the sock being used is still open and useable.
+	 * purpose: Checks to see if the sock being used is still open and useable.
 	 * Blocks the port while in use
 	 * 
 	 */
@@ -209,7 +209,7 @@ public class PeerToPeerSocket implements Runnable{
 	}
 	
 	/**
-	 * @purpose: Determines how to send a message and how to receive one.
+	 * purpose: Determines how to send a message and how to receive one.
 	 * 
 	 * @param obj - the sender of the message
 	 * 
@@ -356,7 +356,7 @@ public class PeerToPeerSocket implements Runnable{
 	}
 	
 	/**
-	 * @purpose: Established the connection between the two networked computers.
+	 * purpose: Established the connection between the two networked computers.
 	 * 
 	 * @param hostname - the IP address or hostname of the computer hosting the program
 	 * 
@@ -381,7 +381,7 @@ public class PeerToPeerSocket implements Runnable{
 	}
 	
 	/**
-	 * @purpose: Sends the message to the outputstream to be received
+	 * purpose: Sends the message to the outputstream to be received
 	 * by the other player.
 	 * 
 	 * @param hostname - the IP address or hostname of the computer that
@@ -445,7 +445,7 @@ public class PeerToPeerSocket implements Runnable{
 	}
 	
 	/**
-	 * @purpose: Sends the message to the outputstream to be received
+	 * purpose: Sends the message to the outputstream to be received
 	 * by the other player.
 	 * 
 	 * @param hostTo - the IP address or hostname of the other computer that
@@ -522,7 +522,7 @@ public class PeerToPeerSocket implements Runnable{
 	}
 	
 	/**
-	 * @purpose: Allows the users to login and maintain a continuous chat.
+	 * purpose: Allows the users to login and maintain a continuous chat.
 	 * 
 	 * @param username - the user's login ID
 	 * 
@@ -533,7 +533,7 @@ public class PeerToPeerSocket implements Runnable{
 	 * @throws IOException - throws an exception if the port number is 
 	 * incorrect or closes before the connection is established.
 	 * 
-	 * @throws NoSuchAlgorithemException - throws an exception if the user's username and/or
+	 * throws NoSuchAlgorithemException - throws an exception if the user's username and/or
 	 * password is incorrect.
 	 */
 	public boolean login(String username, String password) throws IOException, NoSuchAlgorithmException {

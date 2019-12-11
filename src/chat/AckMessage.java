@@ -29,7 +29,7 @@ public class AckMessage implements Serializable{
 	private Sender from;
 	
 	/**
-	 * @purpose: Initializes a AckMessage object with all of its attributes.
+	 * purpose: Initializes a AckMessage object with all of its attributes.
 	 * 
 	 * @param to - the Sender the message is begin sent to
 	 * 

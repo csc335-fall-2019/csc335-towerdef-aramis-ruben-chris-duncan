@@ -39,7 +39,7 @@ public class ViewModel extends Observable {
 	private int currentCol;
 	
 	/**
-	 * @purpose: Initializes a ViewModel object with all of its attributes.
+	 * purpose: Initializes a ViewModel object with all of its attributes.
 	 * 
 	 * @param height - the height of the window to be created by this view
 	 * 
@@ -73,7 +73,7 @@ public class ViewModel extends Observable {
 	}
 	
 	/**
-	 * @purpose: increases how much of the window is subtracted from view.
+	 * purpose: increases how much of the window is subtracted from view.
 	 * 
 	 * @param m - the amount to be subtracted
 	 * 
@@ -93,7 +93,7 @@ public class ViewModel extends Observable {
 	}
 	
 	/**
-	 * @purpose: increases how much of the window is subtracted from view.
+	 * purpose: increases how much of the window is subtracted from view.
 	 * 
 	 * @param m - the amount to be subtracted
 	 * 

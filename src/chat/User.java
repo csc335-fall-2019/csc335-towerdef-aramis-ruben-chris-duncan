@@ -34,16 +34,16 @@ public class User implements Serializable{
 	private static MessageDigest md;
 	
 	/**
-	 * @purpose: Initializes a User object and its attributes.
+	 * purpose: Initializes a User object and its attributes.
 	 * 
-	 * @param username - a String representing the user's login ID
+	 * @param userName - a String representing the user's login ID
 	 * 
 	 * @param password - a String that is the user's password
 	 * 
 	 * @throws IOException - throws an exception if the port number is 
 	 * incorrect or closes before the connection is established.
 	 * 
-	 * @throws NoSuchAlgorithemException - throws an exception if the user's username and/or
+	 * throws NoSuchAlgorithemException - throws an exception if the user's username and/or
 	 * password is incorrect.
 	 * 
 	 */
@@ -76,7 +76,7 @@ public class User implements Serializable{
 	}
 	
 	/**
-	 * @purpose: Checks to see if the entered password is correct.
+	 * purpose: Checks to see if the entered password is correct.
 	 * 
 	 * @param check - a String that is the text input of the user's password
 	 * to be checked
@@ -84,6 +84,7 @@ public class User implements Serializable{
 	 * @throws FileNotFoundException - throws an error if the given password doesn't
 	 * match any username/password combinations in the system
 	 * 
+	 * @return true if password found; false otherwise
 	 */
 	public boolean checkPassword(String check) throws FileNotFoundException {
 		System.out.println(generateSHA512Password(check)+"\n"+pass);
@@ -100,7 +101,7 @@ public class User implements Serializable{
 	}
 	
 	/**
-	 * @purpose: Encrypts the user's password using a salting method.
+	 * purpose: Encrypts the user's password using a salting method.
 	 * 
 	 * @param salt - an array of random numbers
 	 * 
@@ -113,7 +114,7 @@ public class User implements Serializable{
 	}
 	
 	/**
-	 * @purpose: Encrypts the password using SHA512.
+	 * purpose: Encrypts the password using SHA512.
 	 * 
 	 * @param pass - the user generated password
 	 * 

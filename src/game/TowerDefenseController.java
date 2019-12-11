@@ -123,7 +123,7 @@ public class TowerDefenseController {
 	private volatile boolean xOr;
 	
   /**
-   * @purpose: Creates the controller for the game that handles all the game
+   * purpose: Creates the controller for the game that handles all the game
    * logic.
    * 
    * @param view - A TowerDefenseView object that is the game board view.
@@ -142,7 +142,7 @@ public class TowerDefenseController {
 	}
 
 	/**
-     * @purpose: Getter method for the board attribute.
+     * purpose: Getter method for the board attribute.
      * 
      * @return board - returns the current board the controller is using
      */
@@ -155,7 +155,7 @@ public class TowerDefenseController {
 	}
 	
 	/**
-     * @purpose: handles player's moves and sends them as messages.
+     * purpose: handles player's moves and sends them as messages.
      * 
      * @param message - a players turn message that tells the other client
      * what moves were made by the player.
@@ -170,7 +170,7 @@ public class TowerDefenseController {
 	}
 	
 	/**
-     * @purpose: Determines if a card can be played and what will happen
+     * purpose: Determines if a card can be played and what will happen
      * based on the type of card played.
      * 
      * @param move - a message that says what moves was made whether it was a 
@@ -218,7 +218,7 @@ public class TowerDefenseController {
 	}
 	
 	/**
-     * @purpose: Handles logic that must happen when players end their turns.
+     * purpose: Handles logic that must happen when players end their turns.
      * 
      */
 	public void endTurn() {
@@ -261,7 +261,7 @@ public class TowerDefenseController {
 	}
 	
 	/**
-     * @purpose: adds a tower to the board when a player clicks a tower card
+     * purpose: adds a tower to the board when a player clicks a tower card
      * to the grid.
      * 
      * @param row - the row of the grid the tower is being added to
@@ -279,7 +279,9 @@ public class TowerDefenseController {
 	
 
 	/**
-     * @purpose: Removes a bought card from the buyable cards in the market.
+     * purpose: Removes a bought card from the buyable cards in the market.
+     * 
+     * @param card - Card object
      * 
      * @return removed - a boolean value stating whether card was successfully removed
      * or not. 
@@ -295,7 +297,7 @@ public class TowerDefenseController {
 	}
 	
     /**
-     * @purpose: Determines what to do when an ability card is double clicked
+     * purpose: Determines what to do when an ability card is double clicked
      * by a player.
      * 
      * @param card - Passed the specific card that was played.
@@ -308,7 +310,7 @@ public class TowerDefenseController {
 	}
 	
 	/**
-     * @purpose: Determines how to handle ability cards being played that 
+     * purpose: Determines how to handle ability cards being played that 
      * effect the other player.
      * 
      * @param card - Passed the specific card that was played.
@@ -320,7 +322,7 @@ public class TowerDefenseController {
 	}
 	
 	/**
-     * @purpose: Determines what to do with a TowerCard once it has been used.
+     * purpose: Determines what to do with a TowerCard once it has been used.
      * 
      * @param row - the row of the grid the tower is being added to
      * 
@@ -354,7 +356,7 @@ public class TowerDefenseController {
 	}
 	
 	/**
-     * @purpose: Determines if a card being placed on the grid can upgrade a tower.
+     * purpose: Determines if a card being placed on the grid can upgrade a tower.
      * 
      * @param row - the row of the grid the tower is being added to
      * 
@@ -380,7 +382,7 @@ public class TowerDefenseController {
 	}
 	
 	/**
-     * @purpose: Upgrades a tower when the same TowerCard has been added to it
+     * purpose: Upgrades a tower when the same TowerCard has been added to it
      * on the grid.
      * 
      * @param t - the type of tower that is being added to the grid
@@ -414,7 +416,7 @@ public class TowerDefenseController {
 	}
 	
 	/**
-     * @purpose: Calculates what damage is to be dealt to the opponent.
+     * purpose: Calculates what damage is to be dealt to the opponent.
      * 
      * @param amount - how much damage is going to be dealt to the other player
      * 
@@ -438,7 +440,7 @@ public class TowerDefenseController {
 	}
 	
 	/**
-     * @purpose: Determines if a minion is going to be killed.
+     * purpose: Determines if a minion is going to be killed.
      * 
      * @param minion - the minion that is being killed
      * 
@@ -458,7 +460,7 @@ public class TowerDefenseController {
 	}
 	
 	/**
-     * @purpose: sets the card the the player has clicked.
+     * purpose: sets the card the the player has clicked.
      * 
      * @param card - the Card object that was selected by the player
      * 
@@ -468,7 +470,7 @@ public class TowerDefenseController {
 	}
 	
 	/**
-     * @purpose: sets the boolean variable that tells if the other player has
+     * purpose: sets the boolean variable that tells if the other player has
      * finished taking their turn.
      * 
      * @param b - a boolean variable 
@@ -479,7 +481,7 @@ public class TowerDefenseController {
 	}
 	
 	/**
-     * @purpose: Searches through all ports to find an available one.
+     * purpose: Searches through all ports to find an available one.
      * 
      * @return s - the socket number being used by the host
      * 
@@ -508,7 +510,7 @@ public class TowerDefenseController {
 	}
 	
 	/**
-     * @purpose: scans for ports that are broadcasting this game.
+     * purpose: scans for ports that are broadcasting this game.
      * 
      * @throws IOException - throws an exception when the scanned port doens't match
      * the host's port
@@ -553,7 +555,7 @@ public class TowerDefenseController {
 	}
 	
 	/**
-     * @purpose: Checks to see if the host of the client matches the hostname of
+     * purpose: Checks to see if the host of the client matches the hostname of
      * the computer hosting the game.
      * 
      * @param host - the name or IP of the hosting computer
@@ -588,7 +590,7 @@ public class TowerDefenseController {
 	}
 	
 	/**
-     * @purpose: Begins the connection to the host for the client.
+     * purpose: Begins the connection to the host for the client.
      * 
      * @param host - the name or IP of the host computer
      * 
@@ -602,7 +604,7 @@ public class TowerDefenseController {
 	}
 	
 	/**
-     * @purpose: Starts the servers game
+     * purpose: Starts the servers game
      * 
      */
 	public void startServer() {
@@ -618,15 +620,18 @@ public class TowerDefenseController {
 	}
 	
 	/**
-     * @purpose: Creates an obersvable list of all possible ports.
+     * purpose: Creates an obersvable list of all possible ports.
      * 
+     * @return observableList of socketAddresses
      */
 	public ObservableList<SocketAddress> getPossibleConnections(){
 		return possibleConnections;
 	}
 	
 	/**
-     * @purpose: Getter method for player.
+     * purpose: Getter method for player.
+     * 
+     * @return Player object
      * 
      */
 	public Player getPlayer() {
@@ -634,7 +639,9 @@ public class TowerDefenseController {
 	}
 	
 	/**
-     * @purpose: Getter method for opponent.
+     * purpose: Getter method for opponent.
+     * 
+     * @return Player object
      * 
      */
 	public Player getOtherPlayer() {
@@ -642,7 +649,7 @@ public class TowerDefenseController {
 	}
 	
 	/**
-     * @purpose: Setter method for opponent object.
+     * purpose: Setter method for opponent object.
      * 
      */
 	private void setOtherPlayer(Player p) {
@@ -650,7 +657,9 @@ public class TowerDefenseController {
 	}
 	
 	/**
-     * @purpose: Getter method for the market
+     * purpose: Getter method for the market
+     *
+     * @return Market object
      * 
      */
 	public Market getMarket() {
@@ -658,7 +667,9 @@ public class TowerDefenseController {
 	}
 
 	/**
-     * @purpose: setter method for board.
+     * purpose: setter method for board.
+     * 
+     * @param m Map object
      * 
      */
 	public void setBoard(Map m) {
@@ -666,15 +677,18 @@ public class TowerDefenseController {
 	}
 	
 	/**
-     * @purpose: Getter method for the view the board is associated with.
+     * purpose: Getter method for the view the board is associated with.
      * 
+     * @return TowerDefenseView object
      */
 	public TowerDefenseView getView() {
 		return view;
 	}
 	
 	/**
-     * @purpose: Setter method for the board using the TowerDefenseBoard object.
+     * purpose: Setter method for the board using the TowerDefenseBoard object.
+     * 
+     * @param m TowerDefenseBoard object
      * 
      */
 	public void setBoard(TowerDefenseBoard m) {
@@ -692,7 +706,9 @@ public class TowerDefenseController {
 	}
 	
 	/**
-     * @purpose: Setter method determining if the wave is complete.
+     * purpose: Setter method determining if the wave is complete.
+     * 
+     * @param b boolean if minions are finished with their wave
      * 
      */
 	public void setMinionsFinished(boolean b) {
@@ -705,7 +721,9 @@ public class TowerDefenseController {
 	}
 	
 	/**
-     * @purpose: Setter for whether the game is paused or not.
+     * purpose: Setter for whether the game is paused or not.
+     * 
+     * @return true if game is paused
      * 
      */
 	public boolean isPaused() {
@@ -713,7 +731,9 @@ public class TowerDefenseController {
 	}
 	
 	/**
-     * @purpose: Setter method for whether the game is paused or not.
+     * purpose: Setter method for whether the game is paused or not.
+     * 
+     * @param b parameter to set if game is paused pauses for true
      * 
      */
 	public void setPaused(boolean b) {

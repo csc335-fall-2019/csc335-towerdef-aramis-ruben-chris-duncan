@@ -22,7 +22,7 @@ import javafx.application.Application;
 public class TowerDefenseMain {
 
 	/**
-     * @purpose: Launches the view which creates the GUI for the game.
+     * purpose: Launches the view which creates the GUI for the game.
      * 
      * @param args - takes in no additional command line arguments.
      */
