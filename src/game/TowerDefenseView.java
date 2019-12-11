@@ -931,7 +931,7 @@ public class TowerDefenseView extends Application implements Observer{
 		});
 		pane.setPrefWidth(1000);
 		pane.setBackground(Background.EMPTY);
-		Button endTurn = new Button("End Turn");
+		endTurn = new Button("End Turn");
 		endTurn.setOnAction((e)->{
 			controller.endTurn();
 			endTurn.setDisable(true);
