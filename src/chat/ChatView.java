@@ -19,9 +19,11 @@ package chat;
  */
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.util.Observable;
 import java.util.Observer;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -49,7 +51,7 @@ import javafx.util.Callback;
 public class ChatView{
 	
 	//Field variables for ChatView Objects
-	private static Stage MESSAGE_RECEIVED; 
+	private static Stage STAGE;
 	private Thread thread;
 	private LoggedInUser user;
 	
@@ -65,20 +67,13 @@ public class ChatView{
 	 */
 	public Stage create(int portNum) throws IOException {
 		Stage primaryStage = new Stage();
-		MESSAGE_RECEIVED = new Stage();
-		BorderPane textPane = new BorderPane();
-		Text label = new Text();
-		label.setText("Received");
-
-		textPane.getChildren().add(label);
-		MESSAGE_RECEIVED.setScene(new Scene(textPane, 100,100));
-		MESSAGE_RECEIVED.initModality(Modality.WINDOW_MODAL);
-		MESSAGE_RECEIVED.initOwner(primaryStage);
+		STAGE = primaryStage;
+		
 		PeerToPeerSocket p2p = new PeerToPeerSocket(portNum);
 		thread = new Thread(p2p);
 		BorderPane pane = createChatBottom(p2p);
 		primaryStage.setScene(new Scene(pane, 400, 400));
-		primaryStage.setTitle(portNum+"");
+		primaryStage.setTitle(InetAddress.getLocalHost().getHostAddress()+":"+portNum+"-"+portNum+5);
 		return primaryStage;
 	}
 	
@@ -124,7 +119,7 @@ public class ChatView{
 					
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					createMessage(e1.getMessage());
 				}
 			}
 		});
@@ -204,6 +199,28 @@ public class ChatView{
 		box.setBottom(hbox);
 		box.setPickOnBounds(false);
 		return box;
+	}
+	
+	/**
+	 * Creates and shows a stage with the desired text.
+	 * @param message the message text to show
+	 */
+	public static void createMessage(String message) {
+		Platform.runLater(()->{
+			Stage s = new Stage();
+			BorderPane textPane = new BorderPane();
+			Text label = new Text();
+			label.setText("Alert");
+			Text reason = new Text();
+			reason.setText(message);
+	
+			textPane.setCenter(reason);
+			s.setScene(new Scene(textPane, 600,200));
+			s.setTitle("Alert");
+			s.initModality(Modality.WINDOW_MODAL);
+			s.initOwner(STAGE);
+			s.showAndWait();
+		});
 	}
 	
 	/**

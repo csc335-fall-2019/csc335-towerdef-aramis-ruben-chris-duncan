@@ -81,6 +81,11 @@ public class TowerDefenseBoard extends Observable implements Serializable{
 		notifyObservers(row+" "+col);
 	}
 	
+	/**
+	 * This method notifies the view to update the row and column passed in.
+	 * @param row the row in the board that was changed.
+	 * @param col the col in the board that was changed.
+	 */
 	public void updateBoard(int row, int col) {
 		setChanged();
 		notifyObservers(row+" "+col);
@@ -95,6 +100,9 @@ public class TowerDefenseBoard extends Observable implements Serializable{
 		notifyObservers(true);
 	}
   
+  /**
+   * This method notifies the view to update the end turn button.
+   */
   	public void beginningOfTurn() {
   		setChanged();
   		notifyObservers(false);
@@ -144,6 +152,16 @@ public class TowerDefenseBoard extends Observable implements Serializable{
 		System.out.println("Updating view.");
 		setChanged();
 		notifyObservers(m);
+	}
+	
+	/**
+	 * Notify the view that the server or client has changed a menu item.
+	 * 
+	 * @param value the value to notify the view with.
+	 */
+	public void notifyMenu(int value) {
+		setChanged();
+		notifyObservers(new Integer(value));
 	}
 	
 	/**
