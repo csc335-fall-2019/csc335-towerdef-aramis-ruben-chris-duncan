@@ -84,6 +84,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
@@ -131,14 +132,13 @@ public class TowerDefenseView extends Application implements Observer{
 	private GridPane grid;
 	private GridPane animationGrid;
 	private Pane attackGrid;
-	private int round;
 	private WaveGenerator wave;
 	private WaveGenerator otherWave;
 	private List<ImageView> lsPath;
 	private List<Integer> direction;
 	private java.util.Map<Minion, Timeline> transitions;
 	private MediaPlayer player;
-	private int currentYVal;
+	private volatile int currentYVal;
 	private Market m;
 	private Button endTurn;
 	
@@ -162,7 +162,6 @@ public class TowerDefenseView extends Application implements Observer{
 		// Closing threads when exit is selected
 		Runtime.getRuntime().addShutdownHook(new Thread(()->{
 			controller.setRunning(false);
-			System.out.println("Exiting...");
 		}));
 		currentYVal = 0;
 		mainMenu();
@@ -274,7 +273,6 @@ public class TowerDefenseView extends Application implements Observer{
 				e.consume();
 				return;
 			}
-			System.out.println("Connecting...");
 			InetSocketAddress address = (InetSocketAddress)view.getSelectionModel().getSelectedItem();
 			if(address==null) {
 				e.consume();
@@ -330,7 +328,6 @@ public class TowerDefenseView extends Application implements Observer{
      */
 	public void newGame() throws IOException {
 		// Initial Set Up
-		round = 1;
 		wave = new WaveGenerator(controller.getPlayer());
 		otherWave = new WaveGenerator(controller.getOtherPlayer());
 		model = new ViewModel(1080,1920);
@@ -366,12 +363,12 @@ public class TowerDefenseView extends Application implements Observer{
 
 		stage.setScene(new Scene(root, model.getWidth(), model.getHeight()));
 		stage.getScene().getStylesheets().add(getClass().getResource("mainView.css").toExternalForm());
-//		stage.setResizable(false);
-//		stage.setFullScreen(true);
-//		stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+		stage.setResizable(false);
+		stage.setFullScreen(true);
+		stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 
 		stage.sizeToScene();
-		loadMusic();
+		//loadMusic();
 		stage.show();
 	}
 	
@@ -480,8 +477,7 @@ public class TowerDefenseView extends Application implements Observer{
 		transitions.clear();
 		Thread thread = new Thread(()-> {
 			// Generating new wave
-			List<Minion> currentWave = wave.generateRandom(); 
-			round++;
+			List<Minion> currentWave = wave.generateRandom();
 			List<ImageView> minions = new ArrayList<ImageView>();
 			// Placing and animating the minions within the wave
 			for(Minion m: currentWave) {
@@ -533,7 +529,6 @@ public class TowerDefenseView extends Application implements Observer{
 		// Sending wave to other player
 		Thread thread2 = new Thread(()-> {
 			List<Minion> currentWave = otherWave.generateRandom();
-			round++;
 			List<ImageView> minions = new ArrayList<ImageView>();
 			for(Minion m: currentWave) {
 				try {
@@ -635,13 +630,14 @@ public class TowerDefenseView extends Application implements Observer{
      */
 	private void move(int index, int initialX, int initialY, Minion minion, List<ImageView> minions, List<Minion> minionsL, List<Integer> direction, int offset) {
 		if(minion.isDead()) {
+			animationGrid.getChildren().remove(minions.get(index));
 			checkMinionsFinished(minionsL);
 			return;
 		}
 		
 		int x = initialX;
 		int y = initialY;
-		for(int k =0;k<(initialX>0?minion.getStep()-1:minion.getStep());k++) {
+		for(int k =0;k<minion.getStep();k++) {
 			int dir = direction.get(k);
 			if(dir==4||dir==2) {
 				x+=dir==4?1:-1;
@@ -652,6 +648,7 @@ public class TowerDefenseView extends Application implements Observer{
 		int xFin = x;
 		int yFin = y;
 		Timeline t = new Timeline(new KeyFrame(Duration.millis((MINION_MAX_SPEED/minion.getSpeed()-offset)*(fastForwardState?.5:1)), (e)-> {
+			
 			try {
 				checkTowers(minion, xFin, yFin);
 			} catch (FileNotFoundException e2) {
@@ -747,8 +744,8 @@ public class TowerDefenseView extends Application implements Observer{
 							Platform.runLater(()->{
 								attackGrid.getChildren().add(view);
 							});
-							view.setX(i*SIZE_IMAGE+SIZE_IMAGE/2);
-							view.setY(j*SIZE_IMAGE+SIZE_IMAGE/2);
+							view.setX(i*(SIZE_IMAGE+2)+(SIZE_IMAGE+2)/2);
+							view.setY(j*(SIZE_IMAGE+2)+(SIZE_IMAGE+2)/2);
 							TranslateTransition tt = new TranslateTransition(
 									Duration.millis((TOWER_MAX_ATTACK_SPEED/t.getAttackSpeed())*(fastForwardState?5:10)), 
 									view);
@@ -795,7 +792,6 @@ public class TowerDefenseView extends Application implements Observer{
      */
 	public void generatePath(Thread callback) {
 		Thread thread = new Thread(()-> {
-			System.out.println("Started.");
 			if(lsPath.size()>0&&direction.size()>0) {
 				callback.start();
 				return;
@@ -904,6 +900,25 @@ public class TowerDefenseView extends Application implements Observer{
 			public void changed(ObservableValue<? extends Number> arg0, Number arg1, Number arg2) {
 				// TODO Auto-generated method stub
 				health.setText(arg2.toString());
+				if(arg2.intValue()<=0) {
+					Pane pane = new Pane();
+					HBox box = new HBox();
+					Label label = new Label("You Died");
+					box.getChildren().add(label);
+					pane.getChildren().add(box);
+					Button button = new Button("Go Back");
+					button.setOnAction((e)->{
+						try {
+							mainMenu();
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					});
+					box.getChildren().add(button);
+					stage.setScene(new Scene(pane, 300, 200));
+					stage.show();
+				}
 			}
 			
 		});
@@ -984,6 +999,26 @@ public class TowerDefenseView extends Application implements Observer{
 			public void changed(ObservableValue<? extends Number> arg0, Number arg1, Number arg2) {
 				// TODO Auto-generated method stub
 				health.setText(arg2.toString());
+				if(arg2.intValue()<=0) {
+					Pane pane = new Pane();
+					HBox box = new HBox();
+					Label label = new Label("You Won");
+					box.getChildren().add(label);
+					pane.getChildren().add(box);
+					Button button = new Button("Go Back");
+					button.setOnAction((e)->{
+						try {
+							mainMenu();
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					});
+					box.getChildren().add(button);
+					controller.setRunning(false);
+					stage.setScene(new Scene(pane, 300, 200));
+					stage.show();
+				}
 			}
 			
 		});
@@ -1033,7 +1068,6 @@ public class TowerDefenseView extends Application implements Observer{
 		market.getChildren().add(view);
 		// What to do when a card in the market is clicked
 		view.setOnMouseClicked((e)->{
-			System.out.println(view.getSelectionModel().getSelectedItem());
 			if(view.getSelectionModel().getSelectedItem()==null) {
 				e.consume();
 				return;
@@ -1257,9 +1291,6 @@ public class TowerDefenseView extends Application implements Observer{
 		if(e instanceof Map) {
 				Platform.runLater(()->{
 					try {
-
-						System.out.println("New game");
-
 						newGame();
 					}catch(Exception ex) {
 						ex.printStackTrace();
@@ -1280,13 +1311,7 @@ public class TowerDefenseView extends Application implements Observer{
 				update();
 			}else {
 				endTurn.setDisable(false);
-				try {
-					animationGrid = createClearGrid();
-				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				attackGrid = createClickThrough();
+				attackGrid.getChildren().clear();
 			}
 		}
 	}
