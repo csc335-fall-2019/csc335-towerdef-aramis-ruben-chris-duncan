@@ -180,6 +180,7 @@ public class PeerToPeerSocket implements Runnable{
 	 * 
 	 */
 	private void checkSockets() {
+		List<Socket> toRemove = new ArrayList<Socket>();
 		for(Socket s: activeConnections) {
 			try {
 				ObjectOutputStream out = (ObjectOutputStream)(mapConnections.get(s)[0]);
@@ -204,10 +205,18 @@ public class PeerToPeerSocket implements Runnable{
 					});
 				}
 			}catch(Exception ex) {
+				try {
+					s.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				toRemove.add(s);
 				System.out.println(ex.getMessage());
 				continue;
 			}
 		}
+		activeConnections.removeAll(toRemove);
 	}
 	
 	/**

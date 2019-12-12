@@ -19,10 +19,6 @@ package chat;
  */
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.util.Observable;
-import java.util.Observer;
-
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -46,6 +42,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import network.ResolveIPAddress;
 
 
 public class ChatView{
@@ -73,7 +70,7 @@ public class ChatView{
 		thread = new Thread(p2p);
 		BorderPane pane = createChatBottom(p2p);
 		primaryStage.setScene(new Scene(pane, 400, 400));
-		primaryStage.setTitle(InetAddress.getLocalHost().getHostAddress()+":"+portNum+"-"+portNum+5);
+		primaryStage.setTitle(ResolveIPAddress.getValidIPAddress()+":"+portNum+"-"+portNum+5);
 		return primaryStage;
 	}
 	
@@ -362,9 +359,9 @@ public class ChatView{
 			if(item!=null) {
 				System.out.println("this: "+user.getUser().getUsername()+" from: "+item.getFrom().getUser());
 				if(item.getFrom().getUser().equals(user.getUser().getUsername())) {
-					text.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+					text.setBackground(new Background(new BackgroundFill(Color.INDIANRED, CornerRadii.EMPTY, Insets.EMPTY)));
 				}else {
-					text.setBackground(new Background(new BackgroundFill(Color.BLUE, CornerRadii.EMPTY, Insets.EMPTY)));
+					text.setBackground(new Background(new BackgroundFill(Color.AQUAMARINE, CornerRadii.EMPTY, Insets.EMPTY)));
 				}
 				textBox.setText(item.getMessage());
 				text.getChildren().add(textBox);

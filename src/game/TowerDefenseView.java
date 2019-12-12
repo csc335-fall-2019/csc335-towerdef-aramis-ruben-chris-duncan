@@ -143,6 +143,7 @@ public class TowerDefenseView extends Application implements Observer{
 	private Button endTurn;
 	private MenuItem pause;
 	private MenuItem fastForward;
+	private int portNum;
 	
 	/**
 	 * Factory for creating simple notification modals.
@@ -156,6 +157,7 @@ public class TowerDefenseView extends Application implements Observer{
 			label.setText("Alert");
 			Text reason = new Text();
 			reason.setText(message);
+			portNum = 5000;
 	
 			textPane.setCenter(reason);
 			s.setScene(new Scene(textPane, 600,200));
@@ -1187,7 +1189,8 @@ public class TowerDefenseView extends Application implements Observer{
 		chat.setOnAction((e)->{
 			ChatView view = new ChatView();
 			try {
-				view.create(5000).show();
+				view.create(portNum).show();
+				portNum+=10;
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				Stage stage = new Stage();
