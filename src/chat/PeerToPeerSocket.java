@@ -44,6 +44,7 @@ import java.util.List;
 import java.util.Map;
 
 import javafx.application.Platform;
+import network.ResolveIPAddress;
 
 
 public class PeerToPeerSocket implements Runnable{
@@ -77,7 +78,7 @@ public class PeerToPeerSocket implements Runnable{
 	 * incorrect or closes before the connection is established.
 	 */
 	public PeerToPeerSocket(int offset) throws IOException {
-		this.host = InetAddress.getLocalHost().getHostAddress().toString();
+		this.host = ResolveIPAddress.getValidIPAddress();
 		mapConnections = new HashMap<Socket, Object[]>();
 		servers = new ArrayList<ServerSocket>();
 		currentConnections = new ArrayList<Sender>();
@@ -203,6 +204,7 @@ public class PeerToPeerSocket implements Runnable{
 					});
 				}
 			}catch(Exception ex) {
+				System.out.println(ex.getMessage());
 				continue;
 			}
 		}
@@ -220,6 +222,7 @@ public class PeerToPeerSocket implements Runnable{
 	 */
 	public void handleMessage(Object obj, Socket s) throws IOException {
 		Message message = (Message)obj;
+		System.out.println(message);
 		// Can we verify that the message is meant for us?
 		if(verifyQuery(message.getQuery(),s)) {
 			message.getFrom().setPort(s.getPort());
@@ -405,16 +408,18 @@ public class PeerToPeerSocket implements Runnable{
 					}
 				}
 				int port = 0;
-				String host = "";
+				String hostN = "";
 				for(Sender s : currentConnections) {
 					if(s.getUser().equals(hostname)) {
 						port = s.getPort();
-						host = s.getHost();
+						hostN = s.getHost();
 					}
 				}
 				for(Socket s: activeConnections) {
-					if(s.getPort()==port&&(s.getInetAddress().getHostName().equals(host)||s.getInetAddress().getHostAddress().equals(host))) {
+					System.out.println(s.getInetAddress().getHostAddress()+" "+s.getInetAddress().getHostName());
+					if(s.getPort()==port&&(s.getInetAddress().getHostName().equals(hostN)||s.getInetAddress().getHostAddress().equals(hostN))) {
 						try {
+							System.out.println("Writing");
 							ObjectOutputStream out = (ObjectOutputStream)mapConnections.get(s)[0];
 							out.writeObject(new Message(from, new Query(hostname), message));
 						} catch (IOException e) {
@@ -486,8 +491,10 @@ public class PeerToPeerSocket implements Runnable{
 				Query query = new Query(hostFinal, port);
 				Message m = new Message(from, query, message);
 				for(Socket s: activeConnections) {
-					if(s.getPort()==port&&(s.getInetAddress().getHostName().equals(host)||s.getInetAddress().getHostAddress().equals(host))) {
+					System.out.println(s.getInetAddress().getHostAddress()+" "+s.getInetAddress().getHostName());
+					if(s.getPort()==port&&(s.getInetAddress().getHostName().equals(hostFinal)||s.getInetAddress().getHostAddress().equals(hostFinal))) {
 						try {
+							System.out.println("Trying to write.");
 							ObjectOutputStream out = (ObjectOutputStream)mapConnections.get(s)[0];
 							out.writeObject(m);
 							System.out.println("Writing object "+message);

@@ -18,6 +18,8 @@ import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+import network.ResolveIPAddress;
+
 public class Sender implements Serializable{
 	
 	// Field variables for Sender objects
@@ -38,7 +40,7 @@ public class Sender implements Serializable{
 	 * doesn't match an existing username
 	 */
 	public Sender(String username) throws UnknownHostException {
-		this(username, InetAddress.getLocalHost().getHostAddress().toString(),0);
+		this(username, ResolveIPAddress.getValidIPAddress(),0);
 	}
 	
 	/**

@@ -74,6 +74,7 @@ import network.FastForwardMessage;
 import network.MarketCardRemovedMessage;
 import network.OtherStatIncreaseMessage;
 import network.PauseMessage;
+import network.ResolveIPAddress;
 import network.StatIncreaseMessage;
 import network.TowerDefenseMoveMessage;
 import network.TowerDefenseTurnMessage;
@@ -540,7 +541,7 @@ public class TowerDefenseController {
 			}
 			// binding to the socket
 			try {
-				s.bind(new InetSocketAddress(InetAddress.getLocalHost().getHostAddress(), initial));
+				s.bind(new InetSocketAddress(ResolveIPAddress.getValidIPAddress(), initial));
 				break;
 			}catch(Exception ex) {
 				initial++;
